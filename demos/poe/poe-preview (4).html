@@ -1,0 +1,2031 @@
+<!DOCTYPE html><html lang="en"><head><meta http-equiv="Content-Security-Policy" content="default-src 'self' 'unsafe-inline' 'unsafe-eval' data: blob: https://cdnjs.cloudflare.com https://cdn.jsdelivr.net https://code.jquery.com https://unpkg.com https://d3js.org https://threejs.org https://cdn.plot.ly https://stackpath.bootstrapcdn.com https://maps.googleapis.com https://cdn.tailwindcss.com https://ajax.googleapis.com https://kit.fontawesome.com https://cdn.datatables.net https://maxcdn.bootstrapcdn.com https://code.highcharts.com https://tako-static-assets-production.s3.amazonaws.com https://www.youtube.com https://fonts.googleapis.com https://fonts.gstatic.com https://pfst.cf2.poecdn.net https://puc.poecdn.net https://i.imgur.com https://wikimedia.org https://*.icons8.com https://*.giphy.com https://picsum.photos https://images.unsplash.com; frame-src 'self' https://www.youtube.com https://trytako.com; child-src 'self'; manifest-src 'self'; worker-src 'self'; upgrade-insecure-requests; block-all-mixed-content;">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Seed of Gratitude</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        primary: '#5D5CDE',
+                        warmSand: '#F7F3E9',
+                        earthyClay: '#D8A38D',
+                        deepCocoa: '#4A2C2A',
+                        leafGreen: '#7BA05B',
+                        gentleSky: '#A2C0D9',
+                        seedBrown: '#8B5A2B',
+                        sunshineYellow: '#F9D949'
+                    },
+                    fontFamily: {
+                        display: ['Playfair Display', 'serif'],
+                        body: ['Nunito', 'sans-serif']
+                    }
+                }
+            }
+        }
+    </script>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&amp;family=Nunito:wght@300;400;600;700&amp;display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+    <style>
+        /* Base Styles */
+        body {
+            font-family: 'Nunito', sans-serif;
+            transition: background-color 0.3s, color 0.3s;
+        }
+        h1, h2, h3, h4, h5, h6 {
+            font-family: 'Playfair Display', serif;
+        }
+        
+        /* Animation for plant growth */
+        @keyframes grow {
+            0% { transform: scale(0.95); }
+            100% { transform: scale(1); }
+        }
+        .grow-animation {
+            animation: grow 2s infinite alternate ease-in-out;
+        }
+        
+        /* Collection jar glow */
+        @keyframes glow {
+            0% { filter: drop-shadow(0 0 2px rgba(249, 217, 73, 0.3)); }
+            100% { filter: drop-shadow(0 0 6px rgba(249, 217, 73, 0.7)); }
+        }
+        .glow-animation {
+            animation: glow 2s infinite alternate ease-in-out;
+        }
+        
+        /* Seed card effects */
+        .seed-card {
+            transition: transform 0.3s, box-shadow 0.3s;
+        }
+        .seed-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+        }
+        
+        /* Custom scrollbar */
+        ::-webkit-scrollbar {
+            width: 6px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #f1f1f1;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #D8A38D;
+            border-radius: 3px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #4A2C2A;
+        }
+        
+        /* Dark mode for scrollbar */
+        .dark ::-webkit-scrollbar-track {
+            background: #333;
+        }
+        .dark ::-webkit-scrollbar-thumb {
+            background: #5D5CDE;
+        }
+        .dark ::-webkit-scrollbar-thumb:hover {
+            background: #7A79E8;
+        }
+        
+        /* Calendar styles */
+        .calendar-day {
+            transition: transform 0.2s;
+        }
+        .calendar-day:hover {
+            transform: scale(1.1);
+            z-index: 10;
+        }
+
+        /* Diary entry card styles */
+        .diary-card {
+            transition: all 0.3s ease;
+        }
+        .diary-card:hover {
+            transform: translateY(-4px);
+        }
+
+        /* Plant container */
+        .plant-container {
+            position: relative;
+            overflow: hidden;
+        }
+        
+        /* Interactive elements hover states */
+        .interactive-element {
+            transition: all 0.25s ease;
+        }
+        .interactive-element:hover {
+            transform: scale(1.05);
+        }
+        
+        /* Loader animation */
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+        .loading-spinner {
+            animation: spin 1s linear infinite;
+        }
+
+        /* Achievement badge styles */
+        .achievement-badge {
+            transition: transform 0.3s ease;
+        }
+        .achievement-badge:hover {
+            transform: rotate(10deg) scale(1.1);
+        }
+        
+        /* Tabs for content switching */
+        .tab-button {
+            position: relative;
+            transition: all 0.3s ease;
+        }
+        .tab-button::after {
+            content: '';
+            position: absolute;
+            width: 0;
+            height: 2px;
+            bottom: -2px;
+            left: 50%;
+            transform: translateX(-50%);
+            background-color: currentColor;
+            transition: width 0.3s ease;
+        }
+        .tab-button.active::after {
+            width: 80%;
+        }
+        
+        /* Tooltip styles */
+        .tooltip {
+            position: relative;
+        }
+        .tooltip .tooltip-text {
+            visibility: hidden;
+            position: absolute;
+            z-index: 100;
+            bottom: 125%;
+            left: 50%;
+            transform: translateX(-50%);
+            background-color: rgba(0, 0, 0, 0.8);
+            color: white;
+            text-align: center;
+            padding: 5px 10px;
+            border-radius: 6px;
+            white-space: nowrap;
+            opacity: 0;
+            transition: opacity 0.3s;
+        }
+        .tooltip:hover .tooltip-text {
+            visibility: visible;
+            opacity: 1;
+        }
+        .tooltip .tooltip-text::after {
+            content: "";
+            position: absolute;
+            top: 100%;
+            left: 50%;
+            margin-left: -5px;
+            border-width: 5px;
+            border-style: solid;
+            border-color: rgba(0, 0, 0, 0.8) transparent transparent transparent;
+        }
+    </style>
+</head>
+<body class="bg-warmSand text-deepCocoa dark:bg-gray-900 dark:text-gray-100">
+    <div id="app" class="min-h-screen flex flex-col">
+        <!-- Top Navigation Bar - Visible on all pages except Login/Register -->
+        <header id="topNav" class="bg-white dark:bg-gray-800 shadow-md py-3 px-4 hidden">
+            <div class="container mx-auto flex justify-between items-center">
+                <div class="flex items-center space-x-4">
+                    <div class="flex items-center space-x-2">
+                        <div class="w-8 h-8 rounded-full bg-earthyClay flex items-center justify-center text-white cursor-pointer">
+                            <span data-i18n="user_initial">U</span>
+                        </div>
+                        <span class="font-medium" data-i18n="user_name">User</span>
+                    </div>
+                    
+                    <!-- Level and XP Bar -->
+                    <div class="hidden md:flex items-center space-x-2">
+                        <span class="text-xs font-bold bg-primary text-white px-2 py-1 rounded-full" data-i18n="level">LVL 5</span>
+                        <div class="w-24 h-2 bg-gray-200 dark:bg-gray-700 rounded-full">
+                            <div class="h-2 bg-primary rounded-full" style="width: 60%"></div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="flex items-center space-x-4">
+                    <!-- Currency Display -->
+                    <div class="flex items-center space-x-3">
+                        <div class="flex items-center">
+                            <i class="fas fa-sun text-sunshineYellow"></i>
+                            <span class="ml-1 text-sm">120</span>
+                        </div>
+                        <div class="flex items-center">
+                            <i class="fas fa-tint text-gentleSky"></i>
+                            <span class="ml-1 text-sm">45</span>
+                        </div>
+                    </div>
+                    
+                    <!-- Streak Counter -->
+                    <div class="flex items-center bg-green-100 dark:bg-green-900 text-green-800 dark:text-green-200 px-2 py-1 rounded-lg">
+                        <i class="fas fa-fire text-red-500"></i>
+                        <span class="ml-1 text-sm" data-i18n="streak_days">7 Days</span>
+                    </div>
+                </div>
+            </div>
+        </header>
+        
+        <!-- Main Content Area -->
+        <main class="flex-grow relative">
+            <!-- Loading Indicator -->
+            <div id="loadingIndicator" class="hidden fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+                <div class="bg-white dark:bg-gray-800 p-5 rounded-xl flex flex-col items-center">
+                    <div class="loading-spinner w-10 h-10 border-4 border-primary border-t-transparent rounded-full mb-3"></div>
+                    <p data-i18n="loading">Loading...</p>
+                </div>
+            </div>
+            
+            <!-- Login Page -->
+            <div id="loginPage" class="min-h-screen flex items-center justify-center">
+                <div class="w-full max-w-md p-6 bg-white dark:bg-gray-800 rounded-xl shadow-lg">
+                    <div class="text-center mb-8">
+                        <h1 class="text-3xl font-bold text-primary mb-2" data-i18n="app_title">Seed of Gratitude</h1>
+                        <p class="text-gray-600 dark:text-gray-300" data-i18n="app_description">Cultivate gratitude, grow your virtual plant</p>
+                    </div>
+                    
+                    <div class="mb-6">
+                        <label class="block text-gray-700 dark:text-gray-300 mb-2" data-i18n="username">Username</label>
+                        <input type="text" class="w-full px-4 py-3 rounded-lg border border-gray-300 dark:border-gray-600 focus:outline-none focus:ring-2 focus:ring-primary bg-white dark:bg-gray-700 text-base" placeholder="Enter your username">
+                    </div>
+                    
+                    <div class="mb-6">
+                        <label class="block text-gray-700 dark:text-gray-300 mb-2" data-i18n="password">Password</label>
+                        <input type="password" class="w-full px-4 py-3 rounded-lg border border-gray-300 dark:border-gray-600 focus:outline-none focus:ring-2 focus:ring-primary bg-white dark:bg-gray-700 text-base" placeholder="Enter your password">
+                    </div>
+                    
+                    <button id="loginButton" class="w-full bg-primary hover:bg-opacity-90 text-white py-3 rounded-lg font-semibold transition duration-300 mb-4" data-i18n="login_button">Login</button>
+                    
+                    <p class="text-center text-gray-600 dark:text-gray-400" data-i18n="no_account">Don't have an account? <a href="#" class="text-primary hover:underline" data-i18n="register">Register</a></p>
+                </div>
+            </div>
+            
+            <!-- Garden Page (Main Screen) -->
+            <div id="gardenPage" class="hidden min-h-screen">
+                <div class="container mx-auto px-4 py-6">
+                    <!-- Calendar Progress Tracker -->
+                    <div class="bg-white dark:bg-gray-800 rounded-xl shadow-md p-4 mb-6">
+                        <h2 class="text-xl font-bold mb-3" data-i18n="monthly_progress">September Progress</h2>
+                        <div class="grid grid-cols-7 gap-2">
+                            <!-- Day headers -->
+                            <div class="text-center text-sm font-medium text-gray-500 dark:text-gray-400" data-i18n="sun">Sun</div>
+                            <div class="text-center text-sm font-medium text-gray-500 dark:text-gray-400" data-i18n="mon">Mon</div>
+                            <div class="text-center text-sm font-medium text-gray-500 dark:text-gray-400" data-i18n="tue">Tue</div>
+                            <div class="text-center text-sm font-medium text-gray-500 dark:text-gray-400" data-i18n="wed">Wed</div>
+                            <div class="text-center text-sm font-medium text-gray-500 dark:text-gray-400" data-i18n="thu">Thu</div>
+                            <div class="text-center text-sm font-medium text-gray-500 dark:text-gray-400" data-i18n="fri">Fri</div>
+                            <div class="text-center text-sm font-medium text-gray-500 dark:text-gray-400" data-i18n="sat">Sat</div>
+                            
+                            <!-- Calendar days -->
+                            <div class="calendar-day h-12 flex items-center justify-center bg-gray-100 dark:bg-gray-700 rounded-lg text-gray-400 dark:text-gray-500">29</div>
+                            <div class="calendar-day h-12 flex items-center justify-center bg-gray-100 dark:bg-gray-700 rounded-lg text-gray-400 dark:text-gray-500">30</div>
+                            <div class="calendar-day h-12 flex items-center justify-center bg-gray-100 dark:bg-gray-700 rounded-lg text-gray-400 dark:text-gray-500">31</div>
+                            <div class="calendar-day h-12 flex items-center justify-center bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg">1</div>
+                            <div class="calendar-day h-12 flex items-center justify-center bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg">2</div>
+                            <div class="calendar-day h-12 flex items-center justify-center bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg">3</div>
+                            <div class="calendar-day h-12 flex items-center justify-center bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg">4</div>
+                            
+                            <div class="calendar-day h-12 flex items-center justify-center bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg">5</div>
+                            <div class="calendar-day h-12 flex items-center justify-center bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg">6</div>
+                            <div class="calendar-day h-12 flex items-center justify-center bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg">7</div>
+                            <div class="calendar-day h-12 flex items-center justify-center bg-green-100 dark:bg-green-900 border border-green-200 dark:border-green-800 rounded-lg tooltip">
+                                8
+                                <i class="fas fa-check-circle text-green-600 dark:text-green-400 ml-1"></i>
+                                <span class="tooltip-text" data-i18n="completed_diary">Diary entry completed</span>
+                            </div>
+                            <div class="calendar-day h-12 flex items-center justify-center bg-green-100 dark:bg-green-900 border border-green-200 dark:border-green-800 rounded-lg tooltip">
+                                9
+                                <i class="fas fa-check-circle text-green-600 dark:text-green-400 ml-1"></i>
+                                <span class="tooltip-text" data-i18n="completed_diary">Diary entry completed</span>
+                            </div>
+                            <div class="calendar-day h-12 flex items-center justify-center bg-green-100 dark:bg-green-900 border border-green-200 dark:border-green-800 rounded-lg tooltip">
+                                10
+                                <i class="fas fa-star text-yellow-500 ml-1"></i>
+                                <span class="tooltip-text" data-i18n="special_entry">Special entry with images</span>
+                            </div>
+                            <div class="calendar-day h-12 flex items-center justify-center bg-red-100 dark:bg-red-900 border border-red-200 dark:border-red-800 rounded-lg tooltip">
+                                11
+                                <i class="fas fa-times-circle text-red-600 dark:text-red-400 ml-1"></i>
+                                <span class="tooltip-text" data-i18n="missed_entry">Missed entry</span>
+                            </div>
+                            
+                            <div class="calendar-day h-12 flex items-center justify-center bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg font-bold text-primary">12</div>
+                            <div class="calendar-day h-12 flex items-center justify-center bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg">13</div>
+                            <div class="calendar-day h-12 flex items-center justify-center bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg">14</div>
+                            <div class="calendar-day h-12 flex items-center justify-center bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg">15</div>
+                            <div class="calendar-day h-12 flex items-center justify-center bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg">16</div>
+                            <div class="calendar-day h-12 flex items-center justify-center bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg">17</div>
+                            <div class="calendar-day h-12 flex items-center justify-center bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg">18</div>
+                        </div>
+                    </div>
+                    
+                    <!-- Plant Display -->
+                    <div class="mb-6 flex flex-col items-center">
+                        <div class="plant-container w-full max-w-xs h-64 bg-white dark:bg-gray-800 rounded-xl shadow-md overflow-hidden flex items-end justify-center p-4 relative">
+                            <div class="absolute bottom-0 left-0 right-0 h-16 bg-earthyClay dark:bg-deepCocoa rounded-b-xl"></div>
+                            <img src="https://i.imgur.com/mWjESFJ.png" alt="Gratitude Plant" class="relative z-10 h-56 grow-animation">
+                        </div>
+                        <div class="mt-4 text-center">
+                            <h2 class="text-xl font-bold" data-i18n="plant_name">Your Gratitude Plant</h2>
+                            <p class="text-sm text-gray-600 dark:text-gray-400" data-i18n="plant_stage">Current Stage: Leafing</p>
+                        </div>
+                    </div>
+                    
+                    <!-- Collection Jar -->
+                    <div class="bg-white dark:bg-gray-800 rounded-xl shadow-md p-6 mb-6 relative">
+                        <button id="eventsButton" class="absolute top-4 right-4 text-primary hover:text-opacity-80">
+                            <i class="fas fa-bell"></i>
+                            <span class="absolute top-0 right-0 bg-red-500 text-white text-xs w-4 h-4 rounded-full flex items-center justify-center">3</span>
+                        </button>
+                        
+                        <h2 class="text-xl font-bold mb-4" data-i18n="collection_jar">Collection Jar</h2>
+                        
+                        <div class="flex justify-center">
+                            <div class="interactive-element cursor-pointer w-32 h-40 relative glow-animation">
+                                <img src="https://i.imgur.com/L5QEKbj.png" alt="Collection Jar" class="h-full">
+                                <div class="absolute bottom-0 left-0 right-0 text-center text-xs text-gray-600 dark:text-gray-400" data-i18n="jar_tap">Tap to view</div>
+                            </div>
+                        </div>
+                        
+                        <!-- Events List (Hidden initially) -->
+                        <div id="eventsList" class="hidden mt-4 bg-gray-100 dark:bg-gray-700 rounded-lg p-4">
+                            <div class="flex justify-between items-center mb-3">
+                                <h3 class="font-bold" data-i18n="latest_events">Latest Events</h3>
+                                <button id="closeEventsButton" class="text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200">
+                                    <i class="fas fa-times"></i>
+                                </button>
+                            </div>
+                            
+                            <div class="space-y-3 max-h-60 overflow-y-auto">
+                                <div class="bg-white dark:bg-gray-800 rounded-lg p-3 shadow-sm">
+                                    <div class="flex items-start">
+                                        <div class="bg-green-100 dark:bg-green-900 p-2 rounded-full mr-3">
+                                            <i class="fas fa-check text-green-600 dark:text-green-400"></i>
+                                        </div>
+                                        <div>
+                                            <h4 class="font-medium" data-i18n="event_challenge">Complete Daily Diary Challenge</h4>
+                                            <p class="text-sm text-gray-600 dark:text-gray-400" data-i18n="event_challenge_desc">Record 3 more days in a row to earn a Kindness Seed!</p>
+                                        </div>
+                                        <span class="ml-auto text-xs text-gray-500 dark:text-gray-400">1h</span>
+                                    </div>
+                                </div>
+                                
+                                <div class="bg-white dark:bg-gray-800 rounded-lg p-3 shadow-sm">
+                                    <div class="flex items-start">
+                                        <div class="bg-blue-100 dark:bg-blue-900 p-2 rounded-full mr-3">
+                                            <i class="fas fa-gift text-blue-600 dark:text-blue-400"></i>
+                                        </div>
+                                        <div>
+                                            <h4 class="font-medium" data-i18n="event_reward">New Evolution Card Available</h4>
+                                            <p class="text-sm text-gray-600 dark:text-gray-400" data-i18n="event_reward_desc">You've unlocked a Rare Evolution Card! Check your collection.</p>
+                                        </div>
+                                        <span class="ml-auto text-xs text-gray-500 dark:text-gray-400">3h</span>
+                                    </div>
+                                </div>
+                                
+                                <div class="bg-white dark:bg-gray-800 rounded-lg p-3 shadow-sm">
+                                    <div class="flex items-start">
+                                        <div class="bg-purple-100 dark:bg-purple-900 p-2 rounded-full mr-3">
+                                            <i class="fas fa-medal text-purple-600 dark:text-purple-400"></i>
+                                        </div>
+                                        <div>
+                                            <h4 class="font-medium" data-i18n="event_achievement">Achievement Unlocked</h4>
+                                            <p class="text-sm text-gray-600 dark:text-gray-400" data-i18n="event_achievement_desc">Consistency Champion: Maintained a 7-day streak!</p>
+                                        </div>
+                                        <span class="ml-auto text-xs text-gray-500 dark:text-gray-400">12h</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Diary Review Page -->
+            <div id="diaryPage" class="hidden min-h-screen">
+                <div class="container mx-auto px-4 py-6">
+                    <h1 class="text-2xl font-bold mb-6" data-i18n="my_gratitude_journal">My Gratitude Journal</h1>
+                    
+                    <!-- Week Navigation -->
+                    <div class="bg-white dark:bg-gray-800 rounded-xl shadow-md p-4 mb-6">
+                        <div class="flex justify-between items-center mb-4">
+                            <h2 class="text-lg font-semibold" data-i18n="september_week1">September - Week 1</h2>
+                            <div class="flex space-x-2">
+                                <button class="tab-button week-tab active px-3 py-1 rounded-md bg-primary bg-opacity-10 text-primary">W1</button>
+                                <button class="tab-button week-tab px-3 py-1 rounded-md hover:bg-primary hover:bg-opacity-10 hover:text-primary">W2</button>
+                                <button class="tab-button week-tab px-3 py-1 rounded-md hover:bg-primary hover:bg-opacity-10 hover:text-primary">W3</button>
+                                <button class="tab-button week-tab px-3 py-1 rounded-md hover:bg-primary hover:bg-opacity-10 hover:text-primary">W4</button>
+                            </div>
+                        </div>
+                        
+                        <!-- Daily Cards View - Swipeable Container -->
+                        <div class="relative">
+                            <div class="overflow-x-auto pb-4 flex space-x-4 snap-x scroll-smooth" id="diaryCardsContainer">
+                                <!-- Diary Entry Card - With Content -->
+                                <div class="diary-card snap-center shrink-0 w-72 bg-warmSand dark:bg-gray-700 rounded-lg shadow-md overflow-hidden cursor-pointer">
+                                    <div class="p-4">
+                                        <div class="flex justify-between items-center mb-3">
+                                            <span class="font-semibold">September 8, 2023</span>
+                                            <span class="text-xs px-2 py-1 bg-green-100 dark:bg-green-900 text-green-800 dark:text-green-200 rounded-full" data-i18n="completed">Completed</span>
+                                        </div>
+                                        <p class="text-sm line-clamp-3">Today I'm grateful for the sunny weather that allowed me to take a walk in the park. The fresh air and sunshine really lifted my mood...</p>
+                                        <div class="mt-3 flex justify-between items-center">
+                                            <div class="flex space-x-1">
+                                                <i class="fas fa-image text-primary"></i>
+                                                <span class="text-xs">2</span>
+                                            </div>
+                                            <button class="text-xs px-2 py-1 bg-primary bg-opacity-10 text-primary rounded hover:bg-opacity-20" data-i18n="view">View</button>
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                <!-- Diary Entry Card - With Content -->
+                                <div class="diary-card snap-center shrink-0 w-72 bg-warmSand dark:bg-gray-700 rounded-lg shadow-md overflow-hidden cursor-pointer">
+                                    <div class="p-4">
+                                        <div class="flex justify-between items-center mb-3">
+                                            <span class="font-semibold">September 9, 2023</span>
+                                            <span class="text-xs px-2 py-1 bg-green-100 dark:bg-green-900 text-green-800 dark:text-green-200 rounded-full" data-i18n="completed">Completed</span>
+                                        </div>
+                                        <p class="text-sm line-clamp-3">I'm grateful for my friend Sarah who called to check on me today. Her kindness and thoughtfulness made me feel cared for...</p>
+                                        <div class="mt-3 flex justify-between items-center">
+                                            <div class="flex space-x-1">
+                                                <i class="fas fa-align-left text-primary"></i>
+                                            </div>
+                                            <button class="text-xs px-2 py-1 bg-primary bg-opacity-10 text-primary rounded hover:bg-opacity-20" data-i18n="view">View</button>
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                <!-- Diary Entry Card - Special Entry -->
+                                <div class="diary-card snap-center shrink-0 w-72 bg-warmSand dark:bg-gray-700 rounded-lg shadow-md overflow-hidden cursor-pointer">
+                                    <div class="p-4">
+                                        <div class="flex justify-between items-center mb-3">
+                                            <span class="font-semibold">September 10, 2023</span>
+                                            <span class="text-xs px-2 py-1 bg-yellow-100 dark:bg-yellow-900 text-yellow-800 dark:text-yellow-200 rounded-full" data-i18n="special">Special</span>
+                                        </div>
+                                        <p class="text-sm line-clamp-3">Today I received a promotion at work! I'm grateful for the recognition of my hard work and dedication over the past year...</p>
+                                        <div class="mt-3 flex justify-between items-center">
+                                            <div class="flex space-x-1">
+                                                <i class="fas fa-image text-primary"></i>
+                                                <span class="text-xs">3</span>
+                                            </div>
+                                            <button class="text-xs px-2 py-1 bg-primary bg-opacity-10 text-primary rounded hover:bg-opacity-20" data-i18n="view">View</button>
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                <!-- Diary Entry Card - Missed -->
+                                <div class="diary-card snap-center shrink-0 w-72 bg-gray-100 dark:bg-gray-700 rounded-lg shadow-md overflow-hidden cursor-pointer opacity-70">
+                                    <div class="p-4">
+                                        <div class="flex justify-between items-center mb-3">
+                                            <span class="font-semibold">September 11, 2023</span>
+                                            <span class="text-xs px-2 py-1 bg-red-100 dark:bg-red-900 text-red-800 dark:text-red-200 rounded-full" data-i18n="missed">Missed</span>
+                                        </div>
+                                        <p class="text-sm text-gray-500 dark:text-gray-400 italic" data-i18n="no_entry_recorded">No entry recorded for this day</p>
+                                        <div class="mt-3 flex justify-end items-center">
+                                            <button class="text-xs px-2 py-1 bg-primary bg-opacity-10 text-primary rounded hover:bg-opacity-20" data-i18n="add_entry">Add Entry</button>
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                <!-- Diary Entry Card - Today -->
+                                <div class="diary-card snap-center shrink-0 w-72 bg-primary bg-opacity-5 dark:bg-primary dark:bg-opacity-20 border-2 border-primary border-dashed rounded-lg shadow-md overflow-hidden cursor-pointer">
+                                    <div class="p-4">
+                                        <div class="flex justify-between items-center mb-3">
+                                            <span class="font-semibold">September 12, 2023</span>
+                                            <span class="text-xs px-2 py-1 bg-blue-100 dark:bg-blue-900 text-blue-800 dark:text-blue-200 rounded-full" data-i18n="today">Today</span>
+                                        </div>
+                                        <p class="text-sm text-center py-6" data-i18n="record_today">Record your gratitude for today</p>
+                                        <div class="mt-3 flex justify-center items-center">
+                                            <button class="text-sm px-4 py-2 bg-primary text-white rounded-full hover:bg-opacity-90">
+                                                <i class="fas fa-plus mr-1"></i>
+                                                <span data-i18n="new_entry">New Entry</span>
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <!-- Navigation arrows for cards -->
+                            <button class="absolute left-0 top-1/2 transform -translate-y-1/2 bg-white dark:bg-gray-800 rounded-full w-8 h-8 flex items-center justify-center shadow-md hover:bg-gray-100 dark:hover:bg-gray-700">
+                                <i class="fas fa-chevron-left"></i>
+                            </button>
+                            <button class="absolute right-0 top-1/2 transform -translate-y-1/2 bg-white dark:bg-gray-800 rounded-full w-8 h-8 flex items-center justify-center shadow-md hover:bg-gray-100 dark:hover:bg-gray-700">
+                                <i class="fas fa-chevron-right"></i>
+                            </button>
+                        </div>
+                    </div>
+                    
+                    <!-- Diary Scroll Button -->
+                    <div class="bg-white dark:bg-gray-800 rounded-xl shadow-md p-4 mb-6">
+                        <div class="flex items-center">
+                            <div class="flex-1">
+                                <h3 class="font-semibold mb-1" data-i18n="create_diary_scroll">Create Diary Scroll</h3>
+                                <p class="text-sm text-gray-600 dark:text-gray-400" data-i18n="compile_entries">Compile your entries into a beautiful shareable scroll</p>
+                            </div>
+                            <button class="bg-primary text-white px-4 py-2 rounded-lg hover:bg-opacity-90">
+                                <i class="fas fa-scroll mr-1"></i>
+                                <span data-i18n="create">Create</span>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Quick Add Entry Button (FAB) -->
+                <div class="fixed bottom-20 right-6">
+                    <button class="interactive-element w-14 h-14 bg-primary text-white rounded-full shadow-lg flex items-center justify-center hover:bg-opacity-90">
+                        <i class="fas fa-plus text-xl"></i>
+                    </button>
+                </div>
+            </div>
+            
+            <!-- Diary Edit/Detail Page -->
+            <div id="diaryEditPage" class="hidden min-h-screen">
+                <div class="container mx-auto px-4 py-6">
+                    <div class="flex items-center mb-4">
+                        <button class="mr-3 bg-white dark:bg-gray-800 p-2 rounded-full shadow-md" id="backToDiaryButton">
+                            <i class="fas fa-arrow-left"></i>
+                        </button>
+                        <h1 class="text-2xl font-bold" data-i18n="diary_entry">Diary Entry</h1>
+                    </div>
+                    
+                    <div class="bg-white dark:bg-gray-800 rounded-xl shadow-md p-6 mb-6">
+                        <!-- Entry Date Header -->
+                        <div class="mb-4 pb-3 border-b border-gray-200 dark:border-gray-700">
+                            <h2 class="text-xl font-bold">September 12, 2023</h2>
+                            <p class="text-sm text-gray-600 dark:text-gray-400" data-i18n="today_entry">Today's Entry</p>
+                        </div>
+                        
+                        <!-- Text Input Field -->
+                        <div class="mb-4">
+                            <label class="block text-gray-700 dark:text-gray-300 mb-2" data-i18n="what_grateful">What are you grateful for today?</label>
+                            <textarea id="diaryContent" class="w-full px-4 py-3 rounded-lg border border-gray-300 dark:border-gray-600 focus:outline-none focus:ring-2 focus:ring-primary bg-white dark:bg-gray-700 min-h-32 text-base" placeholder="Write your thoughts here..."></textarea>
+                        </div>
+                        
+                        <!-- Rich Text Toolbar -->
+                        <div class="flex flex-wrap mb-4 p-2 bg-gray-100 dark:bg-gray-700 rounded-lg">
+                            <button class="p-2 hover:bg-gray-200 dark:hover:bg-gray-600 rounded mr-1 mb-1">
+                                <i class="fas fa-bold"></i>
+                            </button>
+                            <button class="p-2 hover:bg-gray-200 dark:hover:bg-gray-600 rounded mr-1 mb-1">
+                                <i class="fas fa-italic"></i>
+                            </button>
+                            <button class="p-2 hover:bg-gray-200 dark:hover:bg-gray-600 rounded mr-1 mb-1">
+                                <i class="fas fa-list-ul"></i>
+                            </button>
+                            <button class="p-2 hover:bg-gray-200 dark:hover:bg-gray-600 rounded mr-1 mb-1">
+                                <i class="fas fa-list-ol"></i>
+                            </button>
+                            <button class="p-2 hover:bg-gray-200 dark:hover:bg-gray-600 rounded mr-1 mb-1">
+                                <i class="fas fa-quote-right"></i>
+                            </button>
+                        </div>
+                        
+                        <!-- Image Attachment Section -->
+                        <div class="mb-4">
+                            <label class="block text-gray-700 dark:text-gray-300 mb-2" data-i18n="add_images">Add Images</label>
+                            <div class="flex flex-wrap">
+                                <div class="w-24 h-24 bg-gray-100 dark:bg-gray-700 rounded-lg flex items-center justify-center mr-2 mb-2 cursor-pointer hover:bg-gray-200 dark:hover:bg-gray-600">
+                                    <i class="fas fa-plus text-gray-400"></i>
+                                </div>
+                                
+                                <!-- Example of uploaded image previews -->
+                                <div class="relative w-24 h-24 mr-2 mb-2">
+                                    <img src="https://picsum.photos/96/96" class="w-full h-full object-cover rounded-lg">
+                                    <button class="absolute top-1 right-1 bg-red-500 text-white rounded-full w-5 h-5 flex items-center justify-center">
+                                        <i class="fas fa-times text-xs"></i>
+                                    </button>
+                                </div>
+                                
+                                <div class="relative w-24 h-24 mr-2 mb-2">
+                                    <img src="https://picsum.photos/97/97" class="w-full h-full object-cover rounded-lg">
+                                    <button class="absolute top-1 right-1 bg-red-500 text-white rounded-full w-5 h-5 flex items-center justify-center">
+                                        <i class="fas fa-times text-xs"></i>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- Action Buttons -->
+                        <div class="flex justify-end space-x-3">
+                            <button class="px-4 py-2 border border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700" data-i18n="cancel">Cancel</button>
+                            <button class="px-4 py-2 bg-primary text-white rounded-lg hover:bg-opacity-90" data-i18n="save">Save</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Seed Almanac / Collection Page -->
+            <div id="collectionPage" class="hidden min-h-screen">
+                <div class="container mx-auto px-4 py-6">
+                    <h1 class="text-2xl font-bold mb-4" data-i18n="seed_almanac">Seed Almanac</h1>
+                    
+                    <!-- Filter/Sort Options -->
+                    <div class="bg-white dark:bg-gray-800 rounded-xl shadow-md p-4 mb-6">
+                        <div class="flex flex-wrap items-center justify-between gap-3">
+                            <div class="flex items-center space-x-2">
+                                <span class="text-sm font-medium" data-i18n="filter_by">Filter by:</span>
+                                <select class="bg-gray-100 dark:bg-gray-700 border-none rounded-lg text-sm py-1 px-2">
+                                    <option value="all" data-i18n="all_virtues">All Virtues</option>
+                                    <option value="love" data-i18n="love">Love</option>
+                                    <option value="joy" data-i18n="joy">Joy</option>
+                                    <option value="peace" data-i18n="peace">Peace</option>
+                                    <option value="patience" data-i18n="patience">Patience</option>
+                                    <option value="kindness" data-i18n="kindness">Kindness</option>
+                                    <option value="goodness" data-i18n="goodness">Goodness</option>
+                                    <option value="faithfulness" data-i18n="faithfulness">Faithfulness</option>
+                                    <option value="gentleness" data-i18n="gentleness">Gentleness</option>
+                                    <option value="self-control" data-i18n="self_control">Self-Control</option>
+                                </select>
+                            </div>
+                            
+                            <div class="flex items-center space-x-2">
+                                <span class="text-sm font-medium" data-i18n="sort_by">Sort by:</span>
+                                <select class="bg-gray-100 dark:bg-gray-700 border-none rounded-lg text-sm py-1 px-2">
+                                    <option value="name" data-i18n="name">Name</option>
+                                    <option value="rarity" data-i18n="rarity">Rarity</option>
+                                    <option value="recent" data-i18n="recently_acquired">Recently Acquired</option>
+                                </select>
+                            </div>
+                            
+                            <div class="flex items-center space-x-2">
+                                <span class="text-sm font-medium" data-i18n="view">View:</span>
+                                <div class="flex space-x-1 bg-gray-100 dark:bg-gray-700 rounded-lg p-1">
+                                    <button class="bg-white dark:bg-gray-800 p-1 rounded">
+                                        <i class="fas fa-th"></i>
+                                    </button>
+                                    <button class="p-1 rounded hover:bg-white dark:hover:bg-gray-800">
+                                        <i class="fas fa-list"></i>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Seed Collection Grid -->
+                    <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4">
+                        <!-- Seed Card - Collected -->
+                        <div class="seed-card bg-white dark:bg-gray-800 rounded-xl shadow-md overflow-hidden cursor-pointer">
+                            <div class="p-2">
+                                <div class="w-full h-32 bg-warmSand dark:bg-gray-700 rounded-lg flex items-center justify-center relative">
+                                    <img src="https://i.imgur.com/1a2b3c4.png" alt="Kindness Seed" class="w-20 h-20 object-contain">
+                                    <span class="absolute top-2 right-2 text-xs bg-green-100 dark:bg-green-900 text-green-800 dark:text-green-200 rounded-full px-2 py-1" data-i18n="collected">Collected</span>
+                                </div>
+                                <div class="p-2 text-center">
+                                    <h3 class="font-semibold" data-i18n="kindness_seed">Kindness Seed</h3>
+                                    <p class="text-xs text-primary" data-i18n="goodness_category">Goodness</p>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- Seed Card - Collected -->
+                        <div class="seed-card bg-white dark:bg-gray-800 rounded-xl shadow-md overflow-hidden cursor-pointer">
+                            <div class="p-2">
+                                <div class="w-full h-32 bg-warmSand dark:bg-gray-700 rounded-lg flex items-center justify-center relative">
+                                    <img src="https://i.imgur.com/2b3c4d5.png" alt="Patience Seed" class="w-20 h-20 object-contain">
+                                    <span class="absolute top-2 right-2 text-xs bg-green-100 dark:bg-green-900 text-green-800 dark:text-green-200 rounded-full px-2 py-1" data-i18n="collected">Collected</span>
+                                </div>
+                                <div class="p-2 text-center">
+                                    <h3 class="font-semibold" data-i18n="patience_seed">Patience Seed</h3>
+                                    <p class="text-xs text-primary" data-i18n="patience_category">Patience</p>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- Seed Card - Collected with Evolution -->
+                        <div class="seed-card bg-white dark:bg-gray-800 rounded-xl shadow-md overflow-hidden cursor-pointer">
+                            <div class="p-2">
+                                <div class="w-full h-32 bg-warmSand dark:bg-gray-700 rounded-lg flex items-center justify-center relative">
+                                    <img src="https://i.imgur.com/3c4d5e6.png" alt="Joy Seed" class="w-20 h-20 object-contain">
+                                    <span class="absolute top-2 right-2 text-xs bg-purple-100 dark:bg-purple-900 text-purple-800 dark:text-purple-200 rounded-full px-2 py-1" data-i18n="evolved">Evolved</span>
+                                </div>
+                                <div class="p-2 text-center">
+                                    <h3 class="font-semibold" data-i18n="joy_seed">Joy Seed</h3>
+                                    <p class="text-xs text-primary" data-i18n="joy_category">Joy</p>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- Seed Card - Not Collected -->
+                        <div class="seed-card bg-white dark:bg-gray-800 rounded-xl shadow-md overflow-hidden cursor-pointer opacity-60">
+                            <div class="p-2">
+                                <div class="w-full h-32 bg-gray-200 dark:bg-gray-700 rounded-lg flex items-center justify-center relative">
+                                    <div class="w-20 h-20 border-2 border-dashed border-gray-400 dark:border-gray-500 rounded-full flex items-center justify-center">
+                                        <i class="fas fa-question text-gray-400 dark:text-gray-500 text-3xl"></i>
+                                    </div>
+                                    <span class="absolute top-2 right-2 text-xs bg-gray-200 dark:bg-gray-600 text-gray-800 dark:text-gray-200 rounded-full px-2 py-1" data-i18n="locked">Locked</span>
+                                </div>
+                                <div class="p-2 text-center">
+                                    <h3 class="font-semibold" data-i18n="unknown_seed">Unknown Seed</h3>
+                                    <p class="text-xs text-gray-500 dark:text-gray-400" data-i18n="discover">Discover to reveal</p>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- Seed Card - Not Collected -->
+                        <div class="seed-card bg-white dark:bg-gray-800 rounded-xl shadow-md overflow-hidden cursor-pointer opacity-60">
+                            <div class="p-2">
+                                <div class="w-full h-32 bg-gray-200 dark:bg-gray-700 rounded-lg flex items-center justify-center relative">
+                                    <div class="w-20 h-20 border-2 border-dashed border-gray-400 dark:border-gray-500 rounded-full flex items-center justify-center">
+                                        <i class="fas fa-question text-gray-400 dark:text-gray-500 text-3xl"></i>
+                                    </div>
+                                    <span class="absolute top-2 right-2 text-xs bg-gray-200 dark:bg-gray-600 text-gray-800 dark:text-gray-200 rounded-full px-2 py-1" data-i18n="locked">Locked</span>
+                                </div>
+                                <div class="p-2 text-center">
+                                    <h3 class="font-semibold" data-i18n="unknown_seed">Unknown Seed</h3>
+                                    <p class="text-xs text-gray-500 dark:text-gray-400" data-i18n="discover">Discover to reveal</p>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- More seeds would be dynamically added here -->
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Seed Detail Page -->
+            <div id="seedDetailPage" class="hidden min-h-screen">
+                <div class="container mx-auto px-4 py-6">
+                    <div class="flex items-center mb-4">
+                        <button class="mr-3 bg-white dark:bg-gray-800 p-2 rounded-full shadow-md" id="backToCollectionButton">
+                            <i class="fas fa-arrow-left"></i>
+                        </button>
+                        <h1 class="text-2xl font-bold" data-i18n="seed_details">Seed Details</h1>
+                    </div>
+                    
+                    <div class="bg-white dark:bg-gray-800 rounded-xl shadow-md p-6 mb-6">
+                        <div class="flex flex-col md:flex-row">
+                            <!-- Main Visual -->
+                            <div class="mb-6 md:mb-0 md:mr-8 flex-shrink-0">
+                                <div class="bg-warmSand dark:bg-gray-700 rounded-lg p-6 flex items-center justify-center w-full md:w-60 h-60">
+                                    <img src="https://i.imgur.com/1a2b3c4.png" alt="Kindness Seed" class="object-contain max-w-full max-h-full">
+                                </div>
+                            </div>
+                            
+                            <!-- Seed Information -->
+                            <div class="flex-grow">
+                                <div class="flex items-start justify-between mb-4">
+                                    <div>
+                                        <h2 class="text-2xl font-bold" data-i18n="kindness_seed">Kindness Seed</h2>
+                                        <div class="flex items-center mt-1">
+                                            <span class="text-sm bg-primary bg-opacity-10 text-primary px-2 py-1 rounded" data-i18n="goodness_caring">Goodness - Caring</span>
+                                            <span class="ml-3 text-xs bg-green-100 dark:bg-green-900 text-green-800 dark:text-green-200 rounded-full px-2 py-1" data-i18n="collected">Collected</span>
+                                        </div>
+                                    </div>
+                                    <div class="text-right">
+                                        <span class="text-sm text-gray-600 dark:text-gray-400" data-i18n="collected_on">Collected on:</span>
+                                        <p class="text-sm font-medium">September 8, 2023</p>
+                                    </div>
+                                </div>
+                                
+                                <div class="mb-6">
+                                    <h3 class="font-semibold mb-2" data-i18n="virtue_description">Virtue Description</h3>
+                                    <p class="text-sm text-gray-700 dark:text-gray-300">Kindness is the quality of being gentle, caring, and helpful. It manifests as compassionate and considerate behavior towards others without expecting anything in return. This virtue seed represents the small acts of kindness that grow into a life of making a positive difference in the world around you.</p>
+                                </div>
+                                
+                                <!-- Personalization Section -->
+                                <div class="border-t border-gray-200 dark:border-gray-700 pt-4 mb-6">
+                                    <h3 class="font-semibold mb-3" data-i18n="personalization">Personalization</h3>
+                                    
+                                    <div class="mb-4">
+                                        <label class="block text-sm font-medium mb-1" data-i18n="custom_name">Custom Name</label>
+                                        <div class="flex items-center">
+                                            <input type="text" class="flex-grow px-3 py-2 bg-gray-100 dark:bg-gray-700 border-none rounded-lg focus:ring-2 focus:ring-primary" value="My Helper Seed" disabled="">
+                                            <button class="ml-2 p-2 text-gray-500 hover:text-primary">
+                                                <i class="fas fa-pencil-alt"></i>
+                                            </button>
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="mb-4">
+                                        <label class="block text-sm font-medium mb-1" data-i18n="custom_story">Custom Story/Description</label>
+                                        <div class="flex items-start">
+                                            <textarea class="flex-grow px-3 py-2 bg-gray-100 dark:bg-gray-700 border-none rounded-lg focus:ring-2 focus:ring-primary h-24" disabled="">This seed reminds me of when I helped my neighbor carry groceries during the storm. Small acts of kindness can brighten someone's day in unexpected ways.</textarea>
+                                            <button class="ml-2 p-2 text-gray-500 hover:text-primary">
+                                                <i class="fas fa-pencil-alt"></i>
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                <!-- Action Button -->
+                                <div class="flex justify-end">
+                                    <button class="flex items-center px-4 py-2 bg-purple-600 text-white rounded-lg hover:bg-purple-700">
+                                        <i class="fas fa-magic mr-2"></i>
+                                        <span data-i18n="use_evolution_card">Use Evolution Card</span>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Challenge & Achievement Page -->
+            <div id="challengePage" class="hidden min-h-screen">
+                <div class="container mx-auto px-4 py-6">
+                    <h1 class="text-2xl font-bold mb-4" data-i18n="challenges_achievements">Challenges &amp; Achievements</h1>
+                    
+                    <!-- Tabbed Interface -->
+                    <div class="bg-white dark:bg-gray-800 rounded-xl shadow-md overflow-hidden mb-6">
+                        <div class="flex border-b border-gray-200 dark:border-gray-700">
+                            <button class="tab-button challenge-tab flex-1 active py-3 font-medium" data-tab="activeChallenges" data-i18n="active_challenges">Active Challenges</button>
+                            <button class="tab-button challenge-tab flex-1 py-3 font-medium" data-tab="completedChallenges" data-i18n="completed">Completed</button>
+                            <button class="tab-button challenge-tab flex-1 py-3 font-medium" data-tab="achievements" data-i18n="achievements">Achievements</button>
+                        </div>
+                        
+                        <!-- Active Challenges Tab Content -->
+                        <div id="activeChallenges" class="challenge-tab-content p-4">
+                            <div class="space-y-4">
+                                <div class="bg-warmSand dark:bg-gray-700 p-4 rounded-lg">
+                                    <div class="flex justify-between items-start mb-3">
+                                        <div>
+                                            <h3 class="font-medium" data-i18n="morning_diary_streak">Morning Diary Streak</h3>
+                                            <p class="text-sm text-gray-600 dark:text-gray-400" data-i18n="record_morning">Record entries before 10 AM for 7 consecutive days</p>
+                                        </div>
+                                        <span class="text-xs bg-yellow-100 dark:bg-yellow-900 text-yellow-800 dark:text-yellow-200 px-2 py-1 rounded-full" data-i18n="in_progress">In Progress</span>
+                                    </div>
+                                    <div class="bg-gray-200 dark:bg-gray-600 h-2 rounded-full overflow-hidden">
+                                        <div class="bg-primary h-full" style="width: 60%"></div>
+                                    </div>
+                                    <div class="flex justify-between text-xs mt-1">
+                                        <span>4/7 days</span>
+                                        <span data-i18n="reward">Reward: Patience Seed</span>
+                                    </div>
+                                </div>
+                                
+                                <div class="bg-warmSand dark:bg-gray-700 p-4 rounded-lg">
+                                    <div class="flex justify-between items-start mb-3">
+                                        <div>
+                                            <h3 class="font-medium" data-i18n="collect_spring_seeds">Collect 5 Spring Seeds</h3>
+                                            <p class="text-sm text-gray-600 dark:text-gray-400" data-i18n="find_seasonal">Find seeds that appear during the spring season</p>
+                                        </div>
+                                        <span class="text-xs bg-blue-100 dark:bg-blue-900 text-blue-800 dark:text-blue-200 px-2 py-1 rounded-full" data-i18n="seasonal">Seasonal</span>
+                                    </div>
+                                    <div class="bg-gray-200 dark:bg-gray-600 h-2 rounded-full overflow-hidden">
+                                        <div class="bg-primary h-full" style="width: 40%"></div>
+                                    </div>
+                                    <div class="flex justify-between text-xs mt-1">
+                                        <span>2/5 seeds</span>
+                                        <span data-i18n="reward">Reward: 50 Sunshine</span>
+                                    </div>
+                                </div>
+                                
+                                <div class="bg-warmSand dark:bg-gray-700 p-4 rounded-lg">
+                                    <div class="flex justify-between items-start mb-3">
+                                        <div>
+                                            <h3 class="font-medium" data-i18n="evolve_rare_seed">Evolve a Rare Seed</h3>
+                                            <p class="text-sm text-gray-600 dark:text-gray-400" data-i18n="use_evolution">Use an Evolution Card on any rare seed in your collection</p>
+                                        </div>
+                                        <span class="text-xs bg-purple-100 dark:bg-purple-900 text-purple-800 dark:text-purple-200 px-2 py-1 rounded-full" data-i18n="special">Special</span>
+                                    </div>
+                                    <div class="bg-gray-200 dark:bg-gray-600 h-2 rounded-full overflow-hidden">
+                                        <div class="bg-primary h-full" style="width: 0%"></div>
+                                    </div>
+                                    <div class="flex justify-between text-xs mt-1">
+                                        <span>0/1 evolution</span>
+                                        <span data-i18n="reward">Reward: Rare Evolution Card</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- Completed Challenges Tab Content -->
+                        <div id="completedChallenges" class="challenge-tab-content p-4 hidden">
+                            <div class="space-y-4">
+                                <div class="bg-warmSand dark:bg-gray-700 p-4 rounded-lg opacity-75">
+                                    <div class="flex justify-between items-start mb-3">
+                                        <div>
+                                            <h3 class="font-medium" data-i18n="login_streak">7-Day Login Streak</h3>
+                                            <p class="text-sm text-gray-600 dark:text-gray-400" data-i18n="open_app">Open the app for 7 consecutive days</p>
+                                        </div>
+                                        <span class="text-xs bg-green-100 dark:bg-green-900 text-green-800 dark:text-green-200 px-2 py-1 rounded-full" data-i18n="complete">Complete</span>
+                                    </div>
+                                    <div class="bg-gray-200 dark:bg-gray-600 h-2 rounded-full overflow-hidden">
+                                        <div class="bg-green-500 dark:bg-green-600 h-full w-full"></div>
+                                    </div>
+                                    <div class="flex justify-between text-xs mt-1">
+                                        <span>7/7 days</span>
+                                        <span data-i18n="reward_received">Reward Received: 30 Dewdrops</span>
+                                    </div>
+                                </div>
+                                
+                                <div class="bg-warmSand dark:bg-gray-700 p-4 rounded-lg opacity-75">
+                                    <div class="flex justify-between items-start mb-3">
+                                        <div>
+                                            <h3 class="font-medium" data-i18n="first_seed">Collect Your First Seed</h3>
+                                            <p class="text-sm text-gray-600 dark:text-gray-400" data-i18n="begin_journey">Begin your virtue collection journey</p>
+                                        </div>
+                                        <span class="text-xs bg-green-100 dark:bg-green-900 text-green-800 dark:text-green-200 px-2 py-1 rounded-full" data-i18n="complete">Complete</span>
+                                    </div>
+                                    <div class="bg-gray-200 dark:bg-gray-600 h-2 rounded-full overflow-hidden">
+                                        <div class="bg-green-500 dark:bg-green-600 h-full w-full"></div>
+                                    </div>
+                                    <div class="flex justify-between text-xs mt-1">
+                                        <span>1/1 seed</span>
+                                        <span data-i18n="reward_received">Reward Received: 20 Sunshine</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- Achievements Tab Content -->
+                        <div id="achievements" class="challenge-tab-content p-4 hidden">
+                            <div>
+                                <h3 class="font-medium mb-3" data-i18n="milestone_achievements">Milestone Achievements</h3>
+                                <div class="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-5 gap-3 mb-6">
+                                    <div class="achievement-badge flex flex-col items-center">
+                                        <div class="w-16 h-16 rounded-full bg-green-100 dark:bg-green-900 flex items-center justify-center mb-1">
+                                            <i class="fas fa-seedling text-green-600 dark:text-green-400 text-xl"></i>
+                                        </div>
+                                        <span class="text-xs text-center" data-i18n="seedling_starter">Seedling Starter</span>
+                                    </div>
+                                    
+                                    <div class="achievement-badge flex flex-col items-center">
+                                        <div class="w-16 h-16 rounded-full bg-blue-100 dark:bg-blue-900 flex items-center justify-center mb-1">
+                                            <i class="fas fa-book text-blue-600 dark:text-blue-400 text-xl"></i>
+                                        </div>
+                                        <span class="text-xs text-center" data-i18n="diary_devotee">Diary Devotee</span>
+                                    </div>
+                                    
+                                    <div class="achievement-badge flex flex-col items-center opacity-50">
+                                        <div class="w-16 h-16 rounded-full bg-gray-200 dark:bg-gray-700 flex items-center justify-center mb-1">
+                                            <i class="fas fa-question text-gray-400 dark:text-gray-500 text-xl"></i>
+                                        </div>
+                                        <span class="text-xs text-center" data-i18n="locked">Locked</span>
+                                    </div>
+                                    
+                                    <div class="achievement-badge flex flex-col items-center opacity-50">
+                                        <div class="w-16 h-16 rounded-full bg-gray-200 dark:bg-gray-700 flex items-center justify-center mb-1">
+                                            <i class="fas fa-question text-gray-400 dark:text-gray-500 text-xl"></i>
+                                        </div>
+                                        <span class="text-xs text-center" data-i18n="locked">Locked</span>
+                                    </div>
+                                    
+                                    <div class="achievement-badge flex flex-col items-center opacity-50">
+                                        <div class="w-16 h-16 rounded-full bg-gray-200 dark:bg-gray-700 flex items-center justify-center mb-1">
+                                            <i class="fas fa-question text-gray-400 dark:text-gray-500 text-xl"></i>
+                                        </div>
+                                        <span class="text-xs text-center" data-i18n="locked">Locked</span>
+                                    </div>
+                                </div>
+                                
+                                <h3 class="font-medium mb-3" data-i18n="collection_achievements">Collection Achievements</h3>
+                                <div class="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-5 gap-3 mb-6">
+                                    <div class="achievement-badge flex flex-col items-center">
+                                        <div class="w-16 h-16 rounded-full bg-yellow-100 dark:bg-yellow-900 flex items-center justify-center mb-1">
+                                            <i class="fas fa-leaf text-yellow-600 dark:text-yellow-400 text-xl"></i>
+                                        </div>
+                                        <span class="text-xs text-center" data-i18n="seed_collector">Seed Collector</span>
+                                    </div>
+                                    
+                                    <div class="achievement-badge flex flex-col items-center opacity-50">
+                                        <div class="w-16 h-16 rounded-full bg-gray-200 dark:bg-gray-700 flex items-center justify-center mb-1">
+                                            <i class="fas fa-question text-gray-400 dark:text-gray-500 text-xl"></i>
+                                        </div>
+                                        <span class="text-xs text-center" data-i18n="locked">Locked</span>
+                                    </div>
+                                    
+                                    <div class="achievement-badge flex flex-col items-center opacity-50">
+                                        <div class="w-16 h-16 rounded-full bg-gray-200 dark:bg-gray-700 flex items-center justify-center mb-1">
+                                            <i class="fas fa-question text-gray-400 dark:text-gray-500 text-xl"></i>
+                                        </div>
+                                        <span class="text-xs text-center" data-i18n="locked">Locked</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Diary Scroll Creator Page -->
+            <div id="scrollCreatorPage" class="hidden min-h-screen">
+                <div class="container mx-auto px-4 py-6">
+                    <div class="flex items-center mb-4">
+                        <button class="mr-3 bg-white dark:bg-gray-800 p-2 rounded-full shadow-md" id="backFromScrollCreator">
+                            <i class="fas fa-arrow-left"></i>
+                        </button>
+                        <h1 class="text-2xl font-bold" data-i18n="create_diary_scroll">Create Diary Scroll</h1>
+                    </div>
+                    
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <!-- Configuration Panel -->
+                        <div class="bg-white dark:bg-gray-800 rounded-xl shadow-md p-6">
+                            <h2 class="text-xl font-bold mb-4" data-i18n="scroll_options">Scroll Options</h2>
+                            
+                            <div class="mb-6">
+                                <label class="block text-gray-700 dark:text-gray-300 mb-2" data-i18n="date_range">Date Range</label>
+                                <select class="w-full px-3 py-2 bg-gray-100 dark:bg-gray-700 border-none rounded-lg focus:ring-2 focus:ring-primary">
+                                    <option value="7days" data-i18n="last_7_days">Last 7 Days</option>
+                                    <option value="thisMonth" data-i18n="this_month">This Month</option>
+                                    <option value="30days" data-i18n="last_30_days">Last 30 Days</option>
+                                    <option value="custom" data-i18n="custom_range">Custom Range</option>
+                                </select>
+                            </div>
+                            
+                            <div class="mb-6">
+                                <label class="block text-gray-700 dark:text-gray-300 mb-2" data-i18n="template">Template</label>
+                                <div class="grid grid-cols-2 gap-3">
+                                    <div class="cursor-pointer border-2 border-primary rounded-lg p-2 flex flex-col items-center">
+                                        <div class="w-full h-24 bg-warmSand dark:bg-gray-700 rounded-lg mb-2 flex items-center justify-center overflow-hidden">
+                                            <img src="https://i.imgur.com/abcdefg.png" alt="Classic Parchment" class="object-cover w-full h-full">
+                                        </div>
+                                        <span class="text-xs" data-i18n="classic_parchment">Classic Parchment</span>
+                                    </div>
+                                    
+                                    <div class="cursor-pointer border-2 border-gray-200 dark:border-gray-700 hover:border-primary rounded-lg p-2 flex flex-col items-center">
+                                        <div class="w-full h-24 bg-warmSand dark:bg-gray-700 rounded-lg mb-2 flex items-center justify-center overflow-hidden">
+                                            <img src="https://i.imgur.com/hijklmn.png" alt="Modern Minimalist" class="object-cover w-full h-full">
+                                        </div>
+                                        <span class="text-xs" data-i18n="modern_minimalist">Modern Minimalist</span>
+                                    </div>
+                                    
+                                    <div class="cursor-pointer border-2 border-gray-200 dark:border-gray-700 hover:border-primary rounded-lg p-2 flex flex-col items-center">
+                                        <div class="w-full h-24 bg-warmSand dark:bg-gray-700 rounded-lg mb-2 flex items-center justify-center overflow-hidden">
+                                            <img src="https://i.imgur.com/opqrstu.png" alt="Starry Night" class="object-cover w-full h-full">
+                                        </div>
+                                        <span class="text-xs" data-i18n="starry_night">Starry Night</span>
+                                    </div>
+                                    
+                                    <div class="cursor-pointer border-2 border-gray-200 dark:border-gray-700 hover:border-primary rounded-lg p-2 flex flex-col items-center">
+                                        <div class="w-full h-24 bg-warmSand dark:bg-gray-700 rounded-lg mb-2 flex items-center justify-center overflow-hidden">
+                                            <img src="https://i.imgur.com/vwxyzab.png" alt="Bamboo Scroll" class="object-cover w-full h-full">
+                                        </div>
+                                        <span class="text-xs" data-i18n="bamboo_scroll">Bamboo Scroll</span>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="mb-6">
+                                <label class="block text-gray-700 dark:text-gray-300 mb-2" data-i18n="content_selection">Content Selection</label>
+                                <div class="flex items-center mb-2">
+                                    <input type="checkbox" id="includeImages" class="rounded text-primary focus:ring-primary mr-2" checked="">
+                                    <label for="includeImages" class="text-sm" data-i18n="include_images">Include Images</label>
+                                </div>
+                                <div class="flex items-center">
+                                    <input type="checkbox" id="highlightSpecial" class="rounded text-primary focus:ring-primary mr-2" checked="">
+                                    <label for="highlightSpecial" class="text-sm" data-i18n="highlight_special">Highlight Special Entries</label>
+                                </div>
+                            </div>
+                            
+                            <div class="mb-6">
+                                <label class="block text-gray-700 dark:text-gray-300 mb-2" data-i18n="background_music">Background Music (for video)</label>
+                                <select class="w-full px-3 py-2 bg-gray-100 dark:bg-gray-700 border-none rounded-lg focus:ring-2 focus:ring-primary">
+                                    <option value="none" data-i18n="none">None</option>
+                                    <option value="gentle" data-i18n="gentle_piano">Gentle Piano</option>
+                                    <option value="nature" data-i18n="nature_sounds">Nature Sounds</option>
+                                    <option value="uplifting" data-i18n="uplifting">Uplifting</option>
+                                </select>
+                            </div>
+                            
+                            <!-- Action Buttons -->
+                            <div class="flex justify-between">
+                                <button class="px-4 py-2 border border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700" data-i18n="cancel">Cancel</button>
+                                <div class="space-x-3">
+                                    <button class="px-4 py-2 bg-primary text-white rounded-lg hover:bg-opacity-90" data-i18n="preview">Preview</button>
+                                    <button class="px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700">
+                                        <i class="fas fa-scroll mr-1"></i>
+                                        <span data-i18n="generate_scroll">Generate Scroll</span>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- Preview Area -->
+                        <div class="bg-white dark:bg-gray-800 rounded-xl shadow-md p-6">
+                            <h2 class="text-xl font-bold mb-4" data-i18n="preview">Preview</h2>
+                            
+                            <div class="bg-warmSand dark:bg-gray-700 rounded-lg p-4 h-96 flex items-center justify-center overflow-hidden">
+                                <div class="w-full h-full overflow-y-auto relative" style="background-image: url('https://i.imgur.com/parchment.jpg'); background-size: cover;">
+                                    <div class="p-8">
+                                        <h1 class="text-center text-2xl font-bold mb-6" data-i18n="gratitude_journey">My Gratitude Journey</h1>
+                                        <p class="text-center mb-6 italic text-gray-600 dark:text-gray-400" data-i18n="diary_date_range">September 1 - September 12, 2023</p>
+                                        
+                                        <div class="mb-6">
+                                            <h2 class="text-lg font-semibold mb-2">September 8, 2023</h2>
+                                            <p>Today I'm grateful for the sunny weather that allowed me to take a walk in the park. The fresh air and sunshine really lifted my mood...</p>
+                                        </div>
+                                        
+                                        <div class="mb-6">
+                                            <h2 class="text-lg font-semibold mb-2">September 9, 2023</h2>
+                                            <p>I'm grateful for my friend Sarah who called to check on me today. Her kindness and thoughtfulness made me feel cared for...</p>
+                                        </div>
+                                        
+                                        <div class="mb-6">
+                                            <h2 class="text-lg font-semibold mb-2 text-primary">September 10, 2023</h2>
+                                            <p>Today I received a promotion at work! I'm grateful for the recognition of my hard work and dedication over the past year...</p>
+                                            <div class="mt-2 flex justify-center">
+                                                <div class="w-32 h-24 bg-gray-300 rounded-md flex items-center justify-center text-gray-500">
+                                                    <i class="fas fa-image text-xl"></i>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <!-- Action Buttons for Preview -->
+                            <div class="flex justify-between mt-4">
+                                <div>
+                                    <button class="px-3 py-1 border border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300 rounded hover:bg-gray-100 dark:hover:bg-gray-700 mr-2" data-i18n="previous_page">Previous Page</button>
+                                    <button class="px-3 py-1 border border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300 rounded hover:bg-gray-100 dark:hover:bg-gray-700" data-i18n="next_page">Next Page</button>
+                                </div>
+                                <div>
+                                    <span class="text-sm text-gray-600 dark:text-gray-400" data-i18n="page_indicator">Page 1 of 3</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Leaderboard Page -->
+            <div id="leaderboardPage" class="hidden min-h-screen">
+                <div class="container mx-auto px-4 py-6">
+                    <h1 class="text-2xl font-bold mb-4" data-i18n="leaderboard">Leaderboard</h1>
+                    
+                    <div class="bg-white dark:bg-gray-800 rounded-xl shadow-md p-6 mb-6">
+                        <div class="flex justify-between items-center mb-4">
+                            <h2 class="text-lg font-semibold" data-i18n="monthly_rankings">Monthly Rankings</h2>
+                            <select class="bg-gray-100 dark:bg-gray-700 border-none rounded-lg text-sm py-1 px-2">
+                                <option value="thisMonth" data-i18n="this_month">This Month</option>
+                                <option value="allTime" data-i18n="all_time">All Time</option>
+                                <option value="weekly" data-i18n="weekly">Weekly</option>
+                            </select>
+                        </div>
+                        
+                        <!-- Top 3 Users -->
+                        <div class="flex flex-col md:flex-row justify-center items-end space-y-4 md:space-y-0 md:space-x-4 mb-8">
+                            <!-- 2nd Place -->
+                            <div class="flex flex-col items-center">
+                                <div class="w-16 h-16 rounded-full bg-gray-200 dark:bg-gray-700 border-2 border-gray-400 dark:border-gray-500 overflow-hidden mb-2">
+                                    <img src="https://picsum.photos/id/1002/64/64" alt="User 2" class="w-full h-full object-cover">
+                                </div>
+                                <div class="text-center">
+                                    <span class="flex items-center justify-center w-6 h-6 bg-silver text-white rounded-full mx-auto mb-1">2</span>
+                                    <p class="font-medium" data-i18n="user_2">Sarah P.</p>
+                                    <p class="text-sm text-primary" data-i18n="points">785 pts</p>
+                                </div>
+                                <div class="h-24 w-16 bg-silver"></div>
+                            </div>
+                            
+                            <!-- 1st Place -->
+                            <div class="flex flex-col items-center">
+                                <div class="relative">
+                                    <div class="w-20 h-20 rounded-full bg-yellow-100 dark:bg-yellow-900 border-2 border-yellow-500 dark:border-yellow-600 overflow-hidden mb-2">
+                                        <img src="https://picsum.photos/id/1001/80/80" alt="User 1" class="w-full h-full object-cover">
+                                    </div>
+                                    <div class="absolute -top-4 -right-4">
+                                        <i class="fas fa-crown text-yellow-500 text-xl"></i>
+                                    </div>
+                                </div>
+                                <div class="text-center">
+                                    <span class="flex items-center justify-center w-6 h-6 bg-gold text-white rounded-full mx-auto mb-1">1</span>
+                                    <p class="font-medium" data-i18n="user_1">Michael K.</p>
+                                    <p class="text-sm text-primary" data-i18n="points">896 pts</p>
+                                </div>
+                                <div class="h-32 w-20 bg-gold"></div>
+                            </div>
+                            
+                            <!-- 3rd Place -->
+                            <div class="flex flex-col items-center">
+                                <div class="w-14 h-14 rounded-full bg-gray-200 dark:bg-gray-700 border-2 border-orange-400 dark:border-orange-500 overflow-hidden mb-2">
+                                    <img src="https://picsum.photos/id/1003/56/56" alt="User 3" class="w-full h-full object-cover">
+                                </div>
+                                <div class="text-center">
+                                    <span class="flex items-center justify-center w-6 h-6 bg-bronze text-white rounded-full mx-auto mb-1">3</span>
+                                    <p class="font-medium" data-i18n="user_3">Alex T.</p>
+                                    <p class="text-sm text-primary" data-i18n="points">723 pts</p>
+                                </div>
+                                <div class="h-20 w-14 bg-bronze"></div>
+                            </div>
+                        </div>
+                        
+                        <!-- Rankings List -->
+                        <div class="space-y-3">
+                            <!-- User's Ranking -->
+                            <div class="bg-primary bg-opacity-10 dark:bg-primary dark:bg-opacity-20 p-3 rounded-lg">
+                                <div class="flex items-center">
+                                    <span class="font-bold w-8 text-center">12</span>
+                                    <div class="w-8 h-8 rounded-full bg-gray-200 dark:bg-gray-700 overflow-hidden mx-4">
+                                        <img src="https://picsum.photos/id/1004/32/32" alt="Your Avatar" class="w-full h-full object-cover">
+                                    </div>
+                                    <div class="flex-grow">
+                                        <p class="font-medium" data-i18n="you">You</p>
+                                    </div>
+                                    <p class="font-medium" data-i18n="your_points">452 pts</p>
+                                </div>
+                            </div>
+                            
+                            <!-- Other Rankings -->
+                            <div class="bg-warmSand dark:bg-gray-700 p-3 rounded-lg">
+                                <div class="flex items-center">
+                                    <span class="font-medium w-8 text-center">4</span>
+                                    <div class="w-8 h-8 rounded-full bg-gray-200 dark:bg-gray-700 overflow-hidden mx-4">
+                                        <img src="https://picsum.photos/id/1005/32/32" alt="User 4" class="w-full h-full object-cover">
+                                    </div>
+                                    <div class="flex-grow">
+                                        <p class="font-medium" data-i18n="user_4">Taylor L.</p>
+                                    </div>
+                                    <p class="font-medium" data-i18n="points_4">698 pts</p>
+                                </div>
+                            </div>
+                            
+                            <div class="bg-warmSand dark:bg-gray-700 p-3 rounded-lg">
+                                <div class="flex items-center">
+                                    <span class="font-medium w-8 text-center">5</span>
+                                    <div class="w-8 h-8 rounded-full bg-gray-200 dark:bg-gray-700 overflow-hidden mx-4">
+                                        <img src="https://picsum.photos/id/1006/32/32" alt="User 5" class="w-full h-full object-cover">
+                                    </div>
+                                    <div class="flex-grow">
+                                        <p class="font-medium" data-i18n="user_5">Jordan B.</p>
+                                    </div>
+                                    <p class="font-medium" data-i18n="points_5">671 pts</p>
+                                </div>
+                            </div>
+                            
+                            <div class="bg-warmSand dark:bg-gray-700 p-3 rounded-lg">
+                                <div class="flex items-center">
+                                    <span class="font-medium w-8 text-center">6</span>
+                                    <div class="w-8 h-8 rounded-full bg-gray-200 dark:bg-gray-700 overflow-hidden mx-4">
+                                        <img src="https://picsum.photos/id/1007/32/32" alt="User 6" class="w-full h-full object-cover">
+                                    </div>
+                                    <div class="flex-grow">
+                                        <p class="font-medium" data-i18n="user_6">Casey O.</p>
+                                    </div>
+                                    <p class="font-medium" data-i18n="points_6">645 pts</p>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- Pagination -->
+                        <div class="flex justify-center mt-6">
+                            <button class="px-3 py-1 rounded-l-lg border border-gray-300 dark:border-gray-600 hover:bg-gray-100 dark:hover:bg-gray-700">
+                                <i class="fas fa-chevron-left"></i>
+                            </button>
+                            <button class="px-3 py-1 bg-primary text-white border border-primary">1</button>
+                            <button class="px-3 py-1 border-t border-b border-gray-300 dark:border-gray-600 hover:bg-gray-100 dark:hover:bg-gray-700">2</button>
+                            <button class="px-3 py-1 border-t border-b border-gray-300 dark:border-gray-600 hover:bg-gray-100 dark:hover:bg-gray-700">3</button>
+                            <button class="px-3 py-1 rounded-r-lg border border-gray-300 dark:border-gray-600 hover:bg-gray-100 dark:hover:bg-gray-700">
+                                <i class="fas fa-chevron-right"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Settings Page -->
+            <div id="settingsPage" class="hidden min-h-screen">
+                <div class="container mx-auto px-4 py-6">
+                    <div class="flex items-center mb-4">
+                        <button class="mr-3 bg-white dark:bg-gray-800 p-2 rounded-full shadow-md" id="backFromSettings">
+                            <i class="fas fa-arrow-left"></i>
+                        </button>
+                        <h1 class="text-2xl font-bold" data-i18n="settings">Settings</h1>
+                    </div>
+                    
+                    <div class="bg-white dark:bg-gray-800 rounded-xl shadow-md p-6 mb-6">
+                        <h2 class="text-xl font-semibold mb-4" data-i18n="general_settings">General Settings</h2>
+                        
+                        <!-- Profile Settings -->
+                        <div class="mb-6 pb-6 border-b border-gray-200 dark:border-gray-700">
+                            <h3 class="font-medium mb-3" data-i18n="profile">Profile</h3>
+                            
+                            <div class="flex flex-col sm:flex-row items-start sm:items-center mb-4">
+                                <div class="flex items-center mb-2 sm:mb-0">
+                                    <div class="w-12 h-12 rounded-full bg-earthyClay flex items-center justify-center text-white mr-3">
+                                        <span data-i18n="user_initial">U</span>
+                                    </div>
+                                    <button class="text-primary text-sm" data-i18n="change_avatar">Change Avatar</button>
+                                </div>
+                                
+                                <div class="sm:ml-auto">
+                                    <button class="px-3 py-1 text-sm bg-primary text-white rounded-lg hover:bg-opacity-90" data-i18n="edit_profile">Edit Profile</button>
+                                </div>
+                            </div>
+                            
+                            <div class="mb-4">
+                                <label class="block text-gray-700 dark:text-gray-300 mb-1" data-i18n="username">Username</label>
+                                <input type="text" class="w-full px-3 py-2 bg-gray-100 dark:bg-gray-700 border-none rounded-lg focus:ring-2 focus:ring-primary" value="GratefulSoul">
+                            </div>
+                            
+                            <div>
+                                <label class="block text-gray-700 dark:text-gray-300 mb-1" data-i18n="email">Email</label>
+                                <input type="email" class="w-full px-3 py-2 bg-gray-100 dark:bg-gray-700 border-none rounded-lg focus:ring-2 focus:ring-primary" value="user@example.com">
+                            </div>
+                        </div>
+                        
+                        <!-- App Settings -->
+                        <div class="mb-6 pb-6 border-b border-gray-200 dark:border-gray-700">
+                            <h3 class="font-medium mb-3" data-i18n="app_settings">App Settings</h3>
+                            
+                            <div class="mb-4">
+                                <div class="flex items-center justify-between">
+                                    <label class="text-gray-700 dark:text-gray-300" data-i18n="dark_mode">Dark Mode</label>
+                                    <label class="relative inline-flex items-center cursor-pointer">
+                                        <input type="checkbox" id="darkModeToggle" class="sr-only peer" checked="">
+                                        <div class="w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-2 peer-focus:ring-primary rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-primary"></div>
+                                    </label>
+                                </div>
+                            </div>
+                            
+                            <div class="mb-4">
+                                <div class="flex items-center justify-between">
+                                    <label class="text-gray-700 dark:text-gray-300" data-i18n="notification">Notifications</label>
+                                    <label class="relative inline-flex items-center cursor-pointer">
+                                        <input type="checkbox" class="sr-only peer" checked="">
+                                        <div class="w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-2 peer-focus:ring-primary rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-primary"></div>
+                                    </label>
+                                </div>
+                            </div>
+                            
+                            <div>
+                                <label class="block text-gray-700 dark:text-gray-300 mb-1" data-i18n="language">Language</label>
+                                <select id="languageSelector" class="w-full px-3 py-2 bg-gray-100 dark:bg-gray-700 border-none rounded-lg focus:ring-2 focus:ring-primary">
+                                    <option value="en" selected="" data-i18n="english">English</option>
+                                    <option value="zh" data-i18n="chinese">Chinese</option>
+                                    <option value="es" data-i18n="spanish">Spanish</option>
+                                    <option value="fr" data-i18n="french">French</option>
+                                </select>
+                            </div>
+                        </div>
+                        
+                        <!-- Privacy Settings -->
+                        <div>
+                            <h3 class="font-medium mb-3" data-i18n="privacy">Privacy</h3>
+                            
+                            <div class="mb-4">
+                                <div class="flex items-center justify-between">
+                                    <label class="text-gray-700 dark:text-gray-300" data-i18n="show_profile">Show my profile on leaderboards</label>
+                                    <label class="relative inline-flex items-center cursor-pointer">
+                                        <input type="checkbox" class="sr-only peer" checked="">
+                                        <div class="w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-2 peer-focus:ring-primary rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-primary"></div>
+                                    </label>
+                                </div>
+                            </div>
+                            
+                            <div>
+                                <div class="flex items-center justify-between">
+                                    <label class="text-gray-700 dark:text-gray-300" data-i18n="share_achievements">Share my achievements</label>
+                                    <label class="relative inline-flex items-center cursor-pointer">
+                                        <input type="checkbox" class="sr-only peer">
+                                        <div class="w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-2 peer-focus:ring-primary rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-primary"></div>
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Account Actions -->
+                    <div class="bg-white dark:bg-gray-800 rounded-xl shadow-md p-6">
+                        <h2 class="text-xl font-semibold mb-4" data-i18n="account">Account</h2>
+                        
+                        <div class="space-y-3">
+                            <button class="w-full flex items-center justify-between px-4 py-3 bg-gray-100 dark:bg-gray-700 rounded-lg hover:bg-gray-200 dark:hover:bg-gray-600">
+                                <span data-i18n="change_password">Change Password</span>
+                                <i class="fas fa-chevron-right"></i>
+                            </button>
+                            
+                            <button class="w-full flex items-center justify-between px-4 py-3 bg-gray-100 dark:bg-gray-700 rounded-lg hover:bg-gray-200 dark:hover:bg-gray-600">
+                                <span data-i18n="help_support">Help &amp; Support</span>
+                                <i class="fas fa-chevron-right"></i>
+                            </button>
+                            
+                            <button class="w-full flex items-center justify-between px-4 py-3 bg-gray-100 dark:bg-gray-700 rounded-lg hover:bg-gray-200 dark:hover:bg-gray-600">
+                                <span data-i18n="terms_conditions">Terms &amp; Conditions</span>
+                                <i class="fas fa-chevron-right"></i>
+                            </button>
+                            
+                            <button class="w-full flex items-center justify-between px-4 py-3 bg-red-100 dark:bg-red-900 text-red-600 dark:text-red-300 rounded-lg hover:bg-red-200 dark:hover:bg-red-800">
+                                <span data-i18n="logout">Logout</span>
+                                <i class="fas fa-sign-out-alt"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+        
+        <!-- Bottom Navigation Bar -->
+        <nav id="bottomNav" class="fixed bottom-0 left-0 right-0 bg-white dark:bg-gray-800 shadow-lg border-t border-gray-200 dark:border-gray-700 hidden">
+            <div class="flex justify-around">
+                <button class="nav-link flex flex-col items-center justify-center py-3 px-6 text-primary" data-page="gardenPage">
+                    <i class="fas fa-seedling text-xl"></i>
+                    <span class="text-xs mt-1" data-i18n="garden">Garden</span>
+                </button>
+                
+                <button class="nav-link flex flex-col items-center justify-center py-3 px-6 text-gray-500 dark:text-gray-400 hover:text-primary dark:hover:text-primary" data-page="diaryPage">
+                    <i class="fas fa-book text-xl"></i>
+                    <span class="text-xs mt-1" data-i18n="diary">Diary</span>
+                </button>
+                
+                <button class="nav-link flex flex-col items-center justify-center py-3 px-6 text-gray-500 dark:text-gray-400 hover:text-primary dark:hover:text-primary" data-page="challengePage">
+                    <i class="fas fa-trophy text-xl"></i>
+                    <span class="text-xs mt-1" data-i18n="challenges">Challenges</span>
+                </button>
+                
+                <button class="nav-link flex flex-col items-center justify-center py-3 px-6 text-gray-500 dark:text-gray-400 hover:text-primary dark:hover:text-primary" data-page="collectionPage">
+                    <i class="fas fa-leaf text-xl"></i>
+                    <span class="text-xs mt-1" data-i18n="collection">Collection</span>
+                </button>
+                
+                <button class="nav-link flex flex-col items-center justify-center py-3 px-6 text-gray-500 dark:text-gray-400 hover:text-primary dark:hover:text-primary" data-page="leaderboardPage">
+                    <i class="fas fa-award text-xl"></i>
+                    <span class="text-xs mt-1" data-i18n="leaderboard">Leaderboard</span>
+                </button>
+            </div>
+        </nav>
+    </div>
+
+    <!-- Language Files -->
+    <script>
+        // English language file
+        const en = {
+            // General
+            app_title: "Seed of Gratitude",
+            app_description: "Cultivate gratitude, grow your virtual plant",
+            loading: "Loading...",
+            
+            // Login/Register
+            username: "Username",
+            password: "Password",
+            login_button: "Login",
+            no_account: "Don't have an account?",
+            register: "Register",
+            
+            // User Profile
+            user_initial: "U",
+            user_name: "User",
+            level: "LVL 5",
+            streak_days: "7 Days",
+            
+            // Navigation
+            garden: "Garden",
+            diary: "Diary",
+            challenges: "Challenges",
+            collection: "Collection",
+            leaderboard: "Leaderboard",
+            
+            // Garden Page
+            monthly_progress: "September Progress",
+            sun: "Sun",
+            mon: "Mon",
+            tue: "Tue",
+            wed: "Wed",
+            thu: "Thu",
+            fri: "Fri",
+            sat: "Sat",
+            plant_name: "Your Gratitude Plant",
+            plant_stage: "Current Stage: Leafing",
+            collection_jar: "Collection Jar",
+            jar_tap: "Tap to view",
+            latest_events: "Latest Events",
+            event_challenge: "Complete Daily Diary Challenge",
+            event_challenge_desc: "Record 3 more days in a row to earn a Kindness Seed!",
+            event_reward: "New Evolution Card Available",
+            event_reward_desc: "You've unlocked a Rare Evolution Card! Check your collection.",
+            event_achievement: "Achievement Unlocked",
+            event_achievement_desc: "Consistency Champion: Maintained a 7-day streak!",
+            completed_diary: "Diary entry completed",
+            special_entry: "Special entry with images",
+            missed_entry: "Missed entry",
+            
+            // Diary Page
+            my_gratitude_journal: "My Gratitude Journal",
+            september_week1: "September - Week 1",
+            completed: "Completed",
+            view: "View",
+            special: "Special",
+            missed: "Missed",
+            no_entry_recorded: "No entry recorded for this day",
+            add_entry: "Add Entry",
+            today: "Today",
+            record_today: "Record your gratitude for today",
+            new_entry: "New Entry",
+            create_diary_scroll: "Create Diary Scroll",
+            compile_entries: "Compile your entries into a beautiful shareable scroll",
+            create: "Create",
+            
+            // Diary Edit/Detail Page
+            diary_entry: "Diary Entry",
+            today_entry: "Today's Entry",
+            what_grateful: "What are you grateful for today?",
+            add_images: "Add Images",
+            cancel: "Cancel",
+            save: "Save",
+            
+            // Seed Collection Page
+            seed_almanac: "Seed Almanac",
+            filter_by: "Filter by:",
+            all_virtues: "All Virtues",
+            love: "Love",
+            joy: "Joy",
+            peace: "Peace",
+            patience: "Patience",
+            kindness: "Kindness",
+            goodness: "Goodness",
+            faithfulness: "Faithfulness",
+            gentleness: "Gentleness",
+            self_control: "Self-Control",
+            sort_by: "Sort by:",
+            name: "Name",
+            rarity: "Rarity",
+            recently_acquired: "Recently Acquired",
+            view: "View",
+            collected: "Collected",
+            evolved: "Evolved",
+            locked: "Locked",
+            unknown_seed: "Unknown Seed",
+            discover: "Discover to reveal",
+            kindness_seed: "Kindness Seed",
+            patience_seed: "Patience Seed",
+            joy_seed: "Joy Seed",
+            goodness_category: "Goodness",
+            patience_category: "Patience",
+            joy_category: "Joy",
+            
+            // Seed Detail Page
+            seed_details: "Seed Details",
+            goodness_caring: "Goodness - Caring",
+            collected_on: "Collected on:",
+            virtue_description: "Virtue Description",
+            personalization: "Personalization",
+            custom_name: "Custom Name",
+            custom_story: "Custom Story/Description",
+            use_evolution_card: "Use Evolution Card",
+            
+            // Challenge & Achievement Page
+            challenges_achievements: "Challenges & Achievements",
+            active_challenges: "Active Challenges",
+            achievements: "Achievements",
+            morning_diary_streak: "Morning Diary Streak",
+            record_morning: "Record entries before 10 AM for 7 consecutive days",
+            in_progress: "In Progress",
+            reward: "Reward: Patience Seed",
+            collect_spring_seeds: "Collect 5 Spring Seeds",
+            find_seasonal: "Find seeds that appear during the spring season",
+            seasonal: "Seasonal",
+            evolve_rare_seed: "Evolve a Rare Seed",
+            use_evolution: "Use an Evolution Card on any rare seed in your collection",
+            login_streak: "7-Day Login Streak",
+            open_app: "Open the app for 7 consecutive days",
+            complete: "Complete",
+            reward_received: "Reward Received: 30 Dewdrops",
+            first_seed: "Collect Your First Seed",
+            begin_journey: "Begin your virtue collection journey",
+            milestone_achievements: "Milestone Achievements",
+            seedling_starter: "Seedling Starter",
+            diary_devotee: "Diary Devotee",
+            collection_achievements: "Collection Achievements",
+            seed_collector: "Seed Collector",
+            
+            // Diary Scroll Creator Page
+            scroll_options: "Scroll Options",
+            date_range: "Date Range",
+            last_7_days: "Last 7 Days",
+            this_month: "This Month",
+            last_30_days: "Last 30 Days",
+            custom_range: "Custom Range",
+            template: "Template",
+            classic_parchment: "Classic Parchment",
+            modern_minimalist: "Modern Minimalist",
+            starry_night: "Starry Night",
+            bamboo_scroll: "Bamboo Scroll",
+            content_selection: "Content Selection",
+            include_images: "Include Images",
+            highlight_special: "Highlight Special Entries",
+            background_music: "Background Music (for video)",
+            none: "None",
+            gentle_piano: "Gentle Piano",
+            nature_sounds: "Nature Sounds",
+            uplifting: "Uplifting",
+            preview: "Preview",
+            generate_scroll: "Generate Scroll",
+            gratitude_journey: "My Gratitude Journey",
+            diary_date_range: "September 1 - September 12, 2023",
+            previous_page: "Previous Page",
+            next_page: "Next Page",
+            page_indicator: "Page 1 of 3",
+            
+            // Leaderboard Page
+            monthly_rankings: "Monthly Rankings",
+            all_time: "All Time",
+            weekly: "Weekly",
+            user_1: "Michael K.",
+            user_2: "Sarah P.",
+            user_3: "Alex T.",
+            user_4: "Taylor L.",
+            user_5: "Jordan B.",
+            user_6: "Casey O.",
+            points: "896 pts",
+            your_points: "452 pts",
+            you: "You",
+            points_4: "698 pts",
+            points_5: "671 pts",
+            points_6: "645 pts",
+            
+            // Settings Page
+            settings: "Settings",
+            general_settings: "General Settings",
+            profile: "Profile",
+            change_avatar: "Change Avatar",
+            edit_profile: "Edit Profile",
+            email: "Email",
+            app_settings: "App Settings",
+            dark_mode: "Dark Mode",
+            notification: "Notifications",
+            language: "Language",
+            english: "English",
+            chinese: "Chinese",
+            spanish: "Spanish",
+            french: "French",
+            privacy: "Privacy",
+            show_profile: "Show my profile on leaderboards",
+            share_achievements: "Share my achievements",
+            account: "Account",
+            change_password: "Change Password",
+            help_support: "Help & Support",
+            terms_conditions: "Terms & Conditions",
+            logout: "Logout"
+        };
+        
+        // Chinese language file
+        const zh = {
+            // General
+            app_title: "感恩的种子",
+            app_description: "培养感恩，成长你的虚拟植物",
+            loading: "加载中...",
+            
+            // Login/Register
+            username: "用户名",
+            password: "密码",
+            login_button: "登录",
+            no_account: "还没有账号？",
+            register: "注册",
+            
+            // User Profile
+            user_initial: "用",
+            user_name: "用户",
+            level: "等级 5",
+            streak_days: "7 天",
+            
+            // Navigation
+            garden: "花园",
+            diary: "日记",
+            challenges: "挑战",
+            collection: "收藏",
+            leaderboard: "排行榜",
+            
+            // Garden Page
+            monthly_progress: "9月进度",
+            sun: "日",
+            mon: "一",
+            tue: "二",
+            wed: "三",
+            thu: "四",
+            fri: "五",
+            sat: "六",
+            plant_name: "你的感恩植物",
+            plant_stage: "当前阶段：生叶",
+            collection_jar: "收集罐",
+            jar_tap: "点击查看",
+            latest_events: "最新事件",
+            event_challenge: "完成每日日记挑战",
+            event_challenge_desc: "连续再记录3天以获得善良种子！",
+            event_reward: "新进化卡可用",
+            event_reward_desc: "你已解锁一张稀有进化卡！查看你的收藏。",
+            event_achievement: "成就解锁",
+            event_achievement_desc: "持续冠军：维持7天连续记录！",
+            completed_diary: "日记条目已完成",
+            special_entry: "带图片的特别条目",
+            missed_entry: "错过的条目",
+            
+            // Diary Page
+            my_gratitude_journal: "我的感恩日记",
+            september_week1: "9月 - 第1周",
+            completed: "已完成",
+            view: "查看",
+            special: "特别",
+            missed: "错过",
+            no_entry_recorded: "这一天没有记录条目",
+            add_entry: "添加条目",
+            today: "今天",
+            record_today: "记录今天的感恩",
+            new_entry: "新条目",
+            create_diary_scroll: "创建日记卷轴",
+            compile_entries: "将你的条目编译成美丽的可分享卷轴",
+            create: "创建",
+            
+            // Diary Edit/Detail Page
+            diary_entry: "日记条目",
+            today_entry: "今天的条目",
+            what_grateful: "今天你感恩什么？",
+            add_images: "添加图片",
+            cancel: "取消",
+            save: "保存",
+            
+            // Seed Collection Page
+            seed_almanac: "种子图鉴",
+            filter_by: "筛选：",
+            all_virtues: "所有美德",
+            love: "爱",
+            joy: "喜乐",
+            peace: "和平",
+            patience: "忍耐",
+            kindness: "善良",
+            goodness: "良善",
+            faithfulness: "信实",
+            gentleness: "温柔",
+            self_control: "节制",
+            sort_by: "排序：",
+            name: "名称",
+            rarity: "稀有度",
+            recently_acquired: "最近获得",
+            view: "查看",
+            collected: "已收集",
+            evolved: "已进化",
+            locked: "未解锁",
+            unknown_seed: "未知种子",
+            discover: "发现以揭示",
+            kindness_seed: "善良种子",
+            patience_seed: "忍耐种子",
+            joy_seed: "喜乐种子",
+            goodness_category: "良善",
+            patience_category: "忍耐",
+            joy_category: "喜乐",
+            
+            // Seed Detail Page
+            seed_details: "种子详情",
+            goodness_caring: "良善 - 关怀",
+            collected_on: "收集于：",
+            virtue_description: "美德描述",
+            personalization: "个性化",
+            custom_name: "自定义名称",
+            custom_story: "自定义故事/描述",
+            use_evolution_card: "使用进化卡",
+            
+            // Challenge & Achievement Page
+            challenges_achievements: "挑战与成就",
+            active_challenges: "活跃挑战",
+            achievements: "成就",
+            morning_diary_streak: "晨间日记连续记录",
+            record_morning: "连续7天在上午10点前记录条目",
+            in_progress: "进行中",
+            reward: "奖励：忍耐种子",
+            collect_spring_seeds: "收集5个春季种子",
+            find_seasonal: "寻找春季出现的种子",
+            seasonal: "季节性",
+            evolve_rare_seed: "进化一个稀有种子",
+            use_evolution: "对您收藏中的任何稀有种子使用进化卡",
+            login_streak: "7天登录连续记录",
+            open_app: "连续7天打开应用",
+            complete: "完成",
+            reward_received: "已获得奖励：30露珠",
+            first_seed: "收集你的第一个种子",
+            begin_journey: "开始你的美德收集之旅",
+            milestone_achievements: "里程碑成就",
+            seedling_starter: "幼苗启动者",
+            diary_devotee: "日记爱好者",
+            collection_achievements: "收集成就",
+            seed_collector: "种子收集者",
+            
+            // Diary Scroll Creator Page
+            scroll_options: "卷轴选项",
+            date_range: "日期范围",
+            last_7_days: "最近7天",
+            this_month: "本月",
+            last_30_days: "最近30天",
+            custom_range: "自定义范围",
+            template: "模板",
+            classic_parchment: "经典羊皮纸",
+            modern_minimalist: "现代简约",
+            starry_night: "星空夜晚",
+            bamboo_scroll: "竹卷轴",
+            content_selection: "内容选择",
+            include_images: "包含图片",
+            highlight_special: "突出特别条目",
+            background_music: "背景音乐（视频用）",
+            none: "无",
+            gentle_piano: "轻柔钢琴",
+            nature_sounds: "自然声音",
+            uplifting: "振奋人心",
+            preview: "预览",
+            generate_scroll: "生成卷轴",
+            gratitude_journey: "我的感恩之旅",
+            diary_date_range: "9月1日 - 9月12日，2023年",
+            previous_page: "上一页",
+            next_page: "下一页",
+            page_indicator: "第1页，共3页",
+            
+            // Leaderboard Page
+            monthly_rankings: "月度排名",
+            all_time: "总排名",
+            weekly: "每周",
+            user_1: "迈克尔 K.",
+            user_2: "莎拉 P.",
+            user_3: "亚历克斯 T.",
+            user_4: "泰勒 L.",
+            user_5: "乔丹 B.",
+            user_6: "凯西 O.",
+            points: "896 分",
+            your_points: "452 分",
+            you: "你",
+            points_4: "698 分",
+            points_5: "671 分",
+            points_6: "645 分",
+            
+            // Settings Page
+            settings: "设置",
+            general_settings: "常规设置",
+            profile: "个人资料",
+            change_avatar: "更改头像",
+            edit_profile: "编辑资料",
+            email: "电子邮件",
+            app_settings: "应用设置",
+            dark_mode: "深色模式",
+            notification: "通知",
+            language: "语言",
+            english: "英语",
+            chinese: "中文",
+            spanish: "西班牙语",
+            french: "法语",
+            privacy: "隐私",
+            show_profile: "在排行榜上显示我的资料",
+            share_achievements: "分享我的成就",
+            account: "账户",
+            change_password: "更改密码",
+            help_support: "帮助与支持",
+            terms_conditions: "条款和条件",
+            logout: "登出"
+        };
+        
+        // Store all language packs
+        const languages = { en, zh };
+        
+        // Current language (default to English)
+        let currentLanguage = 'en';
+        
+        // Function to set the language
+        function setLanguage(lang) {
+            if (languages[lang]) {
+                currentLanguage = lang;
+                updateUI();
+            }
+        }
+        
+        // Function to update the UI with the current language
+        function updateUI() {
+            const elements = document.querySelectorAll('[data-i18n]');
+            elements.forEach(element => {
+                const key = element.getAttribute('data-i18n');
+                if (languages[currentLanguage][key]) {
+                    element.textContent = languages[currentLanguage][key];
+                }
+            });
+        }
+    </script>
+    
+    <script>
+        // App initialization
+        document.addEventListener('DOMContentLoaded', function() {
+            // Check dark mode preference
+            if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
+                document.documentElement.classList.add('dark');
+            }
+            
+            // Listen for changes to color scheme
+            window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', event => {
+                if (event.matches) {
+                    document.documentElement.classList.add('dark');
+                } else {
+                    document.documentElement.classList.remove('dark');
+                }
+            });
+            
+            // Initial language setup
+            setLanguage('en');
+            
+            // Login functionality
+            document.getElementById('loginButton').addEventListener('click', function() {
+                document.getElementById('loginPage').classList.add('hidden');
+                document.getElementById('topNav').classList.remove('hidden');
+                document.getElementById('bottomNav').classList.remove('hidden');
+                document.getElementById('gardenPage').classList.remove('hidden');
+            });
+            
+            // Navigation
+            const navLinks = document.querySelectorAll('.nav-link');
+            const pages = document.querySelectorAll('[id$="Page"]');
+            
+            navLinks.forEach(link => {
+                link.addEventListener('click', function() {
+                    const targetPage = this.getAttribute('data-page');
+                    
+                    // Hide all pages
+                    pages.forEach(page => {
+                        if (page.id !== 'loginPage') { // Don't hide login page
+                            page.classList.add('hidden');
+                        }
+                    });
+                    
+                    // Show target page
+                    document.getElementById(targetPage).classList.remove('hidden');
+                    
+                    // Update active nav link
+                    navLinks.forEach(navLink => {
+                        navLink.classList.remove('text-primary');
+                        navLink.classList.add('text-gray-500', 'dark:text-gray-400', 'hover:text-primary', 'dark:hover:text-primary');
+                    });
+                    
+                    this.classList.remove('text-gray-500', 'dark:text-gray-400', 'hover:text-primary', 'dark:hover:text-primary');
+                    this.classList.add('text-primary');
+                });
+            });
+            
+            // Events list toggle
+            document.getElementById('eventsButton').addEventListener('click', function() {
+                document.getElementById('eventsList').classList.toggle('hidden');
+            });
+            
+            document.getElementById('closeEventsButton').addEventListener('click', function() {
+                document.getElementById('eventsList').classList.add('hidden');
+            });
+            
+            // Challenge tabs
+            const challengeTabs = document.querySelectorAll('.challenge-tab');
+            const challengeContents = document.querySelectorAll('.challenge-tab-content');
+            
+            challengeTabs.forEach(tab => {
+                tab.addEventListener('click', function() {
+                    const targetTab = this.getAttribute('data-tab');
+                    
+                    // Hide all tab contents
+                    challengeContents.forEach(content => {
+                        content.classList.add('hidden');
+                    });
+                    
+                    // Show target tab content
+                    document.getElementById(targetTab).classList.remove('hidden');
+                    
+                    // Update active tab
+                    challengeTabs.forEach(t => {
+                        t.classList.remove('active');
+                    });
+                    
+                    this.classList.add('active');
+                });
+            });
+            
+            // Back button handlers
+            document.getElementById('backToDiaryButton').addEventListener('click', function() {
+                document.getElementById('diaryEditPage').classList.add('hidden');
+                document.getElementById('diaryPage').classList.remove('hidden');
+            });
+            
+            document.getElementById('backToCollectionButton').addEventListener('click', function() {
+                document.getElementById('seedDetailPage').classList.add('hidden');
+                document.getElementById('collectionPage').classList.remove('hidden');
+            });
+            
+            document.getElementById('backFromScrollCreator').addEventListener('click', function() {
+                document.getElementById('scrollCreatorPage').classList.add('hidden');
+                document.getElementById('diaryPage').classList.remove('hidden');
+            });
+            
+            document.getElementById('backFromSettings').addEventListener('click', function() {
+                document.getElementById('settingsPage').classList.add('hidden');
+                document.getElementById('gardenPage').classList.remove('hidden');
+            });
+            
+            // Dark mode toggle
+            document.getElementById('darkModeToggle').addEventListener('change', function() {
+                if (this.checked) {
+                    document.documentElement.classList.add('dark');
+                } else {
+                    document.documentElement.classList.remove('dark');
+                }
+            });
+            
+            // Language selector
+            document.getElementById('languageSelector').addEventListener('change', function() {
+                setLanguage(this.value);
+            });
+        });
+    </script>
+
+
+</body></html>

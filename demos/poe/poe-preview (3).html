@@ -1,0 +1,1689 @@
+<!DOCTYPE html><html lang="zh-CN"><head><meta http-equiv="Content-Security-Policy" content="default-src 'self' 'unsafe-inline' 'unsafe-eval' data: blob: https://cdnjs.cloudflare.com https://cdn.jsdelivr.net https://code.jquery.com https://unpkg.com https://d3js.org https://threejs.org https://cdn.plot.ly https://stackpath.bootstrapcdn.com https://maps.googleapis.com https://cdn.tailwindcss.com https://ajax.googleapis.com https://kit.fontawesome.com https://cdn.datatables.net https://maxcdn.bootstrapcdn.com https://code.highcharts.com https://tako-static-assets-production.s3.amazonaws.com https://www.youtube.com https://fonts.googleapis.com https://fonts.gstatic.com https://pfst.cf2.poecdn.net https://puc.poecdn.net https://i.imgur.com https://wikimedia.org https://*.icons8.com https://*.giphy.com https://picsum.photos https://images.unsplash.com; frame-src 'self' https://www.youtube.com https://trytako.com; child-src 'self'; manifest-src 'self'; worker-src 'self'; upgrade-insecure-requests; block-all-mixed-content;">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>感恩种子 (Gratitude Seed)</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Rubik:wght@400;500;600;700&amp;display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+    <style>
+        :root {
+            --primary: #5D5CDE;
+            --primary-light: #8584E9;
+            --primary-dark: #4342A0;
+            --secondary: #FF9D5C;
+            --secondary-light: #FFB78C;
+            --secondary-dark: #E57F40;
+            --tertiary: #52C49F;
+            --tertiary-light: #7CE1C2;
+            --tertiary-dark: #3AA781;
+            --text-primary: #333333;
+            --text-secondary: #555555;
+            --background-light: #FFFFFF;
+            --background-dark: #181818;
+            --card-light: #F9F9F9;
+            --card-dark: #222222;
+        }
+
+        .dark {
+            --text-primary: #F5F5F5;
+            --text-secondary: #DDDDDD;
+            --background-light: #181818;
+            --background-dark: #121212;
+            --card-light: #222222;
+            --card-dark: #2A2A2A;
+        }
+
+        body {
+            font-family: 'Rubik', -apple-system, BlinkMacSystemFont, sans-serif;
+            background-color: var(--background-light);
+            color: var(--text-primary);
+            transition: background-color 0.3s ease, color 0.3s ease;
+            line-height: 1.6;
+            overflow-x: hidden;
+        }
+
+        .button {
+            background-color: var(--primary);
+            color: white;
+            border-radius: 20px;
+            padding: 12px 24px;
+            font-weight: 600;
+            transition: all 0.2s ease;
+            box-shadow: 0 4px 6px rgba(93, 92, 222, 0.2);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .button:active {
+            transform: scale(0.96);
+        }
+
+        .button-secondary {
+            background-color: var(--secondary);
+            box-shadow: 0 4px 6px rgba(255, 157, 92, 0.2);
+        }
+
+        .button-tertiary {
+            background-color: var(--tertiary);
+            box-shadow: 0 4px 6px rgba(82, 196, 159, 0.2);
+        }
+
+        .button-outline {
+            background-color: transparent;
+            border: 2px solid var(--primary);
+            color: var(--primary);
+            box-shadow: none;
+        }
+
+        .card {
+            background-color: var(--card-light);
+            border-radius: 24px;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.05);
+            transition: all 0.3s ease;
+            overflow: hidden;
+        }
+
+        .dark .card {
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+        }
+
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.1);
+        }
+
+        .dark .card:hover {
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.3);
+        }
+
+        .input {
+            border: 2px solid #E5E7EB;
+            border-radius: 12px;
+            padding: 12px 16px;
+            font-size: 16px;
+            transition: all 0.2s ease;
+            background-color: var(--background-light);
+            color: var(--text-primary);
+        }
+
+        .input:focus {
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(93, 92, 222, 0.2);
+            outline: none;
+        }
+
+        .tab-active {
+            color: var(--primary);
+            border-bottom: 3px solid var(--primary);
+            font-weight: 600;
+        }
+
+        .tab {
+            padding: 12px 16px;
+            transition: all 0.2s ease;
+        }
+
+        .floating {
+            animation: floating 3s ease-in-out infinite;
+        }
+
+        @keyframes floating {
+            0% { transform: translateY(0px); }
+            50% { transform: translateY(-10px); }
+            100% { transform: translateY(0px); }
+        }
+
+        .bounce {
+            animation: bounce 0.5s ease-in-out;
+        }
+
+        @keyframes bounce {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-10px); }
+        }
+
+        .seed-card {
+            position: relative;
+            transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+
+        .seed-card:hover {
+            transform: translateY(-10px) scale(1.02);
+        }
+
+        .seed-card::after {
+            content: '';
+            position: absolute;
+            top: -5px;
+            left: -5px;
+            right: -5px;
+            bottom: -5px;
+            background: linear-gradient(45deg, var(--primary), var(--secondary), var(--tertiary));
+            z-index: -1;
+            border-radius: 16px;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .seed-card:hover::after {
+            opacity: 0.5;
+        }
+
+        .badge {
+            background-color: var(--secondary-light);
+            color: white;
+            border-radius: 20px;
+            padding: 4px 12px;
+            font-size: 12px;
+            font-weight: 600;
+            display: inline-block;
+        }
+
+        .nav-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 8px 0;
+            width: 20%;
+            transition: all 0.2s ease;
+        }
+
+        .nav-item.active {
+            color: var(--primary);
+        }
+
+        .nav-item svg {
+            width: 24px;
+            height: 24px;
+            margin-bottom: 4px;
+        }
+
+        .sparkle {
+            position: absolute;
+            pointer-events: none;
+            z-index: 10;
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            background-color: white;
+            box-shadow: 0 0 10px 2px gold;
+            animation: sparkle 0.8s linear forwards;
+        }
+
+        @keyframes sparkle {
+            0% { transform: scale(0); opacity: 0; }
+            20% { transform: scale(1); opacity: 1; }
+            80% { transform: scale(1); opacity: 1; }
+            100% { transform: scale(0); opacity: 0; }
+        }
+
+        /* Plant growth stages */
+        .plant-container {
+            position: relative;
+            height: 300px;
+            margin: auto;
+            width: 300px;
+        }
+
+        .plant-pot {
+            position: absolute;
+            bottom: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 120px;
+            height: 70px;
+            background: linear-gradient(to bottom, #e3a066, #c47d45);
+            border-radius: 0 0 60px 60px;
+            z-index: 1;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+
+        .plant-pot::before {
+            content: '';
+            position: absolute;
+            top: -10px;
+            left: -10px;
+            right: -10px;
+            height: 20px;
+            background: #e3a066;
+            border-radius: 10px;
+        }
+
+        .plant-soil {
+            position: absolute;
+            bottom: 50px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 100px;
+            height: 20px;
+            background: #6e4c31;
+            border-radius: 50%;
+            z-index: 2;
+        }
+
+        .plant-stem {
+            position: absolute;
+            bottom: 70px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 6px;
+            background: #52C49F;
+            z-index: 1;
+            transition: height 1s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+
+        .plant-leaf {
+            position: absolute;
+            width: 25px;
+            height: 15px;
+            background: #7CE1C2;
+            border-radius: 50% 50% 50% 0;
+            z-index: 0;
+            transform-origin: bottom right;
+            transform: rotate(45deg);
+            transition: all 0.5s ease;
+            opacity: 0;
+        }
+
+        .plant-leaf.left {
+            transform: scaleX(-1) rotate(45deg);
+            transform-origin: bottom left;
+        }
+
+        .plant-flower {
+            position: absolute;
+            width: 40px;
+            height: 40px;
+            background: var(--primary-light);
+            border-radius: 50%;
+            z-index: 3;
+            left: 50%;
+            transform: translateX(-50%);
+            opacity: 0;
+            transition: all 0.5s ease;
+            box-shadow: 0 0 20px rgba(93, 92, 222, 0.4);
+        }
+
+        .plant-flower::after {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 15px;
+            height: 15px;
+            background: var(--secondary);
+            border-radius: 50%;
+        }
+
+        /* Ripple effect */
+        .ripple {
+            position: absolute;
+            border-radius: 50%;
+            background-color: rgba(255, 255, 255, 0.6);
+            transform: scale(0);
+            animation: ripple 0.6s linear;
+        }
+
+        @keyframes ripple {
+            to {
+                transform: scale(4);
+                opacity: 0;
+            }
+        }
+
+        /* Water drop animation */
+        .water-drop {
+            position: absolute;
+            width: 15px;
+            height: 20px;
+            background-color: #7FB3D5;
+            border-radius: 50% 50% 0 50%;
+            transform: rotate(45deg);
+            animation: drop 1.5s ease-in forwards;
+            opacity: 0;
+            z-index: 4;
+        }
+
+        @keyframes drop {
+            0% {
+                top: 50px;
+                opacity: 0;
+            }
+            20% {
+                opacity: 1;
+            }
+            80% {
+                opacity: 1;
+            }
+            100% {
+                top: 220px;
+                opacity: 0;
+                transform: rotate(45deg) scale(0.5);
+            }
+        }
+
+        /* Screens and navigation */
+        .screen {
+            display: none;
+            height: 100vh;
+            width: 100vw;
+            overflow-y: auto;
+            position: relative;
+            padding-bottom: 80px; /* Space for bottom nav */
+        }
+
+        .screen.active {
+            display: block;
+        }
+
+        /* Bottom navigation */
+        .bottom-nav {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background-color: var(--background-light);
+            box-shadow: 0 -2px 10px rgba(0,0,0,0.05);
+            display: flex;
+            justify-content: space-around;
+            padding: 10px 0;
+            z-index: 100;
+        }
+
+        .dark .bottom-nav {
+            background-color: var(--background-dark);
+            box-shadow: 0 -2px 10px rgba(0,0,0,0.2);
+        }
+
+        /* Achievement badges */
+        .achievement {
+            background: linear-gradient(135deg, var(--primary-light), var(--primary));
+            border-radius: 12px;
+            padding: 15px;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+        }
+
+        .achievement-icon {
+            background-color: white;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 15px;
+            color: var(--primary);
+            font-size: 20px;
+        }
+
+        /* Settings switches */
+        .switch {
+            position: relative;
+            display: inline-block;
+            width: 48px;
+            height: 24px;
+        }
+
+        .switch input {
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
+
+        .slider {
+            position: absolute;
+            cursor: pointer;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: #ccc;
+            transition: .4s;
+            border-radius: 24px;
+        }
+
+        .slider:before {
+            position: absolute;
+            content: "";
+            height: 18px;
+            width: 18px;
+            left: 3px;
+            bottom: 3px;
+            background-color: white;
+            transition: .4s;
+            border-radius: 50%;
+        }
+
+        input:checked + .slider {
+            background-color: var(--primary);
+        }
+
+        input:checked + .slider:before {
+            transform: translateX(24px);
+        }
+
+        /* Language selector */
+        .language-selector {
+            position: relative;
+        }
+
+        .language-options {
+            position: absolute;
+            top: 100%;
+            right: 0;
+            background-color: var(--card-light);
+            border-radius: 12px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            padding: 10px 0;
+            display: none;
+            z-index: 10;
+            min-width: 150px;
+        }
+
+        .language-option {
+            padding: 8px 16px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .language-option:hover {
+            background-color: var(--card-dark);
+        }
+
+        .language-selector.open .language-options {
+            display: block;
+        }
+
+        /* Onboarding/intro */
+        .intro-slide {
+            display: none;
+            height: 100vh;
+            width: 100%;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            padding: 2rem;
+        }
+
+        .intro-slide.active {
+            display: flex;
+        }
+
+        .intro-indicator {
+            display: flex;
+            margin-top: 2rem;
+        }
+
+        .intro-dot {
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            background-color: #E5E7EB;
+            margin: 0 5px;
+        }
+
+        .intro-dot.active {
+            background-color: var(--primary);
+            transform: scale(1.2);
+        }
+
+        /* Gratitude entry animation */
+        .gratitude-entry {
+            opacity: 0;
+            transform: translateY(20px);
+            animation: fadeInUp 0.5s forwards;
+        }
+
+        @keyframes fadeInUp {
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* Leaderboard styles */
+        .leaderboard-item {
+            display: flex;
+            align-items: center;
+            padding: 10px 15px;
+            border-bottom: 1px solid #e5e7eb;
+            transition: all 0.2s ease;
+        }
+
+        .leaderboard-item:hover {
+            background-color: var(--card-dark);
+        }
+
+        .leaderboard-rank {
+            font-weight: 700;
+            width: 30px;
+            text-align: center;
+        }
+
+        .leaderboard-user {
+            flex: 1;
+            display: flex;
+            align-items: center;
+        }
+
+        .leaderboard-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background-color: var(--primary-light);
+            margin-right: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: 600;
+        }
+
+        .leaderboard-score {
+            font-weight: 600;
+            color: var(--tertiary);
+        }
+
+        /* Top ranks styling */
+        .leaderboard-item:nth-child(1) .leaderboard-rank {
+            color: gold;
+        }
+
+        .leaderboard-item:nth-child(2) .leaderboard-rank {
+            color: silver;
+        }
+
+        .leaderboard-item:nth-child(3) .leaderboard-rank {
+            color: #cd7f32; /* bronze */
+        }
+
+        .seed-title {
+            font-weight: 700;
+            font-size: 1.1rem;
+            margin-bottom: 0.3rem;
+        }
+
+        .seed-description {
+            font-size: 0.9rem;
+            color: var(--text-secondary);
+        }
+
+        /* Loading animation */
+        .loading-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: rgba(255, 255, 255, 0.9);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+            transition: all 0.3s ease;
+        }
+
+        .dark .loading-overlay {
+            background-color: rgba(24, 24, 24, 0.9);
+        }
+
+        .loading-spinner {
+            width: 50px;
+            height: 50px;
+            border: 5px solid #f3f3f3;
+            border-top: 5px solid var(--primary);
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin-bottom: 20px;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .hidden {
+            display: none;
+        }
+    </style>
+</head>
+<body>
+    <!-- Loading overlay -->
+    <div id="loadingOverlay" class="loading-overlay">
+        <div class="loading-spinner"></div>
+        <p id="loadingText">正在连接到感恩花园...</p>
+    </div>
+
+    <!-- Onboarding / Intro -->
+    <div id="intro" class="screen active">
+        <div class="intro-slide active" id="intro-slide-1">
+            <img src="https://cdn.jsdelivr.net/gh/twitter/twemoji@14.0.2/assets/svg/1f331.svg" alt="Seedling" class="w-32 h-32 mb-8 floating">
+            <h1 class="text-3xl font-bold mb-4">欢迎来到感恩种子</h1>
+            <p class="text-lg mb-8">在这里，每一次感恩都能让你的种子生长，见证内在美德的绽放</p>
+            <button class="button px-10 py-4 text-lg" onclick="nextIntroSlide()">开始旅程</button>
+        </div>
+        
+        <div class="intro-slide" id="intro-slide-2">
+            <img src="https://cdn.jsdelivr.net/gh/twitter/twemoji@14.0.2/assets/svg/1f4d6.svg" alt="Book" class="w-32 h-32 mb-8">
+            <h1 class="text-3xl font-bold mb-4">记录感恩时刻</h1>
+            <p class="text-lg mb-8">每天记录值得感恩的事物，灌溉你的感恩种子</p>
+            <button class="button px-10 py-4 text-lg" onclick="nextIntroSlide()">继续</button>
+        </div>
+
+        <div class="intro-slide" id="intro-slide-3">
+            <img src="https://cdn.jsdelivr.net/gh/twitter/twemoji@14.0.2/assets/svg/1f33c.svg" alt="Flower" class="w-32 h-32 mb-8">
+            <h1 class="text-3xl font-bold mb-4">收集美德种子</h1>
+            <p class="text-lg mb-8">通过持续感恩，发现并培养自身的美好品质</p>
+            <button class="button px-10 py-4 text-lg" onclick="nextIntroSlide()">继续</button>
+        </div>
+
+        <div class="intro-slide" id="intro-slide-4">
+            <img src="https://cdn.jsdelivr.net/gh/twitter/twemoji@14.0.2/assets/svg/1f308.svg" alt="Rainbow" class="w-32 h-32 mb-8">
+            <h1 class="text-3xl font-bold mb-4">认领你的第一颗种子</h1>
+            <p class="text-lg mb-8">让我们开始这段奇妙的成长之旅吧！</p>
+            <button class="button px-10 py-4 text-lg" onclick="claimFirstSeed()">认领种子</button>
+        </div>
+
+        <div class="intro-indicator">
+            <div class="intro-dot active" data-slide="1"></div>
+            <div class="intro-dot" data-slide="2"></div>
+            <div class="intro-dot" data-slide="3"></div>
+            <div class="intro-dot" data-slide="4"></div>
+        </div>
+    </div>
+
+    <!-- Home Screen -->
+    <div id="homeScreen" class="screen p-4">
+        <div class="flex justify-between items-center mb-6">
+            <h2 class="text-2xl font-bold">我的感恩花园</h2>
+            <div class="flex items-center">
+                <div class="badge mr-2" id="streakBadge">连续 0 天</div>
+                <div class="language-selector">
+                    <button class="p-2" onclick="toggleLanguageSelector()">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <circle cx="12" cy="12" r="10"></circle>
+                            <line x1="2" y1="12" x2="22" y2="12"></line>
+                            <path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"></path>
+                        </svg>
+                    </button>
+                    <div class="language-options">
+                        <div class="language-option" onclick="changeLanguage('zh-CN')">中文 (简体)</div>
+                        <div class="language-option" onclick="changeLanguage('en-US')">English</div>
+                        <div class="language-option" onclick="changeLanguage('ja-JP')">日本語</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="plant-container" id="plantContainer">
+            <div class="plant-pot"></div>
+            <div class="plant-soil"></div>
+            <div class="plant-stem" id="plantStem" style="height: 10px;"></div>
+            <!-- Leaves and flower will be added by JavaScript -->
+        </div>
+
+        <div class="card p-4 mb-4">
+            <h3 class="text-lg font-semibold mb-2">今日能量: <span id="dailyEnergy">20</span>/100</h3>
+            <div class="w-full bg-gray-200 rounded-full h-3 mb-3">
+                <div class="bg-blue-500 rounded-full h-3" id="energyBar" style="width: 20%"></div>
+            </div>
+            <p class="text-sm text-gray-600 dark:text-gray-400">记录感恩事项来获取能量，帮助你的植物生长</p>
+        </div>
+
+        <div class="flex justify-center mb-6">
+            <button id="waterPlantBtn" class="button button-tertiary flex items-center justify-center px-8 py-4 text-lg">
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="mr-2">
+                    <path d="M12 2.69l5.66 5.66a8 8 0 1 1-11.31 0z"></path>
+                </svg>
+                记录感恩
+            </button>
+        </div>
+
+        <h3 class="text-xl font-bold mb-4">最近的感恩时刻</h3>
+        <div id="recentGratitude" class="space-y-4">
+            <!-- Entries will be added here by JavaScript -->
+        </div>
+    </div>
+
+    <!-- Journal Entry Screen -->
+    <div id="journalScreen" class="screen p-4">
+        <div class="flex justify-between items-center mb-6">
+            <button onclick="switchScreen('homeScreen')" class="p-2">
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <line x1="19" y1="12" x2="5" y2="12"></line>
+                    <polyline points="12 19 5 12 12 5"></polyline>
+                </svg>
+            </button>
+            <h2 class="text-2xl font-bold">记录感恩</h2>
+            <div class="w-8"></div> <!-- For balance -->
+        </div>
+
+        <div class="card p-4 mb-6">
+            <p class="text-lg mb-4">今天，我感恩...</p>
+            <textarea id="gratitudeInput" class="input w-full h-32 mb-4" placeholder="例如: 感谢今天阳光明媚的天气让我心情愉快..."></textarea>
+            
+            <div class="flex justify-between mb-4">
+                <div class="flex items-center">
+                    <label class="text-sm mr-2">类型:</label>
+                    <select id="gratitudeType" class="input py-2">
+                        <option value="general">日常生活</option>
+                        <option value="people">人际关系</option>
+                        <option value="self">自我成长</option>
+                        <option value="nature">自然万物</option>
+                        <option value="challenge">挑战与学习</option>
+                    </select>
+                </div>
+                
+                <div class="flex items-center">
+                    <label class="text-sm mr-2">心情:</label>
+                    <select id="gratitudeMood" class="input py-2">
+                        <option value="joyful">😊 愉快</option>
+                        <option value="peaceful">😌 平静</option>
+                        <option value="hopeful">🌟 希望</option>
+                        <option value="grateful">🙏 感激</option>
+                        <option value="content">😊 满足</option>
+                    </select>
+                </div>
+            </div>
+            
+            <div class="text-center">
+                <button id="saveGratitudeBtn" class="button px-10 py-3" onclick="saveGratitude()">保存</button>
+            </div>
+        </div>
+
+        <div class="card p-4 mb-4">
+            <h3 class="text-lg font-semibold mb-2">灵感提示</h3>
+            <div class="space-y-2">
+                <p class="p-2 bg-gray-100 dark:bg-gray-800 rounded-lg">"今天让我微笑的一件小事是..."</p>
+                <p class="p-2 bg-gray-100 dark:bg-gray-800 rounded-lg">"我从今天的挑战中学到了..."</p>
+                <p class="p-2 bg-gray-100 dark:bg-gray-800 rounded-lg">"我感谢的一个人是...因为..."</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Almanac/Collection Screen -->
+    <div id="collectionScreen" class="screen p-4">
+        <h2 class="text-2xl font-bold mb-6">美德种子图鉴</h2>
+        
+        <div class="flex justify-between mb-4">
+            <p>已收集: <span id="seedCount">3</span>/12</p>
+            <div>
+                <select id="seedFilter" class="input py-1">
+                    <option value="all">全部种子</option>
+                    <option value="collected">已收集</option>
+                    <option value="uncollected">未收集</option>
+                </select>
+            </div>
+        </div>
+        
+        <div class="grid grid-cols-2 gap-4" id="seedCollection">
+            <!-- Seeds will be added here by JavaScript -->
+        </div>
+    </div>
+
+    <!-- Seed Detail Screen -->
+    <div id="seedDetailScreen" class="screen p-4 hidden">
+        <div class="flex justify-between items-center mb-6">
+            <button onclick="switchScreen('collectionScreen')" class="p-2">
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <line x1="19" y1="12" x2="5" y2="12"></line>
+                    <polyline points="12 19 5 12 12 5"></polyline>
+                </svg>
+            </button>
+            <h2 class="text-2xl font-bold" id="seedDetailTitle">种子详情</h2>
+            <div class="w-8"></div> <!-- For balance -->
+        </div>
+
+        <div class="card p-6 mb-6">
+            <div class="flex justify-center mb-4">
+                <img id="seedDetailImage" src="" alt="Seed" class="w-32 h-32">
+            </div>
+            <h3 class="text-xl font-bold mb-2 text-center" id="seedDetailName"></h3>
+            <p class="text-center mb-4" id="seedDetailStatus"></p>
+            <p class="mb-4" id="seedDetailDescription"></p>
+            
+            <div class="bg-gray-100 dark:bg-gray-800 p-4 rounded-lg mb-4">
+                <h4 class="font-semibold mb-2">寓意解读</h4>
+                <p id="seedDetailMeaning"></p>
+            </div>
+            
+            <div id="seedUpgradeSection" class="hidden">
+                <h4 class="font-semibold mb-2">个性化</h4>
+                <button class="button button-outline w-full mb-2">重命名</button>
+                <button class="button button-outline w-full">更新形象</button>
+            </div>
+        </div>
+
+        <div class="card p-4 mb-4" id="seedAchievementSection">
+            <h3 class="text-lg font-semibold mb-2">获取提示</h3>
+            <p id="seedAchievementHint">持续记录与"喜悦"相关的感恩事项，或完成特定的挑战任务来获得这颗种子。</p>
+        </div>
+    </div>
+
+    <!-- Profile Screen -->
+    <div id="profileScreen" class="screen p-4">
+        <div class="flex justify-between items-center mb-6">
+            <h2 class="text-2xl font-bold">个人资料</h2>
+            <button onclick="switchScreen('settingsScreen')" class="p-2">
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <circle cx="12" cy="12" r="3"></circle>
+                    <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"></path>
+                </svg>
+            </button>
+        </div>
+
+        <div class="card p-6 mb-6 text-center">
+            <div class="flex justify-center mb-4">
+                <div class="w-24 h-24 bg-primary rounded-full flex items-center justify-center text-white text-2xl font-bold">
+                    YZ
+                </div>
+            </div>
+            <h3 class="text-xl font-bold">勇者</h3>
+            <p class="text-gray-600 dark:text-gray-400 mb-4">感恩练习第 7 天</p>
+            
+            <div class="flex justify-around">
+                <div>
+                    <p class="text-2xl font-bold">30</p>
+                    <p class="text-sm">感恩记录</p>
+                </div>
+                <div>
+                    <p class="text-2xl font-bold">5</p>
+                    <p class="text-sm">种子收集</p>
+                </div>
+                <div>
+                    <p class="text-2xl font-bold">7</p>
+                    <p class="text-sm">连续天数</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="mb-6">
+            <h3 class="text-xl font-bold mb-4">成就徽章</h3>
+            <div class="space-y-3">
+                <div class="achievement">
+                    <div class="achievement-icon">🌱</div>
+                    <div>
+                        <p class="font-semibold">播种者</p>
+                        <p class="text-sm text-white">记录第一条感恩笔记</p>
+                    </div>
+                </div>
+                <div class="achievement">
+                    <div class="achievement-icon">🔥</div>
+                    <div>
+                        <p class="font-semibold">持续一周</p>
+                        <p class="text-sm text-white">连续7天记录感恩</p>
+                    </div>
+                </div>
+                <div class="achievement">
+                    <div class="achievement-icon">🌻</div>
+                    <div>
+                        <p class="font-semibold">收藏家</p>
+                        <p class="text-sm text-white">收集5种不同的美德种子</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="card p-4 mb-6">
+            <h3 class="text-lg font-semibold mb-4">排行榜</h3>
+            <div class="leaderboard">
+                <div class="leaderboard-item">
+                    <div class="leaderboard-rank">1</div>
+                    <div class="leaderboard-user">
+                        <div class="leaderboard-avatar">LW</div>
+                        <div>李薇</div>
+                    </div>
+                    <div class="leaderboard-score">96天</div>
+                </div>
+                <div class="leaderboard-item">
+                    <div class="leaderboard-rank">2</div>
+                    <div class="leaderboard-user">
+                        <div class="leaderboard-avatar">ZM</div>
+                        <div>张明</div>
+                    </div>
+                    <div class="leaderboard-score">82天</div>
+                </div>
+                <div class="leaderboard-item">
+                    <div class="leaderboard-rank">3</div>
+                    <div class="leaderboard-user">
+                        <div class="leaderboard-avatar">WJ</div>
+                        <div>王静</div>
+                    </div>
+                    <div class="leaderboard-score">65天</div>
+                </div>
+                <div class="leaderboard-item">
+                    <div class="leaderboard-rank">4</div>
+                    <div class="leaderboard-user">
+                        <div class="leaderboard-avatar">YZ</div>
+                        <div>勇者 (你)</div>
+                    </div>
+                    <div class="leaderboard-score">7天</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Settings Screen -->
+    <div id="settingsScreen" class="screen p-4">
+        <div class="flex justify-between items-center mb-6">
+            <button onclick="switchScreen('profileScreen')" class="p-2">
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <line x1="19" y1="12" x2="5" y2="12"></line>
+                    <polyline points="12 19 5 12 12 5"></polyline>
+                </svg>
+            </button>
+            <h2 class="text-2xl font-bold">设置</h2>
+            <div class="w-8"></div> <!-- For balance -->
+        </div>
+
+        <div class="card p-4 mb-4">
+            <h3 class="text-lg font-semibold mb-4">通知设置</h3>
+            <div class="flex justify-between items-center mb-3">
+                <span>每日提醒</span>
+                <label class="switch">
+                    <input type="checkbox" checked="">
+                    <span class="slider"></span>
+                </label>
+            </div>
+            <div class="flex justify-between items-center mb-3">
+                <span>提醒时间</span>
+                <select class="input py-1">
+                    <option>早上 8:00</option>
+                    <option>中午 12:00</option>
+                    <option selected="">晚上 9:00</option>
+                    <option>晚上 10:00</option>
+                </select>
+            </div>
+            <div class="flex justify-between items-center">
+                <span>成就通知</span>
+                <label class="switch">
+                    <input type="checkbox" checked="">
+                    <span class="slider"></span>
+                </label>
+            </div>
+        </div>
+
+        <div class="card p-4 mb-4">
+            <h3 class="text-lg font-semibold mb-4">应用设置</h3>
+            <div class="flex justify-between items-center mb-3">
+                <span>暗黑模式</span>
+                <label class="switch">
+                    <input type="checkbox" id="darkModeToggle" onchange="toggleDarkMode()">
+                    <span class="slider"></span>
+                </label>
+            </div>
+            <div class="flex justify-between items-center mb-3">
+                <span>语言</span>
+                <select class="input py-1" id="languageSelect" onchange="updateLanguage()">
+                    <option value="zh-CN" selected="">中文</option>
+                    <option value="en-US">English</option>
+                    <option value="ja-JP">日本語</option>
+                </select>
+            </div>
+            <div class="flex justify-between items-center">
+                <span>声音效果</span>
+                <label class="switch">
+                    <input type="checkbox" checked="">
+                    <span class="slider"></span>
+                </label>
+            </div>
+        </div>
+
+        <div class="card p-4 mb-4">
+            <h3 class="text-lg font-semibold mb-4">关于</h3>
+            <p class="text-gray-600 dark:text-gray-400 mb-2">感恩种子 v1.0.0</p>
+            <p class="text-gray-600 dark:text-gray-400 mb-2">一款帮助培养感恩习惯的应用</p>
+            <div class="flex justify-between items-center mb-2">
+                <span>隐私政策</span>
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <polyline points="9 18 15 12 9 6"></polyline>
+                </svg>
+            </div>
+            <div class="flex justify-between items-center">
+                <span>使用条款</span>
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <polyline points="9 18 15 12 9 6"></polyline>
+                </svg>
+            </div>
+        </div>
+    </div>
+
+    <!-- Bottom Navigation -->
+    <div class="bottom-nav">
+        <div class="nav-item active" onclick="switchNav('homeScreen', this)">
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path>
+                <polyline points="9 22 9 12 15 12 15 22"></polyline>
+            </svg>
+            <span class="text-xs">首页</span>
+        </div>
+        <div class="nav-item" onclick="switchNav('collectionScreen', this)">
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <circle cx="12" cy="12" r="10"></circle>
+                <path d="M8 14s1.5 2 4 2 4-2 4-2"></path>
+                <line x1="9" y1="9" x2="9.01" y2="9"></line>
+                <line x1="15" y1="9" x2="15.01" y2="9"></line>
+            </svg>
+            <span class="text-xs">图鉴</span>
+        </div>
+        <div class="nav-item" onclick="switchNav('journalScreen', this)">
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path>
+                <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path>
+            </svg>
+            <span class="text-xs">记录</span>
+        </div>
+        <div class="nav-item" onclick="switchNav('profileScreen', this)">
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+                <circle cx="12" cy="7" r="4"></circle>
+            </svg>
+            <span class="text-xs">我的</span>
+        </div>
+    </div>
+
+    <script>
+        // Simulate loading screen for demo
+        setTimeout(() => {
+            document.getElementById('loadingOverlay').classList.add('hidden');
+        }, 1500);
+
+        // Dark mode detection
+        if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
+            document.documentElement.classList.add('dark');
+            document.getElementById('darkModeToggle').checked = true;
+        }
+        window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', event => {
+            if (event.matches) {
+                document.documentElement.classList.add('dark');
+                document.getElementById('darkModeToggle').checked = true;
+            } else {
+                document.documentElement.classList.remove('dark');
+                document.getElementById('darkModeToggle').checked = false;
+            }
+        });
+
+        // Variables to track app state
+        let currentIntroSlide = 1;
+        const totalIntroSlides = 4;
+        let gratitudeCount = 0;
+        let streakCount = 0;
+        let plantGrowthStage = 0;
+        const maxGrowthStage = 5;
+        let energy = 20;
+        
+        // Sample seed data
+        const seeds = [
+            {
+                id: 'gratitude',
+                name: '感恩',
+                description: '学会感谢生活中的一切，无论大小。',
+                meaning: '感恩是幸福的基石，它让我们认识到生活中的恩赐，培养我们对现有事物的珍视之情。',
+                emoji: '🙏',
+                collected: true
+            },
+            {
+                id: 'joy',
+                name: '喜悦',
+                description: '从简单的事物中寻找快乐。',
+                meaning: '喜悦是一种内在的生命力，让我们从日常的简单事物中找到欢乐，照亮我们的内心世界。',
+                emoji: '😊',
+                collected: true
+            },
+            {
+                id: 'peace',
+                name: '平静',
+                description: '在混乱中保持内心的平静。',
+                meaning: '平静是内心的宁静，让我们在外界纷扰中保持稳定，找到自己的平衡点。',
+                emoji: '🕊️',
+                collected: true
+            },
+            {
+                id: 'patience',
+                name: '耐心',
+                description: '学会等待，相信时间的力量。',
+                meaning: '耐心是一种静待花开的能力，让我们在等待中培养坚韧和信念，不急不躁地迎接生活的变化。',
+                emoji: '⏳',
+                collected: false
+            },
+            {
+                id: 'kindness',
+                name: '善良',
+                description: '对他人怀有真诚的关心和同情。',
+                meaning: '善良是人性中最美的光辉，它让我们能够关爱他人，传递温暖，创造更和谐的世界。',
+                emoji: '💖',
+                collected: false
+            },
+            {
+                id: 'courage',
+                name: '勇气',
+                description: '即使害怕，依然勇敢前行。',
+                meaning: '勇气并非没有恐惧，而是在面对恐惧时依然前行。它让我们能够面对挑战，突破自我限制。',
+                emoji: '🦁',
+                collected: false
+            },
+            {
+                id: 'wisdom',
+                name: '智慧',
+                description: '将知识转化为生活的指南。',
+                meaning: '智慧是知识和经验的结晶，让我们能够明辨是非，做出明智的决定，指引生活的方向。',
+                emoji: '🦉',
+                collected: false
+            },
+            {
+                id: 'humility',
+                name: '谦卑',
+                description: '认识自己的局限，愿意学习和成长。',
+                meaning: '谦卑不是自卑，而是对自己能力和限制的正确认识，保持开放的心态，愿意不断学习和进步。',
+                emoji: '🌱',
+                collected: false
+            },
+            {
+                id: 'compassion',
+                name: '同理心',
+                description: '能够理解并感受他人的情感。',
+                meaning: '同理心是感受他人情感的能力，让我们能够站在他人的角度思考问题，建立更深刻的连接。',
+                emoji: '🤲',
+                collected: false
+            },
+            {
+                id: 'honesty',
+                name: '诚实',
+                description: '言行一致，真实地表达自己。',
+                meaning: '诚实是品格的基石，它让我们能够真实地面对自己和他人，建立信任，活出真实的自我。',
+                emoji: '🔍',
+                collected: false
+            },
+            {
+                id: 'forgiveness',
+                name: '宽恕',
+                description: '释放过去的伤害，给自己和他人新的开始。',
+                meaning: '宽恕是一种释放，它让我们能够放下过去的伤害，减轻内心的负担，向未来敞开心扉。',
+                emoji: '🕊️',
+                collected: false
+            },
+            {
+                id: 'perseverance',
+                name: '毅力',
+                description: '即使困难重重，依然坚持不懈。',
+                meaning: '毅力是坚持不懈的决心，让我们在面对挫折时不轻易放弃，持续朝着目标前进。',
+                emoji: '🏔️',
+                collected: false
+            }
+        ];
+
+        // Sample gratitude entries
+        const sampleGratitudes = [
+            {
+                text: "今天阳光明媚，我很感激能在公园里散步，享受大自然的美丽。",
+                type: "nature",
+                mood: "joyful",
+                date: "2023-10-25"
+            },
+            {
+                text: "感谢朋友在我需要时的支持和鼓励，让我感到被关心和理解。",
+                type: "people",
+                mood: "grateful",
+                date: "2023-10-24"
+            },
+            {
+                text: "今天完成了一个困难的项目，我感谢自己的坚持和努力。",
+                type: "self",
+                mood: "content",
+                date: "2023-10-23"
+            }
+        ];
+        
+        // Initialize the app
+        function initApp() {
+            updateSeedCount();
+            renderSeedCollection();
+            renderRecentGratitudes();
+            
+            document.getElementById('waterPlantBtn').addEventListener('click', () => {
+                switchScreen('journalScreen');
+                switchNav('journalScreen', document.querySelectorAll('.nav-item')[2]);
+            });
+
+            document.getElementById('seedFilter').addEventListener('change', renderSeedCollection);
+        }
+
+        // Intro slide navigation
+        function nextIntroSlide() {
+            if (currentIntroSlide < totalIntroSlides) {
+                document.getElementById(`intro-slide-${currentIntroSlide}`).classList.remove('active');
+                currentIntroSlide++;
+                document.getElementById(`intro-slide-${currentIntroSlide}`).classList.add('active');
+                
+                // Update dots
+                document.querySelectorAll('.intro-dot').forEach(dot => {
+                    dot.classList.remove('active');
+                });
+                document.querySelector(`.intro-dot[data-slide="${currentIntroSlide}"]`).classList.add('active');
+            }
+        }
+
+        // Claim first seed and go to main app
+        function claimFirstSeed() {
+            // Show seed claiming animation
+            const introScreen = document.getElementById('intro');
+            introScreen.innerHTML = `
+                <div class="flex flex-col items-center justify-center h-full p-4 text-center">
+                    <img src="https://cdn.jsdelivr.net/gh/twitter/twemoji@14.0.2/assets/svg/1f331.svg" alt="Seedling" class="w-32 h-32 mb-8 bounce">
+                    <h2 class="text-2xl font-bold mb-4">恭喜你获得第一颗种子！</h2>
+                    <p class="text-lg mb-8">这是你感恩之旅的开始</p>
+                    <button class="button px-10 py-4 text-lg" onclick="startMainApp()">开始探索</button>
+                </div>
+            `;
+            
+            // Add sparkle animation
+            for (let i = 0; i < 10; i++) {
+                setTimeout(() => addSparkle(), i * 300);
+            }
+        }
+
+        // Add sparkle effect
+        function addSparkle() {
+            const sparkle = document.createElement('div');
+            sparkle.classList.add('sparkle');
+            
+            const intro = document.getElementById('intro');
+            const centerX = intro.offsetWidth / 2;
+            const centerY = intro.offsetHeight / 2;
+            
+            const angle = Math.random() * Math.PI * 2;
+            const distance = 100 + Math.random() * 100;
+            
+            const x = centerX + Math.cos(angle) * distance;
+            const y = centerY + Math.sin(angle) * distance;
+            
+            sparkle.style.left = `${x}px`;
+            sparkle.style.top = `${y}px`;
+            
+            intro.appendChild(sparkle);
+            
+            setTimeout(() => {
+                sparkle.remove();
+            }, 800);
+        }
+
+        // Start main app after intro
+        function startMainApp() {
+            switchScreen('homeScreen');
+            document.querySelector('.bottom-nav').style.display = 'flex';
+            
+            // Initialize with some data
+            streakCount = 7;
+            document.getElementById('streakBadge').textContent = `连续 ${streakCount} 天`;
+            
+            growPlant(1);
+        }
+
+        // Switch between screens
+        function switchScreen(screenId) {
+            document.querySelectorAll('.screen').forEach(screen => {
+                screen.classList.remove('active');
+            });
+            document.getElementById(screenId).classList.add('active');
+        }
+
+        // Switch between nav items
+        function switchNav(screenId, navItem) {
+            document.querySelectorAll('.nav-item').forEach(item => {
+                item.classList.remove('active');
+            });
+            navItem.classList.add('active');
+            switchScreen(screenId);
+        }
+
+        // Toggle dark mode
+        function toggleDarkMode() {
+            const darkModeEnabled = document.getElementById('darkModeToggle').checked;
+            if (darkModeEnabled) {
+                document.documentElement.classList.add('dark');
+            } else {
+                document.documentElement.classList.remove('dark');
+            }
+        }
+
+        // Toggle language selector
+        function toggleLanguageSelector() {
+            const selector = document.querySelector('.language-selector');
+            selector.classList.toggle('open');
+        }
+
+        // Change language
+        function changeLanguage(lang) {
+            document.getElementById('languageSelect').value = lang;
+            updateLanguage();
+            toggleLanguageSelector();
+        }
+
+        // Update language (demo only shows message)
+        function updateLanguage() {
+            const lang = document.getElementById('languageSelect').value;
+            console.log(`Language changed to: ${lang}`);
+            // In a real app, this would update all text elements
+        }
+
+        // Save gratitude entry
+        function saveGratitude() {
+            const gratitudeText = document.getElementById('gratitudeInput').value.trim();
+            const gratitudeType = document.getElementById('gratitudeType').value;
+            const gratitudeMood = document.getElementById('gratitudeMood').value;
+            
+            if (gratitudeText === '') {
+                alert('请输入感恩内容');
+                return;
+            }
+            
+            // Create new gratitude object
+            const newGratitude = {
+                text: gratitudeText,
+                type: gratitudeType,
+                mood: gratitudeMood,
+                date: new Date().toISOString().split('T')[0]
+            };
+            
+            // Add to beginning of the list
+            sampleGratitudes.unshift(newGratitude);
+            
+            // Clear the input
+            document.getElementById('gratitudeInput').value = '';
+            
+            // Update UI
+            renderRecentGratitudes();
+            growPlant(plantGrowthStage + 1);
+            updateEnergy(energy + 20);
+            
+            // Show water animation
+            addWaterDrop();
+            
+            // Switch back to home screen
+            switchScreen('homeScreen');
+            switchNav('homeScreen', document.querySelectorAll('.nav-item')[0]);
+            
+            // Display success message
+            const successMessage = document.createElement('div');
+            successMessage.classList.add('fixed', 'bottom-20', 'left-0', 'right-0', 'mx-auto', 'w-4/5', 'bg-green-500', 'text-white', 'p-4', 'rounded-lg', 'text-center');
+            successMessage.style.zIndex = '1000';
+            successMessage.textContent = '感恩记录已保存！你的植物得到了滋养。';
+            document.body.appendChild(successMessage);
+            
+            setTimeout(() => {
+                successMessage.classList.add('transition-opacity', 'duration-500', 'opacity-0');
+                setTimeout(() => {
+                    successMessage.remove();
+                }, 500);
+            }, 3000);
+        }
+
+        // Add water drop animation
+        function addWaterDrop() {
+            const plantContainer = document.getElementById('plantContainer');
+            const waterDrop = document.createElement('div');
+            waterDrop.classList.add('water-drop');
+            
+            // Position at top center
+            waterDrop.style.left = '50%';
+            waterDrop.style.transform = 'translateX(-50%) rotate(45deg)';
+            
+            plantContainer.appendChild(waterDrop);
+            
+            // Remove after animation completes
+            setTimeout(() => {
+                waterDrop.remove();
+            }, 1500);
+        }
+
+        // Update energy display
+        function updateEnergy(newEnergy) {
+            energy = Math.min(newEnergy, 100);
+            document.getElementById('dailyEnergy').textContent = energy;
+            document.getElementById('energyBar').style.width = `${energy}%`;
+        }
+
+        // Grow plant to specified stage
+        function growPlant(stage) {
+            plantGrowthStage = Math.min(stage, maxGrowthStage);
+            
+            const plantStem = document.getElementById('plantStem');
+            const plantContainer = document.getElementById('plantContainer');
+            
+            // Clear existing leaves and flowers
+            document.querySelectorAll('.plant-leaf, .plant-flower').forEach(el => el.remove());
+            
+            // Update stem height based on stage
+            const heights = [10, 50, 90, 130, 170, 200];
+            plantStem.style.height = `${heights[plantGrowthStage]}px`;
+            
+            // Add leaves based on stage
+            if (plantGrowthStage >= 1) {
+                // First set of leaves
+                addLeaf(70, -15, false);
+                addLeaf(70, 15, true);
+            }
+            
+            if (plantGrowthStage >= 2) {
+                // Second set of leaves
+                addLeaf(100, -20, false);
+                addLeaf(100, 20, true);
+            }
+            
+            if (plantGrowthStage >= 3) {
+                // Third set of leaves
+                addLeaf(140, -25, false);
+                addLeaf(140, 25, true);
+                
+                // Add small leaves
+                addLeaf(120, -10, false, 0.7);
+                addLeaf(120, 10, true, 0.7);
+            }
+            
+            if (plantGrowthStage >= 4) {
+                // More leaves
+                addLeaf(170, -15, false, 0.8);
+                addLeaf(170, 15, true, 0.8);
+            }
+            
+            if (plantGrowthStage >= 5) {
+                // Add flower
+                const flower = document.createElement('div');
+                flower.classList.add('plant-flower');
+                flower.style.bottom = '210px';
+                plantContainer.appendChild(flower);
+                
+                // Animate flower appearance
+                setTimeout(() => {
+                    flower.style.opacity = '1';
+                }, 100);
+            }
+            
+            // Make all leaves visible with staggered delay
+            document.querySelectorAll('.plant-leaf').forEach((leaf, index) => {
+                setTimeout(() => {
+                    leaf.style.opacity = '1';
+                }, 100 * index);
+            });
+        }
+
+        // Add a leaf to the plant
+        function addLeaf(bottom, leftOffset, isLeft, scale = 1) {
+            const plantContainer = document.getElementById('plantContainer');
+            const leaf = document.createElement('div');
+            leaf.classList.add('plant-leaf');
+            if (isLeft) leaf.classList.add('left');
+            
+            leaf.style.bottom = `${bottom}px`;
+            leaf.style.left = `${50 + leftOffset}%`;
+            
+            if (scale !== 1) {
+                leaf.style.transform = isLeft 
+                    ? `scaleX(-1) rotate(45deg) scale(${scale})` 
+                    : `rotate(45deg) scale(${scale})`;
+            }
+            
+            plantContainer.appendChild(leaf);
+        }
+
+        // Update seed count
+        function updateSeedCount() {
+            const collectedSeeds = seeds.filter(seed => seed.collected).length;
+            document.getElementById('seedCount').textContent = `${collectedSeeds}/${seeds.length}`;
+        }
+
+        // Render seed collection
+        function renderSeedCollection() {
+            const filter = document.getElementById('seedFilter').value;
+            const seedCollection = document.getElementById('seedCollection');
+            seedCollection.innerHTML = '';
+            
+            let filteredSeeds = seeds;
+            if (filter === 'collected') {
+                filteredSeeds = seeds.filter(seed => seed.collected);
+            } else if (filter === 'uncollected') {
+                filteredSeeds = seeds.filter(seed => !seed.collected);
+            }
+            
+            filteredSeeds.forEach(seed => {
+                const seedCard = document.createElement('div');
+                seedCard.classList.add('card', 'seed-card', 'p-4', 'text-center');
+                if (!seed.collected) {
+                    seedCard.classList.add('opacity-50');
+                }
+                
+                seedCard.innerHTML = `
+                    <div class="text-5xl mb-2">${seed.emoji}</div>
+                    <h3 class="font-bold">${seed.name}</h3>
+                    <p class="text-sm">${seed.collected ? '已收集' : '未获得'}</p>
+                `;
+                
+                seedCard.addEventListener('click', () => showSeedDetail(seed.id));
+                seedCollection.appendChild(seedCard);
+            });
+        }
+
+        // Show seed detail
+        function showSeedDetail(seedId) {
+            const seed = seeds.find(s => s.id === seedId);
+            if (!seed) return;
+            
+            document.getElementById('seedDetailTitle').textContent = '种子详情';
+            document.getElementById('seedDetailImage').src = `https://cdn.jsdelivr.net/gh/twitter/twemoji@14.0.2/assets/svg/${getEmojiHex(seed.emoji)}.svg`;
+            document.getElementById('seedDetailName').textContent = seed.name;
+            document.getElementById('seedDetailStatus').textContent = seed.collected ? '已收集' : '未获得';
+            document.getElementById('seedDetailDescription').textContent = seed.description;
+            document.getElementById('seedDetailMeaning').textContent = seed.meaning;
+            
+            if (seed.collected) {
+                document.getElementById('seedAchievementSection').classList.add('hidden');
+                document.getElementById('seedUpgradeSection').classList.remove('hidden');
+            } else {
+                document.getElementById('seedAchievementSection').classList.remove('hidden');
+                document.getElementById('seedUpgradeSection').classList.add('hidden');
+                document.getElementById('seedAchievementHint').textContent = `持续记录与"${seed.name}"相关的感恩事项，或完成特定的挑战任务来获得这颗种子。`;
+            }
+            
+            switchScreen('seedDetailScreen');
+        }
+
+        // Get emoji hex code for image URL
+        function getEmojiHex(emoji) {
+            // Simple mapping for demo
+            const emojiMap = {
+                '🙏': '1f64f',
+                '😊': '1f60a',
+                '🕊️': '1f54a',
+                '⏳': '23f3',
+                '💖': '1f496',
+                '🦁': '1f981',
+                '🦉': '1f989',
+                '🌱': '1f331',
+                '🤲': '1f932',
+                '🔍': '1f50d',
+                '🏔️': '1f3d4'
+            };
+            
+            return emojiMap[emoji] || '1f331'; // Default to seedling
+        }
+
+        // Render recent gratitude entries
+        function renderRecentGratitudes() {
+            const recentContainer = document.getElementById('recentGratitude');
+            recentContainer.innerHTML = '';
+            
+            sampleGratitudes.slice(0, 3).forEach((gratitude, index) => {
+                const entry = document.createElement('div');
+                entry.classList.add('card', 'p-4', 'gratitude-entry');
+                entry.style.animationDelay = `${index * 0.1}s`;
+                
+                let moodEmoji = '😊';
+                switch (gratitude.mood) {
+                    case 'joyful': moodEmoji = '😊'; break;
+                    case 'peaceful': moodEmoji = '😌'; break;
+                    case 'hopeful': moodEmoji = '🌟'; break;
+                    case 'grateful': moodEmoji = '🙏'; break;
+                    case 'content': moodEmoji = '😊'; break;
+                }
+                
+                const date = new Date(gratitude.date);
+                const formattedDate = `${date.getMonth() + 1}月${date.getDate()}日`;
+                
+                entry.innerHTML = `
+                    <div class="flex justify-between items-start mb-2">
+                        <div class="badge">${getTypeLabel(gratitude.type)}</div>
+                        <div class="text-sm text-gray-500">${formattedDate}</div>
+                    </div>
+                    <p class="mb-2">${gratitude.text}</p>
+                    <div class="text-right">${moodEmoji}</div>
+                `;
+                
+                recentContainer.appendChild(entry);
+            });
+        }
+
+        // Helper to get type label
+        function getTypeLabel(type) {
+            switch (type) {
+                case 'general': return '日常生活';
+                case 'people': return '人际关系';
+                case 'self': return '自我成长';
+                case 'nature': return '自然万物';
+                case 'challenge': return '挑战与学习';
+                default: return '日常生活';
+            }
+        }
+
+        // Add ripple effect on button clicks
+        document.addEventListener('click', function(e) {
+            if (e.target.classList.contains('button')) {
+                const button = e.target;
+                const ripple = document.createElement('span');
+                ripple.classList.add('ripple');
+                
+                const buttonRect = button.getBoundingClientRect();
+                const size = Math.max(buttonRect.width, buttonRect.height);
+                
+                ripple.style.width = ripple.style.height = `${size}px`;
+                ripple.style.left = `${e.clientX - buttonRect.left - size / 2}px`;
+                ripple.style.top = `${e.clientY - buttonRect.top - size / 2}px`;
+                
+                button.appendChild(ripple);
+                
+                setTimeout(() => {
+                    ripple.remove();
+                }, 600);
+            }
+        });
+
+        // Initialize app on load
+        document.addEventListener('DOMContentLoaded', initApp);
+    </script>
+
+
+</body></html>

@@ -1,0 +1,170 @@
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>希望之森 - The Forest of Forgotten Hope</title>
+    <link rel="stylesheet" href="styles.css">
+    <script type="importmap">
+    {
+      "imports": {
+        "three": "https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.js",
+        "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.160.0/examples/jsm/"
+      }
+    }
+    </script>
+</head>
+<body>
+    <div id="game-container">
+        <div id="forest-scene"></div>
+        <div id="ui-container">
+            <div id="journal">
+                <div id="journal-title">艾瑞恩的感恩日记</div>
+                <div id="journal-content">
+                    <textarea id="gratitude-entry" placeholder="今天，我感谢..."></textarea>
+                    <button id="save-entry">记录感恩</button>
+                </div>
+                <div id="seeds-container">
+                    <div id="seeds-title">已收集的希望种子</div>
+                    <div id="seeds-list"></div>
+                </div>
+            </div>
+            <div id="info-panel">
+                <h2>遗忘森林</h2>
+                <p>在这片被迷雾笼罩的古老森林中，希望之树静静等待被唤醒...</p>
+                <div id="tree-info">
+                    <h3>希望之树状态</h3>
+                    <div id="tree-status">未解锁</div>
+                </div>
+                <div id="door-info">
+                    <h3>幸福之门</h3>
+                    <div id="door-status">需要收集更多种子</div>
+                </div>
+            </div>
+            <div id="game-menu">
+                <div class="menu-button" id="inventory-button">
+                    <div class="button-icon">🎒</div>
+                    <span>背包</span>
+                </div>
+                <div class="menu-button" id="map-button">
+                    <div class="button-icon">🗺️</div>
+                    <span>地图</span>
+                </div>
+                <div class="menu-button" id="settings-button">
+                    <div class="button-icon">⚙️</div>
+                    <span>设置</span>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Inventory Panel -->
+        <div id="inventory-panel" class="game-panel hidden">
+            <div class="panel-header">
+                <h2>希望背包</h2>
+                <button class="close-panel">×</button>
+            </div>
+            <div class="panel-content">
+                <div class="inventory-tabs">
+                    <div class="inventory-tab active" data-tab="seeds">希望种子</div>
+                    <div class="inventory-tab" data-tab="artifacts">神器</div>
+                    <div class="inventory-tab" data-tab="notes">笔记</div>
+                </div>
+                <div class="inventory-content active" id="seeds-inventory">
+                    <div class="seed-grid"></div>
+                </div>
+                <div class="inventory-content" id="artifacts-inventory">
+                    <p class="empty-message">还未收集到任何神器。</p>
+                </div>
+                <div class="inventory-content" id="notes-inventory">
+                    <p class="empty-message">还未记录任何笔记。</p>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Map Panel -->
+        <div id="map-panel" class="game-panel hidden">
+            <div class="panel-header">
+                <h2>遗忘森林地图</h2>
+                <button class="close-panel">×</button>
+            </div>
+            <div class="panel-content">
+                <div id="forest-map">
+                    <div class="map-container">
+                        <svg viewBox="0 0 200 200" id="map-svg">
+                            <circle cx="100" cy="100" r="10" class="map-marker main-tree" />
+                            <circle cx="70" cy="60" r="8" class="map-marker locked-tree" data-tree-id="1" />
+                            <circle cx="140" cy="70" r="8" class="map-marker locked-tree" data-tree-id="2" />
+                            <circle cx="150" cy="130" r="8" class="map-marker locked-tree" data-tree-id="3" />
+                            <circle cx="80" cy="150" r="8" class="map-marker locked-tree" data-tree-id="4" />
+                            <circle cx="50" cy="110" r="8" class="map-marker locked-tree" data-tree-id="5" />
+                            <rect x="95" y="25" width="10" height="20" class="map-marker gate" />
+                        </svg>
+                    </div>
+                    <div class="map-legend">
+                        <div class="legend-item"><span class="legend-marker main-tree"></span> 主树</div>
+                        <div class="legend-item"><span class="legend-marker unlocked-tree"></span> 已唤醒的树</div>
+                        <div class="legend-item"><span class="legend-marker locked-tree"></span> 沉睡的树</div>
+                        <div class="legend-item"><span class="legend-marker gate"></span> 幸福之门</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Settings Panel -->
+        <div id="settings-panel" class="game-panel hidden">
+            <div class="panel-header">
+                <h2>游戏设置</h2>
+                <button class="close-panel">×</button>
+            </div>
+            <div class="panel-content">
+                <div class="settings-section">
+                    <h3>图像设置</h3>
+                    <div class="setting-item">
+                        <label for="fog-density">雾气密度:</label>
+                        <input type="range" id="fog-density" min="0" max="0.1" step="0.005" value="0.03">
+                    </div>
+                    <div class="setting-item">
+                        <label for="seed-glow">种子光亮:</label>
+                        <input type="range" id="seed-glow" min="0.5" max="3" step="0.1" value="1.5">
+                    </div>
+                </div>
+                <div class="settings-section">
+                    <h3>音效设置</h3>
+                    <div class="setting-item">
+                        <label for="music-volume">音乐音量:</label>
+                        <input type="range" id="music-volume" min="0" max="1" step="0.1" value="0.3">
+                    </div>
+                    <div class="setting-item">
+                        <label for="sfx-volume">特效音量:</label>
+                        <input type="range" id="sfx-volume" min="0" max="1" step="0.1" value="0.5">
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Seed Detail Panel -->
+        <div id="seed-detail-panel" class="game-panel hidden">
+            <div class="panel-header">
+                <h2>希望种子</h2>
+                <button class="close-panel">×</button>
+            </div>
+            <div class="panel-content">
+                <div id="seed-visual"></div>
+                <div id="seed-details">
+                    <h3 id="seed-date"></h3>
+                    <p id="seed-entry"></p>
+                    <div id="seed-actions">
+                        <button id="plant-seed">种植</button>
+                        <button id="offer-seed">奉献</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div id="message-box" class="hidden">
+            <p id="message-text"></p>
+            <button id="message-close">继续</button>
+        </div>
+    </div>
+    <script type="module" src="main.js"></script>
+</body>
+</html>

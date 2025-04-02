@@ -206,3 +206,160 @@
 
 ## 八、总结
 “Seed of Gratitude” 通过独特的感恩日记与种子收集养成玩法，结合丰富的社交互动和成就系统，为玩家打造了一个充满正能量和创造力的虚拟世界。它不仅是一款游戏，更是一种生活方式的引导，鼓励玩家在日常生活中发现美好、培养感恩之心，从而实现个人成长和幸福追求。随着产品的不断迭代和优化，“Seed of Gratitude” 将持续为玩家带来新颖、有趣且有意义的游戏体验，成为玩家心灵成长道路上的忠实伙伴。
+
+
+
+```
+Okay, incorporating the change where the **Diary Entry / Review Page** now also showcases previously generated Diary Scrolls. Here are the updated, complete descriptions for all key pages:
+
+---
+
+**Page 1: Main Screen / Garden Page**
+
+*   **Purpose/Core Function:** The central hub. Visually represents gratitude progress via the growing "Gratitude Plant," provides navigation, displays daily tracking via the Calendar, and alerts users to tasks/events via the interactive "Collection Jar."
+*   **Layout & Key Elements:**
+    *   **Top Navigation Bar:** Player Avatar/Nickname (to Profile), Level/XP Bar, Currency displays ("Sunshine," "Dewdrops"), prominent "Streak Counter."
+    *   **Central Area - Gratitude Plant:** The focal point, showing the unique plant's current growth stage in its customizable Pot/Land.
+    *   **Central Area - Calendar Progress Tracker:** Positioned *above* the Collection Jar. Clear grid layout for the month, using icons (✅/⭐ for done, ❌/🌫️ for missed) in daily cells. Interactive for details/navigation.
+    *   **Central Area - Collection Jar:** Positioned *below* the Calendar Tracker. Features:
+        *   Placeholder for the **3D model** (e.g., glass jar, "Seed" label, wooden base).
+        *   **Task Notification Animation:** Jar animates (shakes, glows, shows orbs) when attention is needed. Clicking reveals details/rewards.
+        *   **Latest Events Button:** Top-right corner of Jar section (icon ▼ or "View Events"). Triggers the Event List overlay.
+    *   **Expanded Event List (Overlay):** Appears at the *top* upon button click. Scrollable list of tasks, challenges, announcements (e.g., "Task Name" - Due: Date, Status: Status). Dismissible via a "Close" (X) button.
+    *   **Bottom Menu Bar:** Fixed navigation: "Home/Garden," "Diary," "Challenge," "Collection," "Shop" (or "More").
+*   **Visual Design & Style:** Warm, natural color palette (Warm Sand, Earthy Clay, Deep Cocoa text). Chosen fonts (Urbanist/Playfair Display, Source Sans Pro/Nunito). Smooth animations for plant, jar, UI.
+*   **Interaction & Navigation:** Bottom bar for sections. Calendar for daily status. Jar for notifications. Plant for passive progress feedback.
+*   **Unique Features:** Dynamic plant growth, interactive 3D Collection Jar, integrated Calendar Tracker, top-expanding event list, prominent Streak Counter.
+
+---
+
+**Page 2: Diary Entry / Review Page**
+
+*   **Purpose/Core Function:** Serves as the primary access point for both viewing/managing *individual* gratitude diary entries and showcasing/accessing *previously generated* Diary Scrolls. Also initiates the creation of new entries and new scrolls.
+*   **Layout & Key Elements:**
+    *   **Top Area:** Clear page title (e.g., "My Diary & Scrolls"). Optional thematic banner.
+    *   **Section 1: Generated Diary Scrolls Showcase:** Positioned prominently near the top. Displays a **gallery or carousel of thumbnails** representing the user's previously created Diary Scrolls.
+        *   Each thumbnail shows a mini-preview of the scroll and potentially its title or date range.
+        *   **Interaction:** Clicking a thumbnail navigates the user to the dedicated **"Diary Scroll Showcase Page" (Page 8)** to view that specific scroll in full detail.
+        *   May include a "View All Scrolls" link if many scrolls exist.
+    *   **Section 2: Create New Scroll Button:** A clearly labeled button, perhaps positioned near the showcase section (e.g., "Create New Diary Scroll"), that navigates the user to the **"Diary Scroll Creator Page" (Page 7)**.
+    *   **Section 3: Browse Individual Entries (Weekly Progress Model):** Located below the scroll showcase.
+        *   **Month/Cycle Indicator:** Shows the current period (e.g., "September - Week 1").
+        *   **Weekly Navigation:** Tabs/cards for weeks (W1, W2, etc.). Clicking a week loads its daily entries.
+        *   **Daily Card View:** Horizontally swipeable cards within the selected week, showing date and content preview.
+            *   **Card Interaction:** Tap opens the full entry (Page 3); Swipe Up reveals Delete button (requires confirmation).
+    *   **Quick Add Entry Button:** A persistent floating action button (FAB) or fixed button ("+" or microphone icon) to create a *new individual* diary entry, navigating to the **"Diary Edit / Detail Page" (Page 3)** in edit mode.
+*   **Visual Design & Style:** Balances the display of generated scrolls with the browsing of individual entries. Scroll thumbnails are visually appealing previews. Maintains overall app aesthetic.
+*   **Interaction & Navigation:** Users can tap scroll thumbnails to view, tap the create scroll button, select weeks, swipe through daily cards, tap cards to view/edit individual entries, or use the quick add button for new entries.
+*   **Unique Features:** **Integrated showcase of generated Diary Scrolls**, clear separation between accessing generated scrolls and browsing individual entries, distinct buttons for creating new scrolls vs. new individual entries, weekly progress model for entry browsing.
+
+---
+
+**Page 3: Diary Edit / Detail Page**
+
+*   **Purpose/Core Function:** Enables writing/saving new individual gratitude entries or viewing/editing existing ones. Supports text, images, and potentially audio. Accessed from Page 2 (tapping a daily card or the Quick Add button).
+*   **Layout & Key Elements:**
+    *   **Header:** Displays the specific date of the entry. "Back" button returns to Page 2.
+    *   **Content Area:** Text input/display field, Rich Text Toolbar (Edit Mode), Image attachment section (view/add), optional Audio attachment section (view/add).
+    *   **Action Buttons (Contextual):** Save/Submit (Edit), Share (View), Delete (View).
+*   **Visual Design & Style:** Clean, content-focused interface. Readable typography. Standard app palette.
+*   **Interaction & Navigation:** Standard text input, button clicks, media handling. Back navigation.
+*   **Unique Features:** Supports mixed media (text, image, audio) in one entry. Context-aware action buttons.
+
+---
+
+**Page 4: Seed Almanac / Collection Page**
+
+*   **Purpose/Core Function:** A visual catalog of all "Virtue Seeds." Users browse collected/uncollected seeds and understand their associated virtues.
+*   **Layout & Key Elements:**
+    *   **Header:** Title "Seed Almanac." Filter/sort options (Virtue, Rarity, Status).
+    *   **Main Content Area:** Grid/list of Seed Cards (image, name, virtue category). Collected seeds are highlighted; uncollected are grayed/silhouetted.
+*   **Visual Design & Style:** Resembles a botanical collection. Appealing seed visuals. Organized layout.
+*   **Interaction & Navigation:** Scrolling, filtering/sorting. Tapping any Seed Card navigates to the **"Seed Detail Page" (Page 5)**.
+*   **Unique Features:** Comprehensive catalog, categorization by virtues, clear collected/uncollected status visuals.
+
+---
+
+**Page 5: Seed Detail Page**
+
+*   **Purpose/Core Function:** Provides deep info on one seed. Allows personalization (name, story, AIGC image) of collected seeds using "Evolution Cards." Accessed from Page 4.
+*   **Layout & Key Elements:**
+    *   **Main Visual:** Large, high-quality seed image/model.
+    *   **Seed Information:** Name (default/custom), Virtue Category, Detailed Description, Collection Status.
+    *   **Personalization Section (Collected Seeds):** Fields for Custom Name, Custom Story, Custom Image display.
+    *   **Action Button: "Use Evolution Card":** Appears if applicable. Triggers personalization workflow (edit name/story, potentially use AIGC for image generation).
+    *   **Navigation:** "Back" button to Page 4.
+*   **Visual Design & Style:** Focuses on the individual seed's beauty/meaning. Clear personalization area.
+*   **Interaction & Navigation:** Primarily viewing. Key interaction is triggering personalization.
+*   **Unique Features:** In-depth virtue meaning, Evolution Card mechanism, customization of name/story, **AIGC integration for unique image generation**.
+
+---
+
+**Page 6: Challenge & Achievement Page**
+
+*   **Purpose/Core Function:** Motivates users via specific tasks (Challenges) and tracks long-term accomplishments (Achievements). Aggregates goals across game mechanics.
+*   **Layout & Key Elements:**
+    *   **Top Banner:** Title "Challenges & Achievements." Background image. Optional achievement summary.
+    *   **Tabbed Interface:**
+        *   **Tab 1: Active Challenges:** List of current tasks (Diary, Collection, Evolution, Social, Event, etc.) with title, description, progress, reward, time limit.
+        *   **Tab 2: Completed Challenges:** Archive.
+        *   **Tab 3: Achievements:** Categorized list (Milestones, Diary, Collection, etc.) showing icon/badge, title, criteria, progress, status.
+*   **Visual Design & Style:** Motivating and rewarding. Clear progress indicators, appealing icons/badges. Consistent theme.
+*   **Interaction & Navigation:** Tab switching. Challenges might be clickable for details. Progress updates dynamically.
+*   **Unique Features:** Tracks short-term (Challenges) & long-term (Achievements) goals, covers all mechanics, clear rewards/progress visualization.
+
+---
+
+**Page 7: Diary Scroll Creator Page**
+
+*   **Purpose/Core Function:** Enables users to compile selected diary entries into a visually appealing, shareable Diary Scroll (image/video) using various style templates. Accessed from Page 2 ("Create New Scroll" button).
+*   **Layout & Key Elements:**
+    *   **Header:** Title "Create Diary Scroll." Back button.
+    *   **Configuration Panel:** Date Range Selector, **Template Selector (visual previews of Parchment, Ink Wash, Album, Minimalist, Starry Night, Bamboo, etc.)**, optional Content Selection, optional Background Music Selector.
+    *   **Preview Area:** Large dynamic preview updates based on selections.
+    *   **Action Buttons:** "Generate Scroll," then "Save to Device" / "Share" upon completion.
+*   **Visual Design & Style:** Functional interface. Focus on template previews and the main preview area. Output templates are visually rich.
+*   **Interaction & Navigation:** User configures options, observes preview, generates, then saves/shares.
+*   **Unique Features:** Step-by-step creation. **Visually distinct template previews (including specific styles)**. Dynamic preview. Image/video output option.
+
+---
+
+**Page 8: Diary Scroll Showcase Page**
+
+*   **Purpose/Core Function:** Displays a *single, specific, previously generated* Diary Scroll artifact in full detail. Allows viewing, re-sharing, or managing it. Accessed from Page 2 (tapping a scroll thumbnail).
+*   **Layout & Key Elements:**
+    *   **Header:** Scroll Title (custom/generic). Back button.
+    *   **Main Content Area:** **Dominantly displays the generated Scroll** (static image in scrollable view or embedded video player).
+    *   **Contextual Info (Optional):** Date range, template name used.
+    *   **Action Bar/Footer:** Buttons: Share, Save to Device, Delete, (Optional) Edit (returns to Page 7 pre-filled).
+*   **Visual Design & Style:** Minimal page design acting as a frame; focus is on the rich Scroll content.
+*   **Interaction & Navigation:** Viewing scroll content (scrolling/playing). Using action buttons. Back navigation.
+*   **Unique Features:** Dedicated full-view display for generated scrolls. Supports image/video formats. Provides management actions (Share, Save, Delete).
+
+You are absolutely right! My apologies for overlooking the Shop Page. Here is the detailed description for it, fitting in with the others:
+
+---
+
+**Page 9: Shop Page**
+
+*   **Purpose/Core Function:** Provides a centralized location for users to browse and acquire optional cosmetic items, premium features, or potentially carefully designed functional items using either earned in-game currency ("Sunshine," "Dewdrops") or real money transactions (if implemented). The goal is to offer personalization and enhanced experiences without disrupting the core gratitude practice.
+*   **Layout & Key Elements:**
+    *   **Header:** Clear page title "Shop" or "Marketplace." Displays the user's current balance of relevant currencies (e.g., Sunshine icon and amount, Dewdrops icon and amount, potentially a premium currency icon if used). Includes a "Back" or "Close" button.
+    *   **Main Content Area - Categorized Sections:** Organizes items for easy browsing, likely using tabs or distinct visual sections:
+        *   **Section 1: Decorations:** Items to personalize the user's garden/plant environment.
+            *   **Sub-categories:** Could include "Pots," "Backgrounds," "Garden Trinkets" (e.g., small animated items like windmills, butterflies, benches), "Plant Effects" (e.g., subtle glows, sparkling particles).
+            *   **Item Display:** Each item shown with a clear visual preview, name, description (optional), and price (in relevant currency/currencies).
+        *   **Section 2: Premium Features:** Non-cosmetic enhancements offered for purchase.
+            *   **Examples:** "Unlock All Diary Scroll Templates," "Advanced Statistics & Insights" (e.g., deeper analysis of diary entries/moods), "Expanded Cloud Storage" (if limits exist), "Ad-Free Experience" (if ads are present in the free tier).
+            *   **Display:** Clearly describe the feature, its benefits, and the purchase price/method (often a one-time purchase or part of a subscription).
+        *   **Section 3: (Optional & Carefully Designed) Functional Items:** Items that might slightly influence gameplay, designed not to be pay-to-win but perhaps convenience or acceleration.
+            *   **Examples:** "Evolution Cards" (Offer a limited number for purchase, ensuring they are still primarily earned through gameplay), "Special Seed Packs" (e.g., containing seeds from a specific virtue category or higher chance of rare seeds – use with caution to avoid undermining collection effort), "Growth Boosters" (temporary slight increase in growth rate from diary entries).
+            *   **Display:** Clear visual, name, description of effect, quantity (if applicable), and price. **Emphasis on balancing availability vs. core gameplay loop.**
+    *   **Featured Items/Specials Section (Optional):** A highlighted area showcasing new arrivals, discounted items, or limited-time offers.
+*   **Visual Design & Style:** Should feel inviting and integrated with the app's overall aesthetic, not overly commercial or jarring. Item previews are crucial and should be high quality. Pricing needs to be clear and unambiguous. Uses standard app colors and fonts.
+*   **Interaction & Navigation:** Users browse categories/items, tap on an item for a detail view (larger preview, full description, purchase button), confirm purchases through a standard checkout flow (using in-game currency or integrating with platform payment systems).
+*   **Unique Features:** Offers cosmetic personalization (Decorations), potential feature upgrades (Premium), and carefully balanced optional functional items. Clear categorization for easy browsing. Integration with both earned in-game currency and potentially real money transactions. **Focus on enhancing, not replacing, the core gratitude experience.**
+
+---
+Now the list includes the Shop Page description alongside the others.
+```

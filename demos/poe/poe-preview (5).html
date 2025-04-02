@@ -1,0 +1,1738 @@
+<!DOCTYPE html><html lang="en"><head><meta http-equiv="Content-Security-Policy" content="default-src 'self' 'unsafe-inline' 'unsafe-eval' data: blob: https://cdnjs.cloudflare.com https://cdn.jsdelivr.net https://code.jquery.com https://unpkg.com https://d3js.org https://threejs.org https://cdn.plot.ly https://stackpath.bootstrapcdn.com https://maps.googleapis.com https://cdn.tailwindcss.com https://ajax.googleapis.com https://kit.fontawesome.com https://cdn.datatables.net https://maxcdn.bootstrapcdn.com https://code.highcharts.com https://tako-static-assets-production.s3.amazonaws.com https://www.youtube.com https://fonts.googleapis.com https://fonts.gstatic.com https://pfst.cf2.poecdn.net https://puc.poecdn.net https://i.imgur.com https://wikimedia.org https://*.icons8.com https://*.giphy.com https://picsum.photos https://images.unsplash.com; frame-src 'self' https://www.youtube.com https://trytako.com; child-src 'self'; manifest-src 'self'; worker-src 'self'; upgrade-insecure-requests; block-all-mixed-content;">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Seed of Gratitude</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600;700&amp;family=Nunito:wght@300;400;600;700&amp;display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/three@0.132.2/build/three.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/three@0.132.2/examples/js/controls/OrbitControls.js"></script>
+    <style>
+        :root {
+            --color-warm-sand: #F7F3E9;
+            --color-earthy-clay: #D8A38D;
+            --color-sage-green: #A1A99C;
+            --color-soft-sky: #C1D4E0;
+            --color-deep-cocoa: #4A2C2A;
+            --color-muted-blush: #D9B4A6;
+            --color-tranquil-blue: #77A6B6;
+            --color-primary: #5D5CDE;
+            
+            /* Dark mode colors */
+            --color-dark-bg: #181818;
+            --color-dark-surface: #262626;
+            --color-dark-card: #333333;
+            --color-dark-text: #E0E0E0;
+            --color-dark-muted: #AAAAAA;
+        }
+        
+        body {
+            font-family: 'Nunito', sans-serif;
+            background-color: var(--color-warm-sand);
+            color: var(--color-deep-cocoa);
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+
+        h1, h2, h3, h4, h5 {
+            font-family: 'Playfair Display', serif;
+        }
+
+        .dark body {
+            background-color: var(--color-dark-bg);
+            color: var(--color-dark-text);
+        }
+
+        /* Jar glow animation */
+        @keyframes jarGlow {
+            0% { filter: drop-shadow(0 0 4px rgba(255, 215, 0, 0.4)); }
+            50% { filter: drop-shadow(0 0 8px rgba(255, 215, 0, 0.7)); }
+            100% { filter: drop-shadow(0 0 4px rgba(255, 215, 0, 0.4)); }
+        }
+
+        .jar-glow {
+            animation: jarGlow 2s infinite;
+        }
+
+        /* Plant growing animation */
+        @keyframes plantGrow {
+            0% { transform: scale(0.95); }
+            50% { transform: scale(1.05); }
+            100% { transform: scale(0.95); }
+        }
+
+        .plant-grow {
+            animation: plantGrow 4s infinite ease-in-out;
+        }
+
+        /* Transition effects */
+        .page-transition {
+            transition: all 0.3s ease-out;
+        }
+
+        .page-enter {
+            opacity: 0;
+            transform: translateY(20px);
+        }
+
+        .page-enter-active {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        /* Custom scrollbar */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: var(--color-warm-sand);
+        }
+
+        .dark ::-webkit-scrollbar-track {
+            background: var(--color-dark-surface);
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: var(--color-earthy-clay);
+            border-radius: 10px;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: var(--color-deep-cocoa);
+        }
+
+        /* 3D Jar canvas */
+        #jarCanvas {
+            width: 100%;
+            height: 200px;
+            cursor: pointer;
+        }
+
+        /* Calendar styling */
+        .calendar-grid {
+            display: grid;
+            grid-template-columns: repeat(7, 1fr);
+            gap: 4px;
+        }
+
+        .calendar-cell {
+            aspect-ratio: 1/1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
+            font-size: 14px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .calendar-cell.completed {
+            background-color: rgba(161, 169, 156, 0.3);
+            color: #4A2C2A;
+        }
+
+        .dark .calendar-cell.completed {
+            background-color: rgba(161, 169, 156, 0.2);
+            color: var(--color-dark-text);
+        }
+
+        .calendar-cell.today {
+            border: 2px solid var(--color-primary);
+        }
+
+        .calendar-cell.empty {
+            visibility: hidden;
+        }
+
+        /* Diary card styling */
+        .diary-card {
+            border-radius: 16px;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .diary-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+        }
+
+        /* Seeds grid */
+        .seed-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+            gap: 16px;
+        }
+
+        .seed-card {
+            border-radius: 12px;
+            transition: all 0.3s ease;
+            aspect-ratio: 3/4;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .seed-card:hover {
+            transform: scale(1.05);
+        }
+
+        .seed-card.locked {
+            filter: grayscale(1) opacity(0.7);
+        }
+
+        /* Achievement card */
+        .achievement-card {
+            border-radius: 12px;
+            transition: all 0.3s ease;
+        }
+
+        .achievement-card:hover {
+            transform: translateX(5px);
+        }
+
+        /* Navigation buttons */
+        .nav-button {
+            transition: all 0.2s ease;
+            border-radius: 50%;
+            width: 56px;
+            height: 56px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .nav-button.active {
+            background-color: var(--color-earthy-clay);
+            color: white;
+        }
+
+        .dark .nav-button.active {
+            background-color: var(--color-primary);
+        }
+
+        .nav-button:hover:not(.active) {
+            background-color: rgba(216, 163, 141, 0.2);
+        }
+
+        .dark .nav-button:hover:not(.active) {
+            background-color: rgba(93, 92, 222, 0.2);
+        }
+
+        /* Events list animation */
+        @keyframes slideDown {
+            from { max-height: 0; opacity: 0; }
+            to { max-height: 300px; opacity: 1; }
+        }
+
+        .events-list-open {
+            animation: slideDown 0.3s ease-out forwards;
+        }
+
+        /* Diary scroll themes */
+        .scroll-theme {
+            border-radius: 8px;
+            aspect-ratio: 3/4;
+            transition: all 0.3s ease;
+        }
+
+        .scroll-theme.selected {
+            border: 3px solid var(--color-primary);
+            transform: scale(1.05);
+        }
+
+        .scroll-theme:hover:not(.selected) {
+            transform: scale(1.05);
+        }
+
+        /* Experience bar */
+        .xp-bar {
+            height: 8px;
+            border-radius: 4px;
+            overflow: hidden;
+        }
+
+        .xp-progress {
+            height: 100%;
+            background-color: var(--color-primary);
+            transition: width 0.5s ease-out;
+        }
+
+        /* Rich text editor */
+        .editor-toolbar {
+            border-bottom: 1px solid rgba(0,0,0,0.1);
+            padding: 8px;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 4px;
+        }
+
+        .dark .editor-toolbar {
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+        }
+
+        .editor-button {
+            width: 36px;
+            height: 36px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .editor-button:hover {
+            background-color: rgba(0,0,0,0.1);
+        }
+
+        .dark .editor-button:hover {
+            background-color: rgba(255,255,255,0.1);
+        }
+
+        .editor-content {
+            min-height: 200px;
+            padding: 16px;
+            outline: none;
+            overflow-y: auto;
+        }
+    </style>
+</head>
+<body>
+    <div id="app">
+        <!-- Top Status Bar (persistent across pages) -->
+        <div class="fixed top-0 left-0 right-0 z-50 py-2 px-4 bg-white dark:bg-gray-900 shadow-md flex items-center justify-between">
+            <div class="flex items-center">
+                <div class="w-8 h-8 rounded-full bg-indigo-500 flex items-center justify-center text-white mr-2">U</div>
+                <div>
+                    <div class="text-sm font-bold">Username</div>
+                    <div class="flex items-center">
+                        <span class="text-xs mr-1">Lvl 5</span>
+                        <div class="xp-bar w-20 bg-gray-200 dark:bg-gray-700">
+                            <div class="xp-progress" style="width: 60%;"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="flex items-center">
+                <div class="flex items-center mr-3">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 text-yellow-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z"></path>
+                    </svg>
+                    <span class="text-xs ml-1">145</span>
+                </div>
+                <div class="flex items-center mr-3">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 text-blue-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z"></path>
+                    </svg>
+                    <span class="text-xs ml-1">78</span>
+                </div>
+                <div class="flex items-center py-1 px-2 bg-green-100 dark:bg-green-900 rounded-full text-green-800 dark:text-green-100">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-3 w-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+                    </svg>
+                    <span class="text-xs ml-1 font-semibold">7 days</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Main Content Area -->
+        <div class="pt-14 pb-20"> <!-- Padding for top bar and bottom nav -->
+            <!-- Page Content -->
+            <div id="page-container" class="page-transition">
+                <!-- Pages will be dynamically loaded here -->
+            </div>
+        </div>
+
+        <!-- Bottom Navigation Bar -->
+        <div class="fixed bottom-0 left-0 right-0 bg-white dark:bg-gray-900 shadow-lg z-50 py-2">
+            <div class="flex justify-around items-center">
+                <button id="nav-home" class="nav-button active" onclick="navigateTo('home')">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"></path>
+                    </svg>
+                </button>
+                <button id="nav-diary" class="nav-button" onclick="navigateTo('diary')">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"></path>
+                    </svg>
+                </button>
+                <button id="nav-challenges" class="nav-button" onclick="navigateTo('challenges')">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4M7.835 4.697a3.42 3.42 0 001.946-.806 3.42 3.42 0 014.438 0 3.42 3.42 0 001.946.806 3.42 3.42 0 013.138 3.138 3.42 3.42 0 00.806 1.946 3.42 3.42 0 010 4.438 3.42 3.42 0 00-.806 1.946 3.42 3.42 0 01-3.138 3.138 3.42 3.42 0 00-1.946.806 3.42 3.42 0 01-4.438 0 3.42 3.42 0 00-1.946-.806 3.42 3.42 0 01-3.138-3.138 3.42 3.42 0 00-.806-1.946 3.42 3.42 0 010-4.438 3.42 3.42 0 00.806-1.946 3.42 3.42 0 013.138-3.138z"></path>
+                    </svg>
+                </button>
+                <button id="nav-collection" class="nav-button" onclick="navigateTo('seeds')">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"></path>
+                    </svg>
+                </button>
+                <button id="nav-shop" class="nav-button" onclick="navigateTo('shop')">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z"></path>
+                    </svg>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Check for dark mode preference
+        if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
+            document.documentElement.classList.add('dark');
+        }
+        
+        window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', event => {
+            if (event.matches) {
+                document.documentElement.classList.add('dark');
+            } else {
+                document.documentElement.classList.remove('dark');
+            }
+        });
+
+        // App Data
+        const appData = {
+            user: {
+                name: 'Garden Explorer',
+                level: 5,
+                xp: 350,
+                nextLevelXp: 500,
+                streakDays: 7,
+                currency: {
+                    sunshine: 145,
+                    dewdrops: 78
+                }
+            },
+            diary: [
+                {
+                    id: 1,
+                    date: new Date(2023, 8, 1),
+                    content: "Today I'm grateful for the beautiful weather and the chance to go for a long walk in the park. The fresh air really cleared my mind.",
+                    images: []
+                },
+                {
+                    id: 2,
+                    date: new Date(2023, 8, 2),
+                    content: "I'm thankful for my supportive friends who helped me through a difficult decision today. Their wisdom and patience mean everything to me.",
+                    images: []
+                },
+                {
+                    id: 3,
+                    date: new Date(2023, 8, 3),
+                    content: "Grateful for the delicious home-cooked meal I enjoyed tonight. Taking time to prepare food mindfully made me appreciate each flavor.",
+                    images: []
+                },
+                {
+                    id: 4,
+                    date: new Date(2023, 8, 4),
+                    content: "I appreciate having time to read my favorite book series again. It's like visiting old friends and finding new insights each time.",
+                    images: []
+                },
+                {
+                    id: 5,
+                    date: new Date(2023, 8, 5),
+                    content: "Today I'm grateful for technology that allowed me to connect with my family across the country. Seeing their faces brought me joy.",
+                    images: []
+                },
+                {
+                    id: 6,
+                    date: new Date(2023, 8, 6),
+                    content: "Thankful for the small acts of kindness I witnessed today - a stranger holding the door, a smile from the barista, a supportive message from a colleague.",
+                    images: []
+                },
+                {
+                    id: 7,
+                    date: new Date(2023, 8, 7),
+                    content: "I'm grateful for the opportunity to learn something new today. Each small piece of knowledge builds toward greater understanding.",
+                    images: []
+                }
+            ],
+            calendar: {
+                month: 8, // September (0-indexed)
+                year: 2023,
+                completedDays: [1, 2, 3, 4, 5, 6, 7]
+            },
+            seeds: [
+                { 
+                    id: 1, 
+                    name: "Kindness Seed", 
+                    category: "Goodness", 
+                    description: "This seed represents acts of kindness toward others without expecting anything in return. It reminds us that even small gestures can have meaningful impacts.",
+                    collected: true,
+                    image: "kindness" // Will be generated
+                },
+                { 
+                    id: 2, 
+                    name: "Joy Seed", 
+                    category: "Joy", 
+                    description: "This seed embodies the pure delight found in simple pleasures and meaningful moments. It reminds us to celebrate happiness when we find it.",
+                    collected: true,
+                    image: "joy" // Will be generated
+                },
+                { 
+                    id: 3, 
+                    name: "Patience Seed", 
+                    category: "Patience", 
+                    description: "This seed represents the calm endurance through delays, problems, or suffering. It reminds us that good things often take time to grow.",
+                    collected: true,
+                    image: "patience" // Will be generated
+                },
+                { 
+                    id: 4, 
+                    name: "Peace Seed", 
+                    category: "Peace", 
+                    description: "This seed embodies tranquility and harmony in relationships and circumstances. It reminds us to seek resolution rather than conflict.",
+                    collected: false,
+                    image: "peace" // Will be generated
+                },
+                { 
+                    id: 5, 
+                    name: "Love Seed", 
+                    category: "Love", 
+                    description: "This seed represents selfless, unconditional care for others. It reminds us that love is both a feeling and a choice we make daily.",
+                    collected: false,
+                    image: "love" // Will be generated
+                },
+                { 
+                    id: 6, 
+                    name: "Faithfulness Seed", 
+                    category: "Faithfulness", 
+                    description: "This seed embodies loyalty and steadfast commitment. It reminds us of the value in keeping our promises and being reliable.",
+                    collected: false,
+                    image: "faithfulness" // Will be generated
+                }
+            ],
+            challenges: [
+                {
+                    id: 1,
+                    title: "Morning Diary Streak",
+                    description: "Record in your diary before 10 AM for 5 consecutive days",
+                    progress: 3,
+                    goal: 5,
+                    reward: "10 Sunshine",
+                    category: "Diary",
+                    completed: false
+                },
+                {
+                    id: 2,
+                    title: "Seed Collector",
+                    description: "Collect 5 different Virtue Seeds",
+                    progress: 3,
+                    goal: 5,
+                    reward: "1 Evolution Card",
+                    category: "Collection",
+                    completed: false
+                },
+                {
+                    id: 3,
+                    title: "Detailed Reflection",
+                    description: "Write a diary entry with at least 100 words",
+                    progress: 1,
+                    goal: 1,
+                    reward: "5 Dewdrops",
+                    category: "Diary",
+                    completed: true
+                }
+            ],
+            achievements: [
+                {
+                    id: 1,
+                    title: "Seedling Starter",
+                    description: "Begin your gratitude journey",
+                    category: "Milestones",
+                    completed: true
+                },
+                {
+                    id: 2,
+                    title: "Weekly Devotion",
+                    description: "Complete 7 consecutive days of diary entries",
+                    category: "Diary",
+                    completed: true
+                },
+                {
+                    id: 3,
+                    title: "Virtue Collector",
+                    description: "Collect 10 different Virtue Seeds",
+                    category: "Collection",
+                    progress: 3,
+                    goal: 10,
+                    completed: false
+                }
+            ],
+            events: [
+                {
+                    id: 1,
+                    title: "New Evolution Card Available",
+                    description: "You can now personalize your Kindness Seed!",
+                    type: "notification"
+                },
+                {
+                    id: 2,
+                    title: "Morning Diary Streak",
+                    description: "3/5 days completed",
+                    type: "progress"
+                },
+                {
+                    id: 3,
+                    title: "Fall Season Challenge",
+                    description: "New seasonal challenges available",
+                    type: "event"
+                }
+            ]
+        };
+
+        // Plant growth stages
+        const plantStages = [
+            { name: "Sprout", level: 1 },
+            { name: "Seedling", level: 3 },
+            { name: "Young Plant", level: 5 },
+            { name: "Mature Plant", level: 7 },
+            { name: "Flowering Plant", level: 10 }
+        ];
+
+        // Current plant stage based on user level
+        function getCurrentPlantStage() {
+            for (let i = plantStages.length - 1; i >= 0; i--) {
+                if (appData.user.level >= plantStages[i].level) {
+                    return plantStages[i];
+                }
+            }
+            return plantStages[0];
+        }
+
+        // Router functionality
+        let currentPage = 'home';
+        
+        function navigateTo(page) {
+            // Update active state for nav buttons
+            document.querySelectorAll('.nav-button').forEach(btn => {
+                btn.classList.remove('active');
+            });
+            document.getElementById(`nav-${page}`).classList.add('active');
+            
+            // Save current page
+            currentPage = page;
+            
+            // Render the appropriate page
+            renderPage(page);
+        }
+
+        function renderPage(page) {
+            const container = document.getElementById('page-container');
+            
+            // Animation for page transition
+            container.classList.add('page-enter');
+            setTimeout(() => {
+                container.classList.remove('page-enter');
+                container.classList.add('page-enter-active');
+                
+                setTimeout(() => {
+                    container.classList.remove('page-enter-active');
+                }, 300);
+            }, 10);
+            
+            // Render the appropriate page content
+            switch(page) {
+                case 'home':
+                    renderHomePage();
+                    break;
+                case 'diary':
+                    renderDiaryPage();
+                    break;
+                case 'challenges':
+                    renderChallengesPage();
+                    break;
+                case 'seeds':
+                    renderSeedsPage();
+                    break;
+                case 'shop':
+                    renderShopPage();
+                    break;
+                case 'diary-entry':
+                    renderDiaryEntryPage();
+                    break;
+                case 'seed-detail':
+                    renderSeedDetailPage();
+                    break;
+                case 'diary-scroll':
+                    renderDiaryScrollPage();
+                    break;
+                default:
+                    renderHomePage();
+            }
+        }
+
+        // Page renders
+        function renderHomePage() {
+            const container = document.getElementById('page-container');
+            const currentPlant = getCurrentPlantStage();
+            
+            container.innerHTML = `
+                <div class="p-4">
+                    <div class="mb-6">
+                        <h1 class="text-2xl font-bold text-center mb-2">Your Gratitude Garden</h1>
+                        <p class="text-center text-gray-600 dark:text-gray-400">${currentPlant.name} - Level ${appData.user.level}</p>
+                    </div>
+                    
+                    <!-- Calendar Progress Tracker -->
+                    <div class="mb-6 bg-white dark:bg-gray-800 rounded-xl p-4 shadow-md">
+                        <div class="flex justify-between items-center mb-3">
+                            <h2 class="font-semibold">September 2023</h2>
+                            <div class="flex items-center text-sm">
+                                <div class="flex items-center mr-2">
+                                    <div class="w-3 h-3 rounded-full bg-green-200 mr-1"></div>
+                                    <span>Completed</span>
+                                </div>
+                                <div class="flex items-center">
+                                    <div class="w-3 h-3 rounded-full bg-gray-200 dark:bg-gray-700 mr-1"></div>
+                                    <span>Pending</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="calendar-grid">
+                            <div class="text-center text-sm text-gray-500 font-medium">S</div>
+                            <div class="text-center text-sm text-gray-500 font-medium">M</div>
+                            <div class="text-center text-sm text-gray-500 font-medium">T</div>
+                            <div class="text-center text-sm text-gray-500 font-medium">W</div>
+                            <div class="text-center text-sm text-gray-500 font-medium">T</div>
+                            <div class="text-center text-sm text-gray-500 font-medium">F</div>
+                            <div class="text-center text-sm text-gray-500 font-medium">S</div>
+                            ${generateCalendarCells()}
+                        </div>
+                    </div>
+                    
+                    <!-- Plant Visualization -->
+                    <div class="mb-6 flex justify-center">
+                        <div class="plant-grow relative">
+                            ${generatePlantSVG(currentPlant.name)}
+                        </div>
+                    </div>
+                    
+                    <!-- Collection Jar Section -->
+                    <div class="bg-white dark:bg-gray-800 rounded-xl p-4 shadow-md mb-6">
+                        <div class="flex justify-between items-center mb-2">
+                            <h2 class="font-semibold">Collection Jar</h2>
+                            <button id="eventButton" class="text-sm flex items-center text-primary-500">
+                                View Events
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 ml-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+                                </svg>
+                            </button>
+                        </div>
+                        
+                        <!-- Events List (Hidden by Default) -->
+                        <div id="eventsList" class="hidden overflow-hidden bg-gray-50 dark:bg-gray-700 rounded-lg mb-3">
+                            <div class="p-3">
+                                ${appData.events.map(event => `
+                                    <div class="flex items-start mb-2 p-2 ${event.type === 'notification' ? 'bg-blue-50 dark:bg-blue-900/20 border-l-4 border-blue-500' : event.type === 'progress' ? 'bg-green-50 dark:bg-green-900/20 border-l-4 border-green-500' : 'bg-yellow-50 dark:bg-yellow-900/20 border-l-4 border-yellow-500'} rounded">
+                                        <div class="flex-1">
+                                            <div class="font-medium">${event.title}</div>
+                                            <div class="text-sm text-gray-600 dark:text-gray-400">${event.description}</div>
+                                        </div>
+                                    </div>
+                                `).join('')}
+                            </div>
+                        </div>
+                        
+                        <!-- 3D Jar Visualization -->
+                        <div>
+                            <canvas id="jarCanvas" class="jar-glow"></canvas>
+                        </div>
+                        
+                        <p class="text-center text-sm text-gray-600 dark:text-gray-400 mt-2">Tap the jar to see your collection</p>
+                    </div>
+                </div>
+            `;
+            
+            // Initialize the 3D jar
+            initJarCanvas();
+            
+            // Event toggle
+            document.getElementById('eventButton').addEventListener('click', () => {
+                const eventsList = document.getElementById('eventsList');
+                if (eventsList.classList.contains('hidden')) {
+                    eventsList.classList.remove('hidden');
+                    eventsList.classList.add('events-list-open');
+                } else {
+                    eventsList.classList.add('hidden');
+                    eventsList.classList.remove('events-list-open');
+                }
+            });
+            
+            // Clicking the jar navigates to collection
+            document.getElementById('jarCanvas').addEventListener('click', () => {
+                navigateTo('seeds');
+            });
+        }
+
+        function renderDiaryPage() {
+            const container = document.getElementById('page-container');
+            
+            container.innerHTML = `
+                <div class="p-4">
+                    <div class="mb-6">
+                        <h1 class="text-2xl font-bold text-center mb-2">My Gratitude Journal</h1>
+                        <p class="text-center text-gray-600 dark:text-gray-400">Record and review your moments of gratitude</p>
+                    </div>
+                    
+                    <!-- Week Navigation -->
+                    <div class="flex justify-between items-center mb-4">
+                        <button class="p-2 rounded-full hover:bg-gray-200 dark:hover:bg-gray-700">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
+                            </svg>
+                        </button>
+                        <h2 class="font-semibold">September - Week 1</h2>
+                        <button class="p-2 rounded-full hover:bg-gray-200 dark:hover:bg-gray-700">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+                            </svg>
+                        </button>
+                    </div>
+                    
+                    <!-- Diary Entries -->
+                    <div class="mb-6 overflow-x-auto pb-4">
+                        <div class="flex space-x-4" style="min-width: min-content;">
+                            ${appData.diary.map(entry => `
+                                <div class="diary-card bg-white dark:bg-gray-800 shadow-md p-4 w-60 flex-shrink-0" onclick="viewDiaryEntry(${entry.id})">
+                                    <div class="text-sm font-semibold mb-2">${formatDate(entry.date)}</div>
+                                    <p class="text-sm text-gray-700 dark:text-gray-300 line-clamp-4">${entry.content.substring(0, 120)}${entry.content.length > 120 ? '...' : ''}</p>
+                                </div>
+                            `).join('')}
+                        </div>
+                    </div>
+                    
+                    <!-- Diary Scroll Button -->
+                    <div class="mb-6">
+                        <button onclick="navigateTo('diary-scroll')" class="w-full bg-[#D8A38D] hover:bg-[#C89076] text-white py-3 px-4 rounded-xl flex items-center justify-center">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                            </svg>
+                            Create Diary Scroll
+                        </button>
+                    </div>
+                    
+                    <!-- Quick Add Button -->
+                    <button onclick="createDiaryEntry()" class="fixed bottom-24 right-6 bg-[#5D5CDE] hover:bg-indigo-600 text-white w-14 h-14 rounded-full flex items-center justify-center shadow-lg">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4" />
+                        </svg>
+                    </button>
+                </div>
+            `;
+        }
+        
+        function renderChallengesPage() {
+            const container = document.getElementById('page-container');
+            
+            container.innerHTML = `
+                <div class="p-4">
+                    <div class="mb-6">
+                        <h1 class="text-2xl font-bold text-center mb-2">Challenges & Achievements</h1>
+                        <p class="text-center text-gray-600 dark:text-gray-400">Track your goals and accomplishments</p>
+                    </div>
+                    
+                    <!-- Tab Navigation -->
+                    <div class="flex border-b border-gray-200 dark:border-gray-700 mb-4">
+                        <button id="tab-active" class="flex-1 py-2 px-4 text-center border-b-2 border-[#5D5CDE] font-medium text-[#5D5CDE]">
+                            Active
+                        </button>
+                        <button id="tab-completed" class="flex-1 py-2 px-4 text-center border-b-2 border-transparent font-medium text-gray-500 dark:text-gray-400">
+                            Completed
+                        </button>
+                        <button id="tab-achievements" class="flex-1 py-2 px-4 text-center border-b-2 border-transparent font-medium text-gray-500 dark:text-gray-400">
+                            Achievements
+                        </button>
+                    </div>
+                    
+                    <!-- Active Challenges -->
+                    <div id="content-active">
+                        ${appData.challenges.filter(c => !c.completed).map(challenge => `
+                            <div class="achievement-card bg-white dark:bg-gray-800 shadow-md p-4 mb-4 rounded-xl">
+                                <div class="flex justify-between items-start">
+                                    <div>
+                                        <h3 class="font-semibold mb-1">${challenge.title}</h3>
+                                        <p class="text-sm text-gray-600 dark:text-gray-400 mb-3">${challenge.description}</p>
+                                    </div>
+                                    <span class="bg-[#A1A99C]/20 text-[#4A2C2A] dark:text-white px-2 py-1 rounded text-xs font-medium">${challenge.category}</span>
+                                </div>
+                                <div class="flex justify-between items-center">
+                                    <div class="flex-1 mr-4">
+                                        <div class="h-2 bg-gray-200 dark:bg-gray-700 rounded-full overflow-hidden">
+                                            <div class="bg-[#5D5CDE] h-full rounded-full" style="width: ${(challenge.progress / challenge.goal) * 100}%"></div>
+                                        </div>
+                                        <div class="text-xs text-gray-600 dark:text-gray-400 mt-1">${challenge.progress}/${challenge.goal} completed</div>
+                                    </div>
+                                    <div class="text-xs font-medium bg-yellow-100 dark:bg-yellow-900/30 text-yellow-800 dark:text-yellow-200 py-1 px-2 rounded">
+                                        Reward: ${challenge.reward}
+                                    </div>
+                                </div>
+                            </div>
+                        `).join('')}
+                    </div>
+                    
+                    <!-- Completed Challenges -->
+                    <div id="content-completed" class="hidden">
+                        ${appData.challenges.filter(c => c.completed).map(challenge => `
+                            <div class="achievement-card bg-white dark:bg-gray-800 shadow-md p-4 mb-4 rounded-xl">
+                                <div class="flex justify-between items-start">
+                                    <div>
+                                        <h3 class="font-semibold mb-1">${challenge.title}</h3>
+                                        <p class="text-sm text-gray-600 dark:text-gray-400 mb-3">${challenge.description}</p>
+                                    </div>
+                                    <div class="flex items-center">
+                                        <span class="bg-green-100 dark:bg-green-900/30 text-green-800 dark:text-green-200 px-2 py-1 rounded text-xs font-medium">Completed</span>
+                                    </div>
+                                </div>
+                                <div class="text-xs font-medium bg-yellow-100 dark:bg-yellow-900/30 text-yellow-800 dark:text-yellow-200 py-1 px-2 rounded inline-block">
+                                    Reward: ${challenge.reward}
+                                </div>
+                            </div>
+                        `).join('')}
+                    </div>
+                    
+                    <!-- Achievements -->
+                    <div id="content-achievements" class="hidden">
+                        ${appData.achievements.map(achievement => `
+                            <div class="achievement-card bg-white dark:bg-gray-800 shadow-md p-4 mb-4 rounded-xl">
+                                <div class="flex justify-between items-start">
+                                    <div>
+                                        <h3 class="font-semibold mb-1">${achievement.title}</h3>
+                                        <p class="text-sm text-gray-600 dark:text-gray-400 mb-2">${achievement.description}</p>
+                                    </div>
+                                    <span class="bg-purple-100 dark:bg-purple-900/30 text-purple-800 dark:text-purple-200 px-2 py-1 rounded text-xs font-medium">${achievement.category}</span>
+                                </div>
+                                ${achievement.completed 
+                                    ? `<div class="flex items-center text-green-600 dark:text-green-400">
+                                        <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+                                        </svg>
+                                        <span class="text-xs font-medium">Achieved</span>
+                                      </div>`
+                                    : `<div class="flex-1">
+                                        <div class="h-2 bg-gray-200 dark:bg-gray-700 rounded-full overflow-hidden">
+                                            <div class="bg-purple-500 h-full rounded-full" style="width: ${(achievement.progress / achievement.goal) * 100}%"></div>
+                                        </div>
+                                        <div class="text-xs text-gray-600 dark:text-gray-400 mt-1">${achievement.progress}/${achievement.goal} completed</div>
+                                      </div>`
+                                }
+                            </div>
+                        `).join('')}
+                    </div>
+                </div>
+            `;
+            
+            // Setup tab navigation
+            document.getElementById('tab-active').addEventListener('click', () => switchChallengeTab('active'));
+            document.getElementById('tab-completed').addEventListener('click', () => switchChallengeTab('completed'));
+            document.getElementById('tab-achievements').addEventListener('click', () => switchChallengeTab('achievements'));
+        }
+        
+        function renderSeedsPage() {
+            const container = document.getElementById('page-container');
+            
+            container.innerHTML = `
+                <div class="p-4">
+                    <div class="mb-6">
+                        <h1 class="text-2xl font-bold text-center mb-2">Seed Almanac</h1>
+                        <p class="text-center text-gray-600 dark:text-gray-400">Your collection of virtue seeds</p>
+                    </div>
+                    
+                    <!-- Filter Options -->
+                    <div class="flex mb-4 overflow-x-auto pb-2">
+                        <button class="bg-[#5D5CDE] text-white text-sm py-1 px-3 rounded-full mr-2 whitespace-nowrap">All Seeds</button>
+                        <button class="bg-white dark:bg-gray-800 text-gray-700 dark:text-gray-300 text-sm py-1 px-3 rounded-full mr-2 whitespace-nowrap">Love</button>
+                        <button class="bg-white dark:bg-gray-800 text-gray-700 dark:text-gray-300 text-sm py-1 px-3 rounded-full mr-2 whitespace-nowrap">Joy</button>
+                        <button class="bg-white dark:bg-gray-800 text-gray-700 dark:text-gray-300 text-sm py-1 px-3 rounded-full mr-2 whitespace-nowrap">Peace</button>
+                        <button class="bg-white dark:bg-gray-800 text-gray-700 dark:text-gray-300 text-sm py-1 px-3 rounded-full mr-2 whitespace-nowrap">Patience</button>
+                        <button class="bg-white dark:bg-gray-800 text-gray-700 dark:text-gray-300 text-sm py-1 px-3 rounded-full whitespace-nowrap">Kindness</button>
+                    </div>
+                    
+                    <!-- Seed Grid -->
+                    <div class="seed-grid">
+                        ${appData.seeds.map(seed => `
+                            <div class="seed-card ${!seed.collected ? 'locked' : ''} bg-white dark:bg-gray-800 shadow-md cursor-pointer" onclick="viewSeedDetail(${seed.id})">
+                                <div class="p-3 h-full flex flex-col">
+                                    <div class="flex-1 flex items-center justify-center mb-2">
+                                        ${generateSeedSVG(seed.image)}
+                                    </div>
+                                    <div class="text-sm font-semibold text-center">${seed.name}</div>
+                                    <div class="text-xs text-center text-gray-500 dark:text-gray-400">${seed.category}</div>
+                                </div>
+                            </div>
+                        `).join('')}
+                    </div>
+                    
+                    <!-- Collection Stats -->
+                    <div class="mt-6 bg-white dark:bg-gray-800 rounded-xl p-4 shadow-md">
+                        <h3 class="font-semibold mb-2">Collection Progress</h3>
+                        <div class="flex justify-between mb-2">
+                            <span class="text-sm text-gray-600 dark:text-gray-400">Seeds Collected:</span>
+                            <span class="text-sm font-medium">${appData.seeds.filter(s => s.collected).length}/${appData.seeds.length}</span>
+                        </div>
+                        <div class="h-2 bg-gray-200 dark:bg-gray-700 rounded-full overflow-hidden">
+                            <div class="bg-[#5D5CDE] h-full rounded-full" style="width: ${(appData.seeds.filter(s => s.collected).length / appData.seeds.length) * 100}%"></div>
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
+        
+        function renderShopPage() {
+            const container = document.getElementById('page-container');
+            
+            container.innerHTML = `
+                <div class="p-4">
+                    <div class="mb-6">
+                        <h1 class="text-2xl font-bold text-center mb-2">Shop</h1>
+                        <p class="text-center text-gray-600 dark:text-gray-400">Enhance your garden experience</p>
+                    </div>
+                    
+                    <!-- Currency Display -->
+                    <div class="flex justify-center space-x-6 mb-6">
+                        <div class="flex items-center">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-yellow-400 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z" />
+                            </svg>
+                            <span class="font-semibold">${appData.user.currency.sunshine}</span>
+                        </div>
+                        <div class="flex items-center">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-blue-400 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z" />
+                            </svg>
+                            <span class="font-semibold">${appData.user.currency.dewdrops}</span>
+                        </div>
+                    </div>
+                    
+                    <!-- Shop Categories -->
+                    <div class="flex border-b border-gray-200 dark:border-gray-700 mb-4">
+                        <button class="flex-1 py-2 px-4 text-center border-b-2 border-[#5D5CDE] font-medium text-[#5D5CDE]">
+                            Evolution Cards
+                        </button>
+                        <button class="flex-1 py-2 px-4 text-center border-b-2 border-transparent font-medium text-gray-500 dark:text-gray-400">
+                            Garden Pots
+                        </button>
+                        <button class="flex-1 py-2 px-4 text-center border-b-2 border-transparent font-medium text-gray-500 dark:text-gray-400">
+                            Special
+                        </button>
+                    </div>
+                    
+                    <!-- Shop Items -->
+                    <div class="grid grid-cols-2 gap-4">
+                        <div class="bg-white dark:bg-gray-800 rounded-xl shadow-md overflow-hidden">
+                            <div class="h-24 bg-gradient-to-r from-purple-400 to-indigo-500 flex items-center justify-center">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-10 w-10 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
+                                </svg>
+                            </div>
+                            <div class="p-3">
+                                <h3 class="font-semibold text-sm">Basic Evolution Card</h3>
+                                <p class="text-xs text-gray-600 dark:text-gray-400 mb-2">Personalize name and story</p>
+                                <div class="flex justify-between items-center">
+                                    <div class="flex items-center">
+                                        <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 text-yellow-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z" />
+                                        </svg>
+                                        <span class="text-xs ml-1">50</span>
+                                    </div>
+                                    <button class="text-xs bg-[#5D5CDE] text-white py-1 px-3 rounded-full hover:bg-indigo-600">
+                                        Purchase
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="bg-white dark:bg-gray-800 rounded-xl shadow-md overflow-hidden">
+                            <div class="h-24 bg-gradient-to-r from-pink-400 to-red-500 flex items-center justify-center">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-10 w-10 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                                </svg>
+                            </div>
+                            <div class="p-3">
+                                <h3 class="font-semibold text-sm">Premium Evolution Card</h3>
+                                <p class="text-xs text-gray-600 dark:text-gray-400 mb-2">Custom image generation</p>
+                                <div class="flex justify-between items-center">
+                                    <div class="flex items-center">
+                                        <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 text-blue-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z" />
+                                        </svg>
+                                        <span class="text-xs ml-1">25</span>
+                                    </div>
+                                    <button class="text-xs bg-[#5D5CDE] text-white py-1 px-3 rounded-full hover:bg-indigo-600">
+                                        Purchase
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="bg-white dark:bg-gray-800 rounded-xl shadow-md overflow-hidden">
+                            <div class="h-24 bg-gradient-to-r from-green-400 to-teal-500 flex items-center justify-center">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-10 w-10 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 3v4M3 5h4M6 17v4m-2-2h4m5-16l2.286 6.857L21 12l-5.714 2.143L13 21l-2.286-6.857L5 12l5.714-2.143L13 3z" />
+                                </svg>
+                            </div>
+                            <div class="p-3">
+                                <h3 class="font-semibold text-sm">Deluxe Evolution Card</h3>
+                                <p class="text-xs text-gray-600 dark:text-gray-400 mb-2">Animated evolution effects</p>
+                                <div class="flex justify-between items-center">
+                                    <div class="flex items-center">
+                                        <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 text-yellow-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z" />
+                                        </svg>
+                                        <span class="text-xs ml-1">100</span>
+                                    </div>
+                                    <button class="text-xs bg-gray-300 dark:bg-gray-700 text-gray-600 dark:text-gray-400 py-1 px-3 rounded-full cursor-not-allowed">
+                                        Coming Soon
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="bg-white dark:bg-gray-800 rounded-xl shadow-md overflow-hidden">
+                            <div class="h-24 bg-gradient-to-r from-blue-400 to-cyan-500 flex items-center justify-center">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-10 w-10 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+                                </svg>
+                            </div>
+                            <div class="p-3">
+                                <h3 class="font-semibold text-sm">Streak Protector</h3>
+                                <p class="text-xs text-gray-600 dark:text-gray-400 mb-2">Prevents streak loss (1-time use)</p>
+                                <div class="flex justify-between items-center">
+                                    <div class="flex items-center">
+                                        <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 text-blue-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z" />
+                                        </svg>
+                                        <span class="text-xs ml-1">15</span>
+                                    </div>
+                                    <button class="text-xs bg-[#5D5CDE] text-white py-1 px-3 rounded-full hover:bg-indigo-600">
+                                        Purchase
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
+        
+        function renderDiaryEntryPage(entryId = null) {
+            const container = document.getElementById('page-container');
+            let entry = null;
+            let isNewEntry = true;
+            
+            if (entryId) {
+                entry = appData.diary.find(e => e.id === entryId);
+                isNewEntry = false;
+            }
+            
+            container.innerHTML = `
+                <div class="p-4">
+                    <div class="flex items-center mb-6">
+                        <button onclick="navigateTo('diary')" class="mr-4">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
+                            </svg>
+                        </button>
+                        <h1 class="text-xl font-bold">${isNewEntry ? 'New Diary Entry' : formatDate(entry.date)}</h1>
+                    </div>
+                    
+                    <!-- Editor Section -->
+                    <div class="bg-white dark:bg-gray-800 rounded-xl shadow-md overflow-hidden mb-6">
+                        <!-- Rich Text Toolbar -->
+                        <div class="editor-toolbar">
+                            <button class="editor-button">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z" />
+                                </svg>
+                            </button>
+                            <button class="editor-button">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
+                                </svg>
+                            </button>
+                            <button class="editor-button">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 9a2 2 0 012-2h.93a2 2 0 001.664-.89l.812-1.22A2 2 0 0110.07 4h3.86a2 2 0 011.664.89l.812 1.22A2 2 0 0018.07 7H19a2 2 0 012 2v9a2 2 0 01-2 2H5a2 2 0 01-2-2V9z" />
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 13a3 3 0 11-6 0 3 3 0 016 0z" />
+                                </svg>
+                            </button>
+                            <button class="editor-button">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.536 8.464a5 5 0 010 7.072m2.828-9.9a9 9 0 010 12.728M5.586 15.536a5 5 0 001.414 1.414m0 0l-2.828 2.828m0 0a9 9 0 0112.728 0" />
+                                </svg>
+                            </button>
+                        </div>
+                        
+                        <!-- Content Area -->
+                        <div class="editor-content" contenteditable="true" id="diaryContent">${entry ? entry.content : ''}</div>
+                    </div>
+                    
+                    <!-- Action Buttons -->
+                    <div class="flex justify-between">
+                        ${isNewEntry ? `
+                            <button onclick="navigateTo('diary')" class="bg-gray-200 dark:bg-gray-700 text-gray-700 dark:text-gray-300 py-2 px-6 rounded-lg">
+                                Cancel
+                            </button>
+                            <button onclick="saveDiaryEntry()" class="bg-[#5D5CDE] hover:bg-indigo-600 text-white py-2 px-6 rounded-lg">
+                                Save
+                            </button>
+                        ` : `
+                            <button class="bg-red-100 dark:bg-red-900/30 text-red-600 dark:text-red-400 py-2 px-6 rounded-lg">
+                                Delete
+                            </button>
+                            <div>
+                                <button class="bg-blue-100 dark:bg-blue-900/30 text-blue-600 dark:text-blue-400 py-2 px-6 rounded-lg mr-2">
+                                    Share
+                                </button>
+                                <button class="bg-[#5D5CDE] hover:bg-indigo-600 text-white py-2 px-6 rounded-lg">
+                                    Edit
+                                </button>
+                            </div>
+                        `}
+                    </div>
+                </div>
+            `;
+        }
+        
+        function renderSeedDetailPage(seedId = 1) {
+            const container = document.getElementById('page-container');
+            const seed = appData.seeds.find(s => s.id === seedId) || appData.seeds[0];
+            
+            container.innerHTML = `
+                <div class="p-4">
+                    <div class="flex items-center mb-6">
+                        <button onclick="navigateTo('seeds')" class="mr-4">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
+                            </svg>
+                        </button>
+                        <h1 class="text-xl font-bold">${seed.name}</h1>
+                    </div>
+                    
+                    <!-- Seed Visual -->
+                    <div class="flex justify-center mb-6">
+                        <div class="w-40 h-40 ${seed.collected ? '' : 'opacity-50 grayscale'} overflow-hidden flex items-center justify-center">
+                            ${generateSeedSVG(seed.image, true)}
+                        </div>
+                    </div>
+                    
+                    <!-- Seed Information -->
+                    <div class="bg-white dark:bg-gray-800 rounded-xl shadow-md p-4 mb-6">
+                        <div class="flex justify-between items-center mb-3">
+                            <div>
+                                <h2 class="font-semibold">${seed.name}</h2>
+                                <div class="text-sm text-gray-600 dark:text-gray-400">Category: ${seed.category}</div>
+                            </div>
+                            <div class="bg-${seed.collected ? 'green' : 'gray'}-100 dark:bg-${seed.collected ? 'green' : 'gray'}-900/30 text-${seed.collected ? 'green' : 'gray'}-800 dark:text-${seed.collected ? 'green' : 'gray'}-200 text-xs py-1 px-3 rounded-full">
+                                ${seed.collected ? 'Collected' : 'Not Yet Found'}
+                            </div>
+                        </div>
+                        <p class="text-sm mb-3">${seed.description}</p>
+                    </div>
+                    
+                    ${seed.collected ? `
+                    <!-- Personalization Section -->
+                    <div class="bg-white dark:bg-gray-800 rounded-xl shadow-md p-4 mb-6">
+                        <h2 class="font-semibold mb-3">Personalization</h2>
+                        
+                        <div class="mb-3">
+                            <label class="block text-sm text-gray-600 dark:text-gray-400 mb-1">Custom Name</label>
+                            <input type="text" class="w-full border dark:border-gray-600 rounded-lg p-2 bg-transparent" value="${seed.name}" placeholder="Give your seed a special name">
+                        </div>
+                        
+                        <div class="mb-4">
+                            <label class="block text-sm text-gray-600 dark:text-gray-400 mb-1">Your Story</label>
+                            <textarea class="w-full border dark:border-gray-600 rounded-lg p-2 h-24 bg-transparent" placeholder="Write a personal story about this virtue in your life"></textarea>
+                        </div>
+                        
+                        <button class="w-full bg-gradient-to-r from-purple-500 to-indigo-600 hover:from-purple-600 hover:to-indigo-700 text-white py-3 rounded-lg flex items-center justify-center">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
+                            </svg>
+                            Use Evolution Card
+                        </button>
+                    </div>
+                    ` : ''}
+                    
+                    <!-- Related Seeds -->
+                    <div class="mb-4">
+                        <h2 class="font-semibold mb-3">Related Seeds</h2>
+                        <div class="flex overflow-x-auto pb-2">
+                            ${appData.seeds.filter(s => s.category === seed.category && s.id !== seed.id).map(relatedSeed => `
+                                <div class="seed-card ${!relatedSeed.collected ? 'locked' : ''} bg-white dark:bg-gray-800 shadow-md mr-3 cursor-pointer flex-shrink-0 w-24" onclick="viewSeedDetail(${relatedSeed.id})">
+                                    <div class="p-2 h-full flex flex-col">
+                                        <div class="flex-1 flex items-center justify-center mb-1">
+                                            ${generateSeedSVG(relatedSeed.image, false, 36)}
+                                        </div>
+                                        <div class="text-xs font-semibold text-center">${relatedSeed.name}</div>
+                                    </div>
+                                </div>
+                            `).join('')}
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
+        
+        function renderDiaryScrollPage() {
+            const container = document.getElementById('page-container');
+            
+            container.innerHTML = `
+                <div class="p-4">
+                    <div class="flex items-center mb-6">
+                        <button onclick="navigateTo('diary')" class="mr-4">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
+                            </svg>
+                        </button>
+                        <h1 class="text-xl font-bold">Create Diary Scroll</h1>
+                    </div>
+                    
+                    <!-- Configuration Panel -->
+                    <div class="bg-white dark:bg-gray-800 rounded-xl shadow-md p-4 mb-6">
+                        <!-- Date Range Selector -->
+                        <div class="mb-4">
+                            <label class="block text-sm font-medium mb-2">Date Range</label>
+                            <select class="w-full border dark:border-gray-600 rounded-lg p-2 text-base bg-transparent">
+                                <option>Last 7 Days</option>
+                                <option>This Month</option>
+                                <option>Last 30 Days</option>
+                                <option>Custom Range</option>
+                            </select>
+                        </div>
+                        
+                        <!-- Theme Selector -->
+                        <div class="mb-4">
+                            <label class="block text-sm font-medium mb-2">Select Theme</label>
+                            <div class="grid grid-cols-3 gap-3">
+                                <div class="scroll-theme selected bg-[url('https://images.unsplash.com/photo-1518281361980-b26bfd556770?auto=format&fit=crop&q=80&w=200&h=300')] bg-cover">
+                                    <div class="h-full w-full bg-black bg-opacity-30 p-2 flex items-end">
+                                        <span class="text-white text-xs">Classic Parchment</span>
+                                    </div>
+                                </div>
+                                <div class="scroll-theme bg-[url('https://images.unsplash.com/photo-1579273168832-1c6639363afa?auto=format&fit=crop&q=80&w=200&h=300')] bg-cover">
+                                    <div class="h-full w-full bg-black bg-opacity-30 p-2 flex items-end">
+                                        <span class="text-white text-xs">Bamboo Scroll</span>
+                                    </div>
+                                </div>
+                                <div class="scroll-theme bg-[url('https://images.unsplash.com/photo-1552332386-f0dd2a3e15f5?auto=format&fit=crop&q=80&w=200&h=300')] bg-cover">
+                                    <div class="h-full w-full bg-black bg-opacity-30 p-2 flex items-end">
+                                        <span class="text-white text-xs">Minimalist</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- Background Music (Optional) -->
+                        <div class="mb-4">
+                            <label class="block text-sm font-medium mb-2">Background Music (Optional)</label>
+                            <select class="w-full border dark:border-gray-600 rounded-lg p-2 text-base bg-transparent">
+                                <option>None</option>
+                                <option>Peaceful Piano</option>
+                                <option>Nature Sounds</option>
+                                <option>Meditation Melody</option>
+                            </select>
+                        </div>
+                    </div>
+                    
+                    <!-- Preview Area -->
+                    <div class="mb-6">
+                        <h2 class="font-semibold mb-3">Preview</h2>
+                        <div class="bg-[url('https://images.unsplash.com/photo-1518281361980-b26bfd556770?auto=format&fit=crop&q=80&w=400')] bg-cover bg-center rounded-xl h-64 p-4 overflow-hidden flex flex-col">
+                            <div class="text-center text-white text-xl mb-3" style="text-shadow: 1px 1px 3px rgba(0,0,0,0.8);">My Gratitude Journey</div>
+                            <div class="flex-1 overflow-y-auto">
+                                <div class="bg-white bg-opacity-80 dark:bg-gray-900 dark:bg-opacity-80 mb-2 p-3 rounded-lg backdrop-blur-sm">
+                                    <div class="text-sm font-semibold mb-1">September 7, 2023</div>
+                                    <p class="text-sm">I'm grateful for the opportunity to learn something new today. Each small piece of knowledge builds toward greater understanding.</p>
+                                </div>
+                                <div class="bg-white bg-opacity-80 dark:bg-gray-900 dark:bg-opacity-80 mb-2 p-3 rounded-lg backdrop-blur-sm">
+                                    <div class="text-sm font-semibold mb-1">September 6, 2023</div>
+                                    <p class="text-sm">Thankful for the small acts of kindness I witnessed today - a stranger holding the door, a smile from the barista, a supportive message from a colleague.</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Action Buttons -->
+                    <div class="grid grid-cols-2 gap-4">
+                        <button class="bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-600 py-3 px-6 rounded-lg flex items-center justify-center">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
+                            </svg>
+                            Save
+                        </button>
+                        <button class="bg-[#5D5CDE] hover:bg-indigo-600 text-white py-3 px-6 rounded-lg flex items-center justify-center">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8.684 13.342C8.886 12.938 9 12.482 9 12c0-.482-.114-.938-.316-1.342m0 2.684a3 3 0 110-2.684m0 2.684l6.632 3.316m-6.632-6l6.632-3.316m0 0a3 3 0 105.367-2.684 3 3 0 00-5.367 2.684zm0 9.316a3 3 0 105.368 2.684 3 3 0 00-5.368-2.684z" />
+                            </svg>
+                            Share
+                        </button>
+                    </div>
+                </div>
+            `;
+            
+            // Set up theme selector
+            document.querySelectorAll('.scroll-theme').forEach(theme => {
+                theme.addEventListener('click', () => {
+                    document.querySelectorAll('.scroll-theme').forEach(t => t.classList.remove('selected'));
+                    theme.classList.add('selected');
+                });
+            });
+        }
+
+        // Helper Functions
+        function formatDate(date) {
+            const options = { year: 'numeric', month: 'long', day: 'numeric' };
+            return date.toLocaleDateString(undefined, options);
+        }
+        
+        function generateCalendarCells() {
+            let html = '';
+            
+            // Get first day of month and number of days
+            const firstDay = new Date(appData.calendar.year, appData.calendar.month, 1).getDay();
+            const daysInMonth = new Date(appData.calendar.year, appData.calendar.month + 1, 0).getDate();
+            
+            // Empty cells for days before the first of month
+            for (let i = 0; i < firstDay; i++) {
+                html += `<div class="calendar-cell empty"></div>`;
+            }
+            
+            // Generate cells for each day of the month
+            for (let day = 1; day <= daysInMonth; day++) {
+                const isToday = day === new Date().getDate() && 
+                                appData.calendar.month === new Date().getMonth() && 
+                                appData.calendar.year === new Date().getFullYear();
+                                
+                const isCompleted = appData.calendar.completedDays.includes(day);
+                
+                html += `
+                    <div class="calendar-cell ${isToday ? 'today' : ''} ${isCompleted ? 'completed' : ''}" onclick="viewDiaryDay(${day})">
+                        ${day}
+                        ${isCompleted ? `
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-3 w-3 ml-1 text-green-600 dark:text-green-400" viewBox="0 0 20 20" fill="currentColor">
+                                <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd" />
+                            </svg>
+                        ` : ''}
+                    </div>
+                `;
+            }
+            
+            return html;
+        }
+
+        function generatePlantSVG(stageName) {
+            const stageNames = {
+                "Sprout": `
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 240" width="200" height="240">
+                        <!-- Pot -->
+                        <path d="M60,200 L60,240 L140,240 L140,200 Z" fill="#D8A38D" />
+                        <path d="M50,200 L150,200 L140,240 L60,240 Z" fill="#C89076" />
+                        
+                        <!-- Soil -->
+                        <ellipse cx="100" cy="200" rx="50" ry="15" fill="#6B4F35" />
+                        
+                        <!-- Sprout -->
+                        <path d="M100,200 L100,150 C100,150 80,160 90,170 C90,170 85,155 100,145 C115,155 110,170 110,170 C120,160 100,150 100,150" fill="#A1A99C" />
+                        <path d="M100,150 L100,180" stroke="#6B4F35" stroke-width="3" stroke-linecap="round" />
+                        <circle cx="100" cy="145" r="10" fill="#D8E8BE" />
+                    </svg>
+                `,
+                "Seedling": `
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 240" width="200" height="240">
+                        <!-- Pot -->
+                        <path d="M60,200 L60,240 L140,240 L140,200 Z" fill="#D8A38D" />
+                        <path d="M50,200 L150,200 L140,240 L60,240 Z" fill="#C89076" />
+                        
+                        <!-- Soil -->
+                        <ellipse cx="100" cy="200" rx="50" ry="15" fill="#6B4F35" />
+                        
+                        <!-- Seedling -->
+                        <path d="M100,200 L100,120" stroke="#6B4F35" stroke-width="3" stroke-linecap="round" />
+                        <path d="M100,160 C100,160 85,155 80,140 C75,125 85,110 100,110 C115,110 125,125 120,140 C115,155 100,160 100,160" fill="#A1A99C" />
+                        <path d="M100,180 C100,180 120,170 130,180 C140,190 130,200 120,195 C110,190 100,180 100,180" fill="#A1A99C" />
+                        <path d="M100,180 C100,180 80,170 70,180 C60,190 70,200 80,195 C90,190 100,180 100,180" fill="#A1A99C" />
+                    </svg>
+                `,
+                "Young Plant": `
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 240" width="200" height="240">
+                        <!-- Pot -->
+                        <path d="M60,200 L60,240 L140,240 L140,200 Z" fill="#D8A38D" />
+                        <path d="M50,200 L150,200 L140,240 L60,240 Z" fill="#C89076" />
+                        
+                        <!-- Soil -->
+                        <ellipse cx="100" cy="200" rx="50" ry="15" fill="#6B4F35" />
+                        
+                        <!-- Young Plant -->
+                        <path d="M100,200 L100,80" stroke="#6B4F35" stroke-width="3" stroke-linecap="round" />
+                        <path d="M100,150 C100,150 75,145 70,125 C65,105 80,85 100,85 C120,85 135,105 130,125 C125,145 100,150 100,150" fill="#A1A99C" />
+                        <path d="M100,180 C100,180 120,165 135,170 C150,175 150,195 135,195 C120,195 100,180 100,180" fill="#A1A99C" />
+                        <path d="M100,180 C100,180 80,165 65,170 C50,175 50,195 65,195 C80,195 100,180 100,180" fill="#A1A99C" />
+                        <path d="M100,120 C100,120 120,105 135,110 C150,115 150,135 135,135 C120,135 100,120 100,120" fill="#A1A99C" />
+                        <path d="M100,120 C100,120 80,105 65,110 C50,115 50,135 65,135 C80,135 100,120 100,120" fill="#A1A99C" />
+                    </svg>
+                `,
+                "Mature Plant": `
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 240" width="200" height="240">
+                        <!-- Pot -->
+                        <path d="M60,200 L60,240 L140,240 L140,200 Z" fill="#D8A38D" />
+                        <path d="M50,200 L150,200 L140,240 L60,240 Z" fill="#C89076" />
+                        
+                        <!-- Soil -->
+                        <ellipse cx="100" cy="200" rx="50" ry="15" fill="#6B4F35" />
+                        
+                        <!-- Mature Plant -->
+                        <path d="M100,200 L100,60" stroke="#6B4F35" stroke-width="3" stroke-linecap="round" />
+                        <path d="M100,120 C100,120 70,110 65,80 C60,50 80,30 100,30 C120,30 140,50 135,80 C130,110 100,120 100,120" fill="#A1A99C" />
+                        <path d="M100,170 C100,170 130,150 150,160 C170,170 165,200 145,195 C125,190 100,170 100,170" fill="#A1A99C" />
+                        <path d="M100,170 C100,170 70,150 50,160 C30,170 35,200 55,195 C75,190 100,170 100,170" fill="#A1A99C" />
+                        <path d="M100,140 C100,140 130,120 150,130 C170,140 165,170 145,165 C125,160 100,140 100,140" fill="#A1A99C" />
+                        <path d="M100,140 C100,140 70,120 50,130 C30,140 35,170 55,165 C75,160 100,140 100,140" fill="#A1A99C" />
+                        <path d="M100,100 C100,100 130,80 150,90 C170,100 165,130 145,125 C125,120 100,100 100,100" fill="#A1A99C" />
+                        <path d="M100,100 C100,100 70,80 50,90 C30,100 35,130 55,125 C75,120 100,100 100,100" fill="#A1A99C" />
+                    </svg>
+                `,
+                "Flowering Plant": `
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 240" width="200" height="240">
+                        <!-- Pot -->
+                        <path d="M60,200 L60,240 L140,240 L140,200 Z" fill="#D8A38D" />
+                        <path d="M50,200 L150,200 L140,240 L60,240 Z" fill="#C89076" />
+                        
+                        <!-- Soil -->
+                        <ellipse cx="100" cy="200" rx="50" ry="15" fill="#6B4F35" />
+                        
+                        <!-- Flowering Plant -->
+                        <path d="M100,200 L100,40" stroke="#6B4F35" stroke-width="3" stroke-linecap="round" />
+                        
+                        <!-- Leaves -->
+                        <path d="M100,160 C100,160 130,140 150,150 C170,160 165,190 145,185 C125,180 100,160 100,160" fill="#A1A99C" />
+                        <path d="M100,160 C100,160 70,140 50,150 C30,160 35,190 55,185 C75,180 100,160 100,160" fill="#A1A99C" />
+                        <path d="M100,120 C100,120 130,100 150,110 C170,120 165,150 145,145 C125,140 100,120 100,120" fill="#A1A99C" />
+                        <path d="M100,120 C100,120 70,100 50,110 C30,120 35,150 55,145 C75,140 100,120 100,120" fill="#A1A99C" />
+                        <path d="M100,80 C100,80 130,60 150,70 C170,80 165,110 145,105 C125,100 100,80 100,80" fill="#A1A99C" />
+                        <path d="M100,80 C100,80 70,60 50,70 C30,80 35,110 55,105 C75,100 100,80 100,80" fill="#A1A99C" />
+                        
+                        <!-- Flowers -->
+                        <circle cx="100" cy="40" r="15" fill="#D9B4A6" />
+                        <circle cx="105" cy="35" r="5" fill="#F7F3E9" />
+                        
+                        <circle cx="130" cy="70" r="10" fill="#D9B4A6" />
+                        <circle cx="133" cy="67" r="3" fill="#F7F3E9" />
+                        
+                        <circle cx="70" cy="70" r="10" fill="#D9B4A6" />
+                        <circle cx="67" cy="67" r="3" fill="#F7F3E9" />
+                        
+                        <circle cx="150" cy="120" r="10" fill="#D9B4A6" />
+                        <circle cx="153" cy="117" r="3" fill="#F7F3E9" />
+                        
+                        <circle cx="50" cy="120" r="10" fill="#D9B4A6" />
+                        <circle cx="47" cy="117" r="3" fill="#F7F3E9" />
+                    </svg>
+                `
+            };
+            
+            return stageNames[stageName] || stageNames["Sprout"];
+        }
+
+        function generateSeedSVG(seedType, large = false, size = null) {
+            const width = size || (large ? 150 : 60);
+            const height = size || (large ? 150 : 60);
+            
+            const seedColors = {
+                "kindness": { primary: "#D8A38D", secondary: "#EAC195", accent: "#5D5CDE" },
+                "joy": { primary: "#FFD166", secondary: "#F9E9C0", accent: "#F25F5C" },
+                "patience": { primary: "#A1A99C", secondary: "#D0D6C8", accent: "#4A2C2A" },
+                "peace": { primary: "#C1D4E0", secondary: "#E1EDF6", accent: "#77A6B6" },
+                "love": { primary: "#F25F5C", secondary: "#F9B9B8", accent: "#FFE0E0" },
+                "faithfulness": { primary: "#8A6D88", secondary: "#C9B1C7", accent: "#F7F3E9" }
+            };
+            
+            const colors = seedColors[seedType] || seedColors.kindness;
+            
+            return `
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" width="${width}" height="${height}">
+                    <!-- Seed Base -->
+                    <ellipse cx="50" cy="60" rx="25" ry="35" fill="${colors.primary}" />
+                    
+                    <!-- Seed Highlight -->
+                    <ellipse cx="40" cy="45" rx="12" ry="20" fill="${colors.secondary}" />
+                    
+                    <!-- Seed Detail -->
+                    <circle cx="60" cy="70" r="8" fill="${colors.accent}" opacity="0.7" />
+                    <circle cx="45" cy="75" r="5" fill="${colors.accent}" opacity="0.5" />
+                    
+                    <!-- Seed Top -->
+                    <path d="M50,25 Q40,35 50,45 Q60,35 50,25" fill="${colors.primary}" />
+                </svg>
+            `;
+        }
+
+        function switchChallengeTab(tab) {
+            // Update tab styling
+            document.getElementById('tab-active').classList.remove('border-[#5D5CDE]', 'text-[#5D5CDE]');
+            document.getElementById('tab-completed').classList.remove('border-[#5D5CDE]', 'text-[#5D5CDE]');
+            document.getElementById('tab-achievements').classList.remove('border-[#5D5CDE]', 'text-[#5D5CDE]');
+            
+            document.getElementById('tab-active').classList.add('border-transparent', 'text-gray-500', 'dark:text-gray-400');
+            document.getElementById('tab-completed').classList.add('border-transparent', 'text-gray-500', 'dark:text-gray-400');
+            document.getElementById('tab-achievements').classList.add('border-transparent', 'text-gray-500', 'dark:text-gray-400');
+            
+            document.getElementById(`tab-${tab}`).classList.remove('border-transparent', 'text-gray-500', 'dark:text-gray-400');
+            document.getElementById(`tab-${tab}`).classList.add('border-[#5D5CDE]', 'text-[#5D5CDE]');
+            
+            // Hide/show content
+            document.getElementById('content-active').classList.add('hidden');
+            document.getElementById('content-completed').classList.add('hidden');
+            document.getElementById('content-achievements').classList.add('hidden');
+            
+            document.getElementById(`content-${tab}`).classList.remove('hidden');
+        }
+
+        // Page-specific functionality
+        function viewDiaryDay(day) {
+            const entry = appData.diary.find(e => e.date.getDate() === day);
+            if (entry) {
+                viewDiaryEntry(entry.id);
+            } else {
+                createDiaryEntry();
+            }
+        }
+        
+        function viewDiaryEntry(entryId) {
+            // Store the current entry ID for use in the page
+            currentEntryId = entryId;
+            navigateTo('diary-entry');
+            renderDiaryEntryPage(entryId);
+        }
+        
+        function createDiaryEntry() {
+            navigateTo('diary-entry');
+            renderDiaryEntryPage();
+        }
+        
+        function saveDiaryEntry() {
+            const content = document.getElementById('diaryContent').innerText;
+            if (content.trim()) {
+                // Create a new entry
+                const newEntry = {
+                    id: appData.diary.length + 1,
+                    date: new Date(),
+                    content: content,
+                    images: []
+                };
+                
+                // Add to diary
+                appData.diary.push(newEntry);
+                
+                // Add to completed days
+                if (!appData.calendar.completedDays.includes(new Date().getDate())) {
+                    appData.calendar.completedDays.push(new Date().getDate());
+                }
+                
+                // Navigate back to diary
+                navigateTo('diary');
+            }
+        }
+        
+        function viewSeedDetail(seedId) {
+            navigateTo('seed-detail');
+            renderSeedDetailPage(seedId);
+        }
+
+        // 3D Jar Visualization
+        function initJarCanvas() {
+            const canvas = document.getElementById('jarCanvas');
+            if (!canvas || !window.THREE) return;
+            
+            const scene = new THREE.Scene();
+            const camera = new THREE.PerspectiveCamera(45, canvas.clientWidth / canvas.clientHeight, 0.1, 1000);
+            const renderer = new THREE.WebGLRenderer({ canvas: canvas, antialias: true, alpha: true });
+            
+            renderer.setSize(canvas.clientWidth, canvas.clientHeight);
+            renderer.setClearColor(0x000000, 0);
+            
+            // Create a jar
+            const jarGeometry = new THREE.CylinderGeometry(1, 1, 2, 32);
+            const jarMaterial = new THREE.MeshPhongMaterial({ 
+                color: 0xffffff,
+                transparent: true,
+                opacity: 0.6,
+                shininess: 100
+            });
+            const jar = new THREE.Mesh(jarGeometry, jarMaterial);
+            
+            // Create a lid
+            const lidGeometry = new THREE.CylinderGeometry(1.1, 1.1, 0.2, 32);
+            const lidMaterial = new THREE.MeshPhongMaterial({ color: 0xD8A38D });
+            const lid = new THREE.Mesh(lidGeometry, lidMaterial);
+            lid.position.y = 1.1;
+            
+            // Create seeds inside the jar
+            createSeeds(scene, 10);
+            
+            scene.add(jar);
+            scene.add(lid);
+            
+            // Add lighting
+            const ambientLight = new THREE.AmbientLight(0xffffff, 0.5);
+            scene.add(ambientLight);
+            
+            const directionalLight = new THREE.DirectionalLight(0xffffff, 0.8);
+            directionalLight.position.set(5, 5, 5);
+            scene.add(directionalLight);
+            
+            const pointLight = new THREE.PointLight(0xffd700, 0.8, 10);
+            pointLight.position.set(0, 0, 2);
+            scene.add(pointLight);
+            
+            // Position camera
+            camera.position.z = 5;
+            camera.position.y = 0;
+            
+            // Add orbit controls if available
+            if (window.THREE.OrbitControls) {
+                const controls = new THREE.OrbitControls(camera, renderer.domElement);
+                controls.enableZoom = false;
+                controls.enablePan = false;
+                controls.rotateSpeed = 0.5;
+                controls.autoRotate = true;
+                controls.autoRotateSpeed = 1;
+                controls.update();
+            }
+            
+            // Animation loop
+            function animate() {
+                requestAnimationFrame(animate);
+                
+                jar.rotation.y += 0.005;
+                lid.rotation.y += 0.005;
+                
+                renderer.render(scene, camera);
+            }
+            
+            animate();
+        }
+        
+        function createSeeds(scene, count) {
+            const seedGeometry = new THREE.SphereGeometry(0.2, 16, 16);
+            
+            for (let i = 0; i < count; i++) {
+                const seedColor = [0xD8A38D, 0xA1A99C, 0xC1D4E0, 0xD9B4A6, 0x77A6B6][Math.floor(Math.random() * 5)];
+                const seedMaterial = new THREE.MeshPhongMaterial({ color: seedColor });
+                const seed = new THREE.Mesh(seedGeometry, seedMaterial);
+                
+                // Position seeds randomly within the jar
+                seed.position.x = (Math.random() - 0.5) * 1.5;
+                seed.position.y = (Math.random() - 0.5) * 1.5;
+                seed.position.z = (Math.random() - 0.5) * 1.5;
+                
+                scene.add(seed);
+            }
+        }
+
+        // Initialize first page
+        navigateTo('home');
+    </script>
+
+
+</body></html>

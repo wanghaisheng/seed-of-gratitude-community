@@ -1,0 +1,1325 @@
+<!DOCTYPE html><html lang="en"><head><meta http-equiv="Content-Security-Policy" content="default-src 'self' 'unsafe-inline' 'unsafe-eval' data: blob: https://cdnjs.cloudflare.com https://cdn.jsdelivr.net https://code.jquery.com https://unpkg.com https://d3js.org https://threejs.org https://cdn.plot.ly https://stackpath.bootstrapcdn.com https://maps.googleapis.com https://cdn.tailwindcss.com https://ajax.googleapis.com https://kit.fontawesome.com https://cdn.datatables.net https://maxcdn.bootstrapcdn.com https://code.highcharts.com https://tako-static-assets-production.s3.amazonaws.com https://www.youtube.com https://fonts.googleapis.com https://fonts.gstatic.com https://pfst.cf2.poecdn.net https://puc.poecdn.net https://i.imgur.com https://wikimedia.org https://*.icons8.com https://*.giphy.com https://picsum.photos https://images.unsplash.com; frame-src 'self' https://www.youtube.com https://trytako.com; child-src 'self'; manifest-src 'self'; worker-src 'self'; upgrade-insecure-requests; block-all-mixed-content;">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Seed of Gratitude</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Ma+Shan+Zheng&amp;family=ZCOOL+XiaoWei&amp;display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary-color: #8B2323; /* Chinese red */
+            --secondary-color: #BFA36F; /* Gold */
+            --accent-color: #007F66; /* Jade green */
+            --light-color: #F9F1E6; /* Rice paper */
+            --dark-color: #2C1E1E; /* Dark wood */
+            
+            --wood-color: #7E6148;
+            --fire-color: #E94E37;
+            --water-color: #5E8EB8;
+            --earth-color: #B98267;
+            --gold-color: #D4AF37;
+        }
+
+        .dark {
+            --primary-color: #C23B22; /* Brighter red for dark mode */
+            --secondary-color: #D4AF37; /* Brighter gold */
+            --accent-color: #3AA99F; /* Brighter jade */
+            --light-color: #3A3637; /* Dark rice paper */
+            --dark-color: #141212; /* Deeper dark wood */
+        }
+
+        body {
+            font-family: 'ZCOOL XiaoWei', serif;
+            background-color: var(--light-color);
+            color: var(--dark-color);
+        }
+
+        .dark body {
+            background-color: var(--dark-color);
+            color: var(--light-color);
+        }
+
+        .chinese-title {
+            font-family: 'Ma Shan Zheng', cursive;
+        }
+
+        .eastern-card {
+            background-color: var(--light-color);
+            border: 1px solid var(--secondary-color);
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+            overflow: hidden;
+            position: relative;
+        }
+
+        .dark .eastern-card {
+            background-color: var(--dark-color);
+            border-color: var(--secondary-color);
+        }
+
+        .eastern-card::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 6px;
+            background-color: var(--primary-color);
+        }
+
+        .eastern-btn {
+            background-color: var(--primary-color);
+            color: var(--light-color);
+            padding: 0.5rem 1.5rem;
+            border-radius: 4px;
+            border: 1px solid var(--secondary-color);
+            transition: all 0.3s ease;
+        }
+
+        .eastern-btn:hover {
+            background-color: var(--secondary-color);
+            transform: translateY(-2px);
+        }
+
+        .dark .eastern-btn {
+            background-color: var(--primary-color);
+            color: var(--light-color);
+        }
+
+        .element-icon {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+            color: white;
+            margin: 0 auto;
+            border: 2px solid var(--secondary-color);
+            box-shadow: 0 0 15px rgba(0,0,0,0.2);
+            transition: all 0.3s ease;
+        }
+
+        .element-icon:hover {
+            transform: scale(1.1);
+        }
+
+        .wood {
+            background-color: var(--wood-color);
+        }
+
+        .fire {
+            background-color: var(--fire-color);
+        }
+
+        .water {
+            background-color: var(--water-color);
+        }
+
+        .earth {
+            background-color: var(--earth-color);
+        }
+
+        .gold {
+            background-color: var(--gold-color);
+        }
+
+        .cloud-pattern {
+            position: absolute;
+            opacity: 0.1;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-image: url("data:image/svg+xml,%3Csvg width='100' height='100' viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M50,0 C60,20 80,20 100,10 C100,40 80,60 60,60 C80,80 100,80 100,100 C70,100 50,80 30,80 C10,100 10,100 0,100 C0,70 20,50 20,30 C0,20 0,10 0,0 C30,0 50,20 50,0 Z' fill='%238B2323' fill-opacity='0.4'/%3E%3C/svg%3E");
+            background-size: 100px 100px;
+            z-index: -1;
+        }
+
+        .nav-icon {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            font-size: 12px;
+            padding: 8px 0;
+            width: 64px;
+        }
+
+        .nav-icon svg {
+            margin-bottom: 4px;
+        }
+
+        /* Animation for scroll unrolling */
+        @keyframes unroll {
+            0% { height: 0; opacity: 0; }
+            100% { height: 100%; opacity: 1; }
+        }
+
+        .unroll-animation {
+            animation: unroll 0.8s ease-out forwards;
+        }
+
+        /* Animation for ink wash effect */
+        @keyframes inkWash {
+            0% { background-position: 0% 0%; }
+            100% { background-position: 100% 100%; }
+        }
+
+        .ink-wash-bg {
+            background: linear-gradient(135deg, rgba(249,241,230,0.8) 0%, rgba(249,241,230,0.9) 50%, rgba(249,241,230,0.8) 100%);
+            background-size: 200% 200%;
+            animation: inkWash 3s ease infinite alternate;
+        }
+
+        .dark .ink-wash-bg {
+            background: linear-gradient(135deg, rgba(44,30,30,0.8) 0%, rgba(44,30,30,0.9) 50%, rgba(44,30,30,0.8) 100%);
+            background-size: 200% 200%;
+            animation: inkWash 3s ease infinite alternate;
+        }
+
+        .nav-indicator {
+            width: 5px;
+            height: 5px;
+            background-color: var(--primary-color);
+            border-radius: 50%;
+            margin-top: 4px;
+        }
+
+        /* Main container */
+        .app-container {
+            max-width: 768px;
+            margin: 0 auto;
+            position: relative;
+            min-height: 100vh;
+        }
+
+        /* Screens */
+        .screen {
+            display: none;
+            padding: 1rem;
+            padding-bottom: 80px; /* Space for navigation */
+        }
+
+        .active-screen {
+            display: block;
+        }
+
+        /* Floating achievement notification */
+        .achievement-notification {
+            position: fixed;
+            top: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: 100;
+            background-color: var(--secondary-color);
+            color: var(--light-color);
+            padding: 10px 20px;
+            border-radius: 20px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+            display: none;
+        }
+
+        .journal-entry {
+            height: 0;
+            overflow: hidden;
+            opacity: 0;
+        }
+
+        .journal-entry.show {
+            height: auto;
+            opacity: 1;
+            transition: opacity 0.5s ease;
+        }
+
+        .seed-card {
+            position: relative;
+            border-radius: 12px;
+            overflow: hidden;
+            transition: transform 0.3s ease;
+        }
+
+        .seed-card:hover {
+            transform: translateY(-5px);
+        }
+
+        /* Challenge items */
+        .challenge-item {
+            border-left: 4px solid var(--accent-color);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .challenge-item::after {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            bottom: 0;
+            width: var(--progress, 0%);
+            background-color: var(--secondary-color);
+            opacity: 0.2;
+            z-index: 0;
+            transition: width 1s ease;
+        }
+
+        .challenge-content {
+            position: relative;
+            z-index: 1;
+        }
+
+        /* Ink wash background for journal */
+        .ink-wash-container {
+            position: relative;
+            overflow: hidden;
+        }
+
+        .ink-wash-container::before {
+            content: "";
+            position: absolute;
+            top: -10%;
+            left: -10%;
+            width: 120%;
+            height: 120%;
+            background-image: url("data:image/svg+xml,%3Csvg width='100' height='100' viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M0,0 C20,10 40,10 50,30 C60,10 80,10 100,0 L100,100 L0,100 Z' fill='%232C1E1E' fill-opacity='0.05'/%3E%3C/svg%3E");
+            background-size: 100px 100px;
+            opacity: 0.1;
+            z-index: -1;
+        }
+
+        /* Progress circle */
+        .progress-circle {
+            position: relative;
+            width: 50px;
+            height: 50px;
+        }
+
+        .progress-ring {
+            transform: rotate(-90deg);
+        }
+
+        .circle-bg {
+            fill: none;
+            stroke: rgba(191, 163, 111, 0.3);
+            stroke-width: 4;
+        }
+
+        .circle-progress {
+            fill: none;
+            stroke: var(--secondary-color);
+            stroke-width: 4;
+            stroke-linecap: round;
+            transition: stroke-dashoffset 0.5s ease;
+        }
+
+        .progress-text {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            font-size: 14px;
+            font-weight: bold;
+            color: var(--secondary-color);
+        }
+
+        /* Smooth scrolling for seed collection */
+        .seeds-container {
+            overflow-x: auto;
+            scrollbar-width: thin;
+            scrollbar-color: var(--secondary-color) var(--light-color);
+        }
+
+        .seeds-container::-webkit-scrollbar {
+            height: 6px;
+        }
+
+        .seeds-container::-webkit-scrollbar-track {
+            background: var(--light-color);
+        }
+
+        .seeds-container::-webkit-scrollbar-thumb {
+            background-color: var(--secondary-color);
+            border-radius: 6px;
+        }
+
+        /* Language selector */
+        .language-selector {
+            padding: 8px 12px;
+            border-radius: 20px;
+            background-color: var(--light-color);
+            border: 1px solid var(--secondary-color);
+            color: var(--dark-color);
+            font-size: 14px;
+            appearance: none;
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' fill='none' viewBox='0 0 24 24' stroke='%238B2323'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M19 9l-7 7-7-7'%3E%3C/path%3E%3C/svg%3E");
+            background-repeat: no-repeat;
+            background-position: right 12px center;
+            padding-right: 28px;
+            cursor: pointer;
+        }
+
+        .dark .language-selector {
+            background-color: var(--dark-color);
+            color: var(--light-color);
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' fill='none' viewBox='0 0 24 24' stroke='%23D4AF37'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M19 9l-7 7-7-7'%3E%3C/path%3E%3C/svg%3E");
+        }
+    </style>
+</head>
+<body>
+    <div class="achievement-notification" id="achievementNotification">
+        <div class="flex items-center">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2" viewBox="0 0 20 20" fill="currentColor">
+                <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"></path>
+            </svg>
+            <span id="achievementText">Achievement Unlocked!</span>
+        </div>
+    </div>
+
+    <div class="app-container">
+        <!-- Home Screen -->
+        <div id="homeScreen" class="screen active-screen">
+            <div class="flex justify-between items-center mb-6">
+                <h1 class="chinese-title text-3xl text-center">感恩种子</h1>
+                <div class="flex items-center">
+                    <select class="language-selector mr-2" id="languageSelector">
+                        <option value="en">English</option>
+                        <option value="zh">中文</option>
+                    </select>
+                    <button id="darkModeToggle" class="w-10 h-10 rounded-full flex items-center justify-center">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z"></path>
+                        </svg>
+                    </button>
+                </div>
+            </div>
+            
+            <div class="cloud-pattern"></div>
+
+            <!-- User Profile Summary -->
+            <div class="eastern-card p-4 mb-6 flex items-center">
+                <div class="w-16 h-16 rounded-full bg-gray-200 mr-4 overflow-hidden">
+                    <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ccircle cx='50' cy='50' r='50' fill='%23BFA36F'/%3E%3Ccircle cx='50' cy='40' r='15' fill='%23F9F1E6'/%3E%3Cpath d='M25,85 C25,65 75,65 75,85' stroke='%23F9F1E6' stroke-width='6' fill='none'/%3E%3C/svg%3E" alt="User Profile">
+                </div>
+                <div>
+                    <h2 class="text-xl font-bold">Welcome, Traveler</h2>
+                    <div class="flex items-center mt-1">
+                        <span class="text-sm">Level 3</span>
+                        <div class="ml-2 bg-gray-200 rounded-full h-2 w-32 overflow-hidden">
+                            <div class="bg-secondary-color h-full" style="width: 60%;"></div>
+                        </div>
+                        <span class="ml-2 text-xs">60%</span>
+                    </div>
+                    <p class="text-sm mt-1">Seeds Collected: 12/50</p>
+                </div>
+            </div>
+
+            <!-- Daily Reflection -->
+            <div class="eastern-card mb-6 overflow-hidden">
+                <div class="p-4 bg-primary-color text-white flex justify-between items-center">
+                    <h3 class="font-bold">Today's Reflection</h3>
+                    <span>12 April</span>
+                </div>
+                <div class="p-4 ink-wash-bg">
+                    <p class="mb-4 italic">"What small moment brought you joy today?"</p>
+                    <button class="eastern-btn w-full" id="writeJournalBtn">Write in Journal</button>
+                </div>
+            </div>
+
+            <!-- Seeds Collection Preview -->
+            <h3 class="font-bold mb-2">Recent Seeds</h3>
+            <div class="seeds-container flex overflow-x-auto pb-4 mb-6">
+                <div class="seed-card mr-4 flex-shrink-0 w-24 h-32 flex flex-col items-center justify-center p-2 eastern-card">
+                    <div class="w-12 h-12 rounded-full bg-gold-color flex items-center justify-center mb-2">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11.049 2.927c.3-.921 1.603-.921 1.902 0l1.519 4.674a1 1 0 00.95.69h4.915c.969 0 1.371 1.24.588 1.81l-3.976 2.888a1 1 0 00-.363 1.118l1.518 4.674c.3.922-.755 1.688-1.538 1.118l-3.976-2.888a1 1 0 00-1.176 0l-3.976 2.888c-.783.57-1.838-.197-1.538-1.118l1.518-4.674a1 1 0 00-.363-1.118l-3.976-2.888c-.784-.57-.38-1.81.588-1.81h4.914a1 1 0 00.951-.69l1.519-4.674z"></path>
+                        </svg>
+                    </div>
+                    <span class="text-xs text-center">Golden Joy</span>
+                </div>
+                <div class="seed-card mr-4 flex-shrink-0 w-24 h-32 flex flex-col items-center justify-center p-2 eastern-card">
+                    <div class="w-12 h-12 rounded-full bg-wood-color flex items-center justify-center mb-2">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 3v4M3 5h4M6 17v4m-2-2h4m5-16l2.286 6.857L21 12l-5.714 2.143L13 21l-2.286-6.857L5 12l5.714-2.143L13 3z"></path>
+                        </svg>
+                    </div>
+                    <span class="text-xs text-center">Woodland Wisdom</span>
+                </div>
+                <div class="seed-card mr-4 flex-shrink-0 w-24 h-32 flex flex-col items-center justify-center p-2 eastern-card">
+                    <div class="w-12 h-12 rounded-full bg-water-color flex items-center justify-center mb-2">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z"></path>
+                        </svg>
+                    </div>
+                    <span class="text-xs text-center">Flowing Peace</span>
+                </div>
+                <div class="seed-card flex-shrink-0 w-24 h-32 flex flex-col items-center justify-center p-2 eastern-card opacity-50">
+                    <div class="w-12 h-12 rounded-full bg-gray-400 flex items-center justify-center mb-2">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path>
+                        </svg>
+                    </div>
+                    <span class="text-xs text-center">Discover More</span>
+                </div>
+            </div>
+
+            <!-- Challenges Preview -->
+            <h3 class="font-bold mb-2">Active Challenges</h3>
+            <div class="eastern-card mb-4">
+                <div class="challenge-item p-4" style="--progress: 30%">
+                    <div class="challenge-content flex justify-between items-center">
+                        <div>
+                            <h4 class="font-bold">Weekly Consistency</h4>
+                            <p class="text-sm">Write 5 journal entries this week</p>
+                        </div>
+                        <div class="progress-circle">
+                            <svg class="progress-ring" width="50" height="50">
+                                <circle class="circle-bg" cx="25" cy="25" r="20"></circle>
+                                <circle class="circle-progress" cx="25" cy="25" r="20" stroke-dasharray="125.6" stroke-dashoffset="87.92"></circle>
+                            </svg>
+                            <div class="progress-text">3/5</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="eastern-card">
+                <div class="challenge-item p-4" style="--progress: 50%">
+                    <div class="challenge-content flex justify-between items-center">
+                        <div>
+                            <h4 class="font-bold">Element Explorer</h4>
+                            <p class="text-sm">Write one entry for each element</p>
+                        </div>
+                        <div class="progress-circle">
+                            <svg class="progress-ring" width="50" height="50">
+                                <circle class="circle-bg" cx="25" cy="25" r="20"></circle>
+                                <circle class="circle-progress" cx="25" cy="25" r="20" stroke-dasharray="125.6" stroke-dashoffset="62.8"></circle>
+                            </svg>
+                            <div class="progress-text">2/5</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Journal Screen -->
+        <div id="journalScreen" class="screen">
+            <div class="flex justify-between items-center mb-6">
+                <h1 class="chinese-title text-3xl">日记</h1>
+                <div class="text-sm">
+                    <span id="streakCounter" class="bg-primary-color text-white py-1 px-3 rounded-full">🔥 3 Day Streak</span>
+                </div>
+            </div>
+
+            <div class="cloud-pattern"></div>
+
+            <div class="ink-wash-container mb-6">
+                <p class="text-center italic mb-4">"The five elements - Gold, Wood, Water, Fire, Earth - guide our reflections on gratitude"</p>
+            </div>
+
+            <div class="grid grid-cols-5 gap-4 mb-8">
+                <div class="element-item text-center">
+                    <div class="element-icon gold" data-element="gold">金</div>
+                    <p class="mt-2 text-sm">Gold</p>
+                </div>
+                <div class="element-item text-center">
+                    <div class="element-icon wood" data-element="wood">木</div>
+                    <p class="mt-2 text-sm">Wood</p>
+                </div>
+                <div class="element-item text-center">
+                    <div class="element-icon water" data-element="water">水</div>
+                    <p class="mt-2 text-sm">Water</p>
+                </div>
+                <div class="element-item text-center">
+                    <div class="element-icon fire" data-element="fire">火</div>
+                    <p class="mt-2 text-sm">Fire</p>
+                </div>
+                <div class="element-item text-center">
+                    <div class="element-icon earth" data-element="earth">土</div>
+                    <p class="mt-2 text-sm">Earth</p>
+                </div>
+            </div>
+
+            <div id="elementJournal" class="eastern-card p-4 mb-6 hidden">
+                <h3 class="font-bold text-lg mb-2" id="elementTitle">Gold Element Journal</h3>
+                <p class="text-sm mb-4" id="elementDescription">Reflect on achievements, value, and what you treasure.</p>
+                <div class="mb-4">
+                    <label class="block text-sm mb-1">What are you grateful for today?</label>
+                    <textarea id="journalEntry" class="w-full border border-secondary-color p-2 rounded h-32 bg-light-color text-dark-color" placeholder="Write your thoughts here..."></textarea>
+                </div>
+                <div class="flex justify-between">
+                    <button class="bg-gray-200 text-dark-color px-4 py-2 rounded" id="cancelJournalBtn">Cancel</button>
+                    <button class="eastern-btn" id="saveJournalBtn">Save Entry</button>
+                </div>
+            </div>
+
+            <div id="journalList" class="mb-6">
+                <h3 class="font-bold mb-3">Recent Entries</h3>
+                <div class="eastern-card mb-4 overflow-hidden journal-entry show">
+                    <div class="p-3 bg-water-color text-white flex justify-between items-center">
+                        <div class="flex items-center">
+                            <div class="w-6 h-6 rounded-full bg-light-color text-water-color flex items-center justify-center mr-2">
+                                水
+                            </div>
+                            <h4>Water Reflection</h4>
+                        </div>
+                        <span class="text-sm">10 April</span>
+                    </div>
+                    <div class="p-4">
+                        <p>I'm grateful for the rain today. The sound of raindrops on my window helped me focus on my work and brought a sense of calm to my day.</p>
+                    </div>
+                </div>
+                <div class="eastern-card overflow-hidden journal-entry show">
+                    <div class="p-3 bg-fire-color text-white flex justify-between items-center">
+                        <div class="flex items-center">
+                            <div class="w-6 h-6 rounded-full bg-light-color text-fire-color flex items-center justify-center mr-2">
+                                火
+                            </div>
+                            <h4>Fire Reflection</h4>
+                        </div>
+                        <span class="text-sm">8 April</span>
+                    </div>
+                    <div class="p-4">
+                        <p>I'm grateful for the passion I felt during my painting session today. The energy and inspiration flowed through me like fire.</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="eastern-card p-4 mb-4">
+                <h3 class="font-bold mb-3">Journal Scroll</h3>
+                <p class="text-sm mb-3">Create a visual scroll of your journey through gratitude.</p>
+                <button class="eastern-btn w-full">Generate Journal Scroll</button>
+            </div>
+        </div>
+
+        <!-- Challenges Screen -->
+        <div id="challengesScreen" class="screen">
+            <div class="flex justify-between items-center mb-6">
+                <h1 class="chinese-title text-3xl">挑战</h1>
+            </div>
+
+            <div class="cloud-pattern"></div>
+
+            <div class="eastern-card p-4 mb-6">
+                <h3 class="font-bold mb-3">Active Challenges</h3>
+                
+                <div class="challenge-item p-4 mb-4" style="--progress: 60%">
+                    <div class="challenge-content">
+                        <div class="flex justify-between items-center mb-2">
+                            <h4 class="font-bold">Daily Gratitude</h4>
+                            <span class="text-xs bg-secondary-color text-white px-2 py-1 rounded">Daily</span>
+                        </div>
+                        <p class="text-sm mb-2">Write one journal entry today</p>
+                        <div class="flex justify-between items-center">
+                            <span class="text-xs">Reward: 1 Seed of Consistency</span>
+                            <button class="eastern-btn text-sm py-1">Complete</button>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="challenge-item p-4 mb-4" style="--progress: 30%">
+                    <div class="challenge-content">
+                        <div class="flex justify-between items-center mb-2">
+                            <h4 class="font-bold">Weekly Consistency</h4>
+                            <span class="text-xs bg-accent-color text-white px-2 py-1 rounded">Weekly</span>
+                        </div>
+                        <p class="text-sm mb-2">Write 5 journal entries this week</p>
+                        <div class="flex justify-between items-center">
+                            <span class="text-xs">Reward: Wisdom Tree Seed</span>
+                            <span class="text-sm font-bold">3/5</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="challenge-item p-4" style="--progress: 20%">
+                    <div class="challenge-content">
+                        <div class="flex justify-between items-center mb-2">
+                            <h4 class="font-bold">Element Explorer</h4>
+                            <span class="text-xs bg-primary-color text-white px-2 py-1 rounded">Special</span>
+                        </div>
+                        <p class="text-sm mb-2">Write one entry for each element</p>
+                        <div class="flex justify-between items-center">
+                            <span class="text-xs">Reward: Harmony Seed</span>
+                            <span class="text-sm font-bold">1/5</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="eastern-card p-4 mb-6">
+                <h3 class="font-bold mb-3">Achievements</h3>
+                <div class="grid grid-cols-3 gap-4">
+                    <div class="achievement-item text-center">
+                        <div class="w-16 h-16 rounded-full bg-secondary-color mx-auto flex items-center justify-center">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+                            </svg>
+                        </div>
+                        <p class="mt-2 text-xs">First Step</p>
+                    </div>
+                    <div class="achievement-item text-center">
+                        <div class="w-16 h-16 rounded-full bg-secondary-color mx-auto flex items-center justify-center">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11.933 12.8a1 1 0 000-1.6L6.6 7.2A1 1 0 005 8v8a1 1 0 001.6.8l5.333-4z"></path>
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19.933 12.8a1 1 0 000-1.6l-5.333-4A1 1 0 0013 8v8a1 1 0 001.6.8l5.333-4z"></path>
+                            </svg>
+                        </div>
+                        <p class="mt-2 text-xs">3 Day Streak</p>
+                    </div>
+                    <div class="achievement-item text-center opacity-50">
+                        <div class="w-16 h-16 rounded-full bg-gray-400 mx-auto flex items-center justify-center">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8.228 9c.549-1.165 2.03-2 3.772-2 2.21 0 4 1.343 4 3 0 1.4-1.278 2.575-3.006 2.907-.542.104-.994.54-.994 1.093m0 3h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                            </svg>
+                        </div>
+                        <p class="mt-2 text-xs">Locked</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="eastern-card p-4">
+                <h3 class="font-bold mb-3">Leaderboard</h3>
+                <div class="flex border-b border-gray-200 pb-2 mb-2">
+                    <span class="w-1/12 text-center font-bold">#</span>
+                    <span class="w-7/12 font-bold">User</span>
+                    <span class="w-4/12 text-right font-bold">Seeds</span>
+                </div>
+                <div class="leaderboard-item flex items-center py-2 bg-secondary-color bg-opacity-20">
+                    <span class="w-1/12 text-center">1</span>
+                    <div class="w-7/12 flex items-center">
+                        <div class="w-8 h-8 rounded-full bg-accent-color mr-2"></div>
+                        <span>GratitudeGuru</span>
+                    </div>
+                    <span class="w-4/12 text-right">128</span>
+                </div>
+                <div class="leaderboard-item flex items-center py-2">
+                    <span class="w-1/12 text-center">2</span>
+                    <div class="w-7/12 flex items-center">
+                        <div class="w-8 h-8 rounded-full bg-primary-color mr-2"></div>
+                        <span>MindfulMaster</span>
+                    </div>
+                    <span class="w-4/12 text-right">112</span>
+                </div>
+                <div class="leaderboard-item flex items-center py-2">
+                    <span class="w-1/12 text-center">3</span>
+                    <div class="w-7/12 flex items-center">
+                        <div class="w-8 h-8 rounded-full bg-wood-color mr-2"></div>
+                        <span>JoyfulJourney</span>
+                    </div>
+                    <span class="w-4/12 text-right">97</span>
+                </div>
+                <div class="leaderboard-item flex items-center py-2 border-t border-gray-200 mt-2">
+                    <span class="w-1/12 text-center">8</span>
+                    <div class="w-7/12 flex items-center">
+                        <div class="w-8 h-8 rounded-full bg-gray-300 mr-2">
+                            <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ccircle cx='50' cy='50' r='50' fill='%23BFA36F'/%3E%3Ccircle cx='50' cy='40' r='15' fill='%23F9F1E6'/%3E%3Cpath d='M25,85 C25,65 75,65 75,85' stroke='%23F9F1E6' stroke-width='6' fill='none'/%3E%3C/svg%3E" alt="User Profile">
+                        </div>
+                        <span>You</span>
+                    </div>
+                    <span class="w-4/12 text-right">45</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Collection Book Screen -->
+        <div id="collectionScreen" class="screen">
+            <div class="flex justify-between items-center mb-6">
+                <h1 class="chinese-title text-3xl">图鉴</h1>
+                <div class="text-sm">
+                    <span class="bg-secondary-color text-white py-1 px-3 rounded-full">
+                        12/50 Seeds
+                    </span>
+                </div>
+            </div>
+
+            <div class="cloud-pattern"></div>
+
+            <div class="eastern-card p-4 mb-6">
+                <div class="grid grid-cols-2 gap-4">
+                    <div class="element-category p-3 bg-gold-color bg-opacity-20 rounded-lg flex items-center">
+                        <div class="element-icon gold mr-3 flex-shrink-0">金</div>
+                        <div>
+                            <h3 class="font-bold">Gold Seeds</h3>
+                            <p class="text-xs">3/10 Collected</p>
+                        </div>
+                    </div>
+                    <div class="element-category p-3 bg-wood-color bg-opacity-20 rounded-lg flex items-center">
+                        <div class="element-icon wood mr-3 flex-shrink-0">木</div>
+                        <div>
+                            <h3 class="font-bold">Wood Seeds</h3>
+                            <p class="text-xs">2/10 Collected</p>
+                        </div>
+                    </div>
+                    <div class="element-category p-3 bg-water-color bg-opacity-20 rounded-lg flex items-center">
+                        <div class="element-icon water mr-3 flex-shrink-0">水</div>
+                        <div>
+                            <h3 class="font-bold">Water Seeds</h3>
+                            <p class="text-xs">4/10 Collected</p>
+                        </div>
+                    </div>
+                    <div class="element-category p-3 bg-fire-color bg-opacity-20 rounded-lg flex items-center">
+                        <div class="element-icon fire mr-3 flex-shrink-0">火</div>
+                        <div>
+                            <h3 class="font-bold">Fire Seeds</h3>
+                            <p class="text-xs">2/10 Collected</p>
+                        </div>
+                    </div>
+                    <div class="element-category p-3 bg-earth-color bg-opacity-20 rounded-lg flex items-center">
+                        <div class="element-icon earth mr-3 flex-shrink-0">土</div>
+                        <div>
+                            <h3 class="font-bold">Earth Seeds</h3>
+                            <p class="text-xs">1/10 Collected</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <h3 class="font-bold mb-2">Gold Seeds</h3>
+            <div class="grid grid-cols-3 gap-4 mb-6">
+                <div class="seed-card eastern-card p-2 flex flex-col items-center">
+                    <div class="w-12 h-12 rounded-full bg-gold-color flex items-center justify-center mb-2">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11.049 2.927c.3-.921 1.603-.921 1.902 0l1.519 4.674a1 1 0 00.95.69h4.915c.969 0 1.371 1.24.588 1.81l-3.976 2.888a1 1 0 00-.363 1.118l1.518 4.674c.3.922-.755 1.688-1.538 1.118l-3.976-2.888a1 1 0 00-1.176 0l-3.976 2.888c-.783.57-1.838-.197-1.538-1.118l1.518-4.674a1 1 0 00-.363-1.118l-3.976-2.888c-.784-.57-.38-1.81.588-1.81h4.914a1 1 0 00.951-.69l1.519-4.674z"></path>
+                        </svg>
+                    </div>
+                    <span class="text-xs text-center mb-1">Golden Joy</span>
+                    <div class="text-xs bg-gold-color bg-opacity-20 px-2 py-1 rounded-full">Level 2</div>
+                </div>
+                <div class="seed-card eastern-card p-2 flex flex-col items-center">
+                    <div class="w-12 h-12 rounded-full bg-gold-color flex items-center justify-center mb-2">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                        </svg>
+                    </div>
+                    <span class="text-xs text-center mb-1">Achievement</span>
+                    <div class="text-xs bg-gold-color bg-opacity-20 px-2 py-1 rounded-full">Level 1</div>
+                </div>
+                <div class="seed-card eastern-card p-2 flex flex-col items-center">
+                    <div class="w-12 h-12 rounded-full bg-gold-color flex items-center justify-center mb-2">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"></path>
+                        </svg>
+                    </div>
+                    <span class="text-xs text-center mb-1">Gratitude</span>
+                    <div class="text-xs bg-gold-color bg-opacity-20 px-2 py-1 rounded-full">Level 1</div>
+                </div>
+                <div class="seed-card eastern-card p-2 flex flex-col items-center opacity-50">
+                    <div class="w-12 h-12 rounded-full bg-gray-400 flex items-center justify-center mb-2">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path>
+                        </svg>
+                    </div>
+                    <span class="text-xs text-center mb-1">Locked</span>
+                    <div class="text-xs bg-gray-300 px-2 py-1 rounded-full">???</div>
+                </div>
+            </div>
+
+            <h3 class="font-bold mb-2">Seed Evolution</h3>
+            <div class="eastern-card p-4">
+                <div class="flex items-center justify-between">
+                    <div class="seed-evolution flex items-center">
+                        <div class="w-12 h-12 rounded-full bg-gold-color flex items-center justify-center">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11.049 2.927c.3-.921 1.603-.921 1.902 0l1.519 4.674a1 1 0 00.95.69h4.915c.969 0 1.371 1.24.588 1.81l-3.976 2.888a1 1 0 00-.363 1.118l1.518 4.674c.3.922-.755 1.688-1.538 1.118l-3.976-2.888a1 1 0 00-1.176 0l-3.976 2.888c-.783.57-1.838-.197-1.538-1.118l1.518-4.674a1 1 0 00-.363-1.118l-3.976-2.888c-.784-.57-.38-1.81.588-1.81h4.914a1 1 0 00.951-.69l1.519-4.674z"></path>
+                            </svg>
+                        </div>
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 mx-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 5l7 7-7 7M5 5l7 7-7 7"></path>
+                        </svg>
+                        <div class="w-16 h-16 rounded-full bg-gold-color flex items-center justify-center">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11.049 2.927c.3-.921 1.603-.921 1.902 0l1.519 4.674a1 1 0 00.95.69h4.915c.969 0 1.371 1.24.588 1.81l-3.976 2.888a1 1 0 00-.363 1.118l1.518 4.674c.3.922-.755 1.688-1.538 1.118l-3.976-2.888a1 1 0 00-1.176 0l-3.976 2.888c-.783.57-1.838-.197-1.538-1.118l1.518-4.674a1 1 0 00-.363-1.118l-3.976-2.888c-.784-.57-.38-1.81.588-1.81h4.914a1 1 0 00.951-.69l1.519-4.674z"></path>
+                            </svg>
+                        </div>
+                    </div>
+                    <div>
+                        <button class="eastern-btn">Evolve</button>
+                    </div>
+                </div>
+                <div class="mt-3">
+                    <p class="text-sm">Golden Joy can evolve at Level 3. Continue writing gold element journal entries to level up!</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Social Screen -->
+        <div id="socialScreen" class="screen">
+            <div class="flex justify-between items-center mb-6">
+                <h1 class="chinese-title text-3xl">社交</h1>
+            </div>
+
+            <div class="cloud-pattern"></div>
+
+            <div class="eastern-card p-4 mb-6">
+                <h3 class="font-bold mb-3">Friends</h3>
+                <div class="friend-item flex items-center p-3 border-b border-gray-200">
+                    <div class="w-12 h-12 rounded-full bg-accent-color mr-3"></div>
+                    <div class="flex-grow">
+                        <h4 class="font-bold">GratitudeGuru</h4>
+                        <p class="text-xs">Level 15 • 128 Seeds</p>
+                    </div>
+                    <div>
+                        <button class="bg-gray-200 text-dark-color px-3 py-1 rounded text-sm">Visit</button>
+                    </div>
+                </div>
+                <div class="friend-item flex items-center p-3 border-b border-gray-200">
+                    <div class="w-12 h-12 rounded-full bg-primary-color mr-3"></div>
+                    <div class="flex-grow">
+                        <h4 class="font-bold">MindfulMaster</h4>
+                        <p class="text-xs">Level 12 • 112 Seeds</p>
+                    </div>
+                    <div>
+                        <button class="bg-gray-200 text-dark-color px-3 py-1 rounded text-sm">Visit</button>
+                    </div>
+                </div>
+                <div class="friend-item flex items-center p-3">
+                    <div class="w-12 h-12 rounded-full bg-wood-color mr-3"></div>
+                    <div class="flex-grow">
+                        <h4 class="font-bold">JoyfulJourney</h4>
+                        <p class="text-xs">Level 10 • 97 Seeds</p>
+                    </div>
+                    <div>
+                        <button class="bg-gray-200 text-dark-color px-3 py-1 rounded text-sm">Visit</button>
+                    </div>
+                </div>
+                <div class="mt-4">
+                    <button class="eastern-btn w-full">Find Friends</button>
+                </div>
+            </div>
+
+            <div class="eastern-card p-4 mb-6">
+                <h3 class="font-bold mb-3">Community</h3>
+                <div class="community-post p-3 bg-light-color rounded-lg mb-4">
+                    <div class="flex items-center mb-2">
+                        <div class="w-10 h-10 rounded-full bg-accent-color mr-2"></div>
+                        <div>
+                            <h4 class="font-bold">GratitudeGuru</h4>
+                            <p class="text-xs">2 hours ago</p>
+                        </div>
+                    </div>
+                    <p class="text-sm mb-2">I just completed my 30-day gratitude challenge! The Fire seeds I collected helped me stay motivated through difficult days. Has anyone else felt more energized by focusing on specific elements?</p>
+                    <div class="flex items-center justify-between">
+                        <div class="flex items-center">
+                            <button class="flex items-center mr-4 text-sm">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"></path>
+                                </svg>
+                                45
+                            </button>
+                            <button class="flex items-center text-sm">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"></path>
+                                </svg>
+                                12
+                            </button>
+                        </div>
+                        <div class="element-icon fire w-6 h-6 text-xs">火</div>
+                    </div>
+                </div>
+                <div class="community-post p-3 bg-light-color rounded-lg">
+                    <div class="flex items-center mb-2">
+                        <div class="w-10 h-10 rounded-full bg-primary-color mr-2"></div>
+                        <div>
+                            <h4 class="font-bold">MindfulMaster</h4>
+                            <p class="text-xs">5 hours ago</p>
+                        </div>
+                    </div>
+                    <p class="text-sm mb-2">My water seed collection is growing! I've found that reflecting on flow and adaptability has helped me navigate changes at work. What element resonates with you during times of change?</p>
+                    <div class="flex items-center justify-between">
+                        <div class="flex items-center">
+                            <button class="flex items-center mr-4 text-sm">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"></path>
+                                </svg>
+                                32
+                            </button>
+                            <button class="flex items-center text-sm">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"></path>
+                                </svg>
+                                8
+                            </button>
+                        </div>
+                        <div class="element-icon water w-6 h-6 text-xs">水</div>
+                    </div>
+                </div>
+                <div class="mt-4">
+                    <button class="eastern-btn w-full">Share Your Journey</button>
+                </div>
+            </div>
+
+            <div class="eastern-card p-4">
+                <h3 class="font-bold mb-3">Group Challenges</h3>
+                <div class="p-3 bg-light-color rounded-lg mb-4">
+                    <h4 class="font-bold">30 Days of Gratitude</h4>
+                    <p class="text-sm mb-2">Join 125 others in creating a daily gratitude habit for 30 days.</p>
+                    <div class="flex justify-between items-center">
+                        <span class="text-xs">Starts in 2 days</span>
+                        <button class="eastern-btn text-sm py-1">Join</button>
+                    </div>
+                </div>
+                <div class="p-3 bg-light-color rounded-lg">
+                    <h4 class="font-bold">Five Elements Challenge</h4>
+                    <p class="text-sm mb-2">Write one entry for each element in 5 days. Support each other on the journey.</p>
+                    <div class="flex justify-between items-center">
+                        <span class="text-xs">78 participants</span>
+                        <button class="eastern-btn text-sm py-1">Join</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Settings Screen -->
+        <div id="settingsScreen" class="screen">
+            <div class="flex justify-between items-center mb-6">
+                <h1 class="chinese-title text-3xl">设置</h1>
+            </div>
+
+            <div class="cloud-pattern"></div>
+
+            <div class="eastern-card mb-6">
+                <h3 class="p-3 border-b border-secondary-color font-bold">Profile</h3>
+                <div class="p-4">
+                    <div class="flex items-center mb-4">
+                        <div class="w-16 h-16 rounded-full bg-gray-200 mr-4 overflow-hidden">
+                            <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ccircle cx='50' cy='50' r='50' fill='%23BFA36F'/%3E%3Ccircle cx='50' cy='40' r='15' fill='%23F9F1E6'/%3E%3Cpath d='M25,85 C25,65 75,65 75,85' stroke='%23F9F1E6' stroke-width='6' fill='none'/%3E%3C/svg%3E" alt="User Profile">
+                        </div>
+                        <button class="eastern-btn">Change Avatar</button>
+                    </div>
+                    <div class="mb-4">
+                        <label class="block text-sm mb-1">Username</label>
+                        <input type="text" class="w-full border border-secondary-color p-2 rounded bg-light-color text-dark-color" value="Traveler">
+                    </div>
+                    <div class="mb-4">
+                        <label class="block text-sm mb-1">Email</label>
+                        <input type="email" class="w-full border border-secondary-color p-2 rounded bg-light-color text-dark-color" value="user@example.com">
+                    </div>
+                    <button class="eastern-btn w-full">Save Changes</button>
+                </div>
+            </div>
+
+            <div class="eastern-card mb-6">
+                <h3 class="p-3 border-b border-secondary-color font-bold">App Settings</h3>
+                <div class="p-4">
+                    <div class="mb-4">
+                        <div class="flex justify-between items-center mb-2">
+                            <label class="text-sm">Daily Reminder</label>
+                            <div class="relative inline-block w-12 h-6 rounded-full bg-gray-300">
+                                <input type="checkbox" class="sr-only" id="toggle-reminder" checked="">
+                                <span class="absolute left-1 top-1 w-4 h-4 rounded-full bg-white transform translate-x-6"></span>
+                            </div>
+                        </div>
+                        <div class="mb-4">
+                            <label class="block text-sm mb-1">Reminder Time</label>
+                            <input type="time" class="w-full border border-secondary-color p-2 rounded bg-light-color text-dark-color" value="21:00">
+                        </div>
+                    </div>
+                    <div class="mb-4">
+                        <div class="flex justify-between items-center">
+                            <label class="text-sm">Dark Mode</label>
+                            <div class="relative inline-block w-12 h-6 rounded-full bg-gray-300">
+                                <input type="checkbox" class="sr-only" id="toggle-dark-mode">
+                                <span class="absolute left-1 top-1 w-4 h-4 rounded-full bg-white"></span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="mb-4">
+                        <label class="block text-sm mb-1">Language</label>
+                        <select class="w-full border border-secondary-color p-2 rounded bg-light-color text-dark-color">
+                            <option value="en">English</option>
+                            <option value="zh">中文</option>
+                            <option value="es">Español</option>
+                            <option value="fr">Français</option>
+                            <option value="de">Deutsch</option>
+                            <option value="ja">日本語</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+
+            <div class="eastern-card mb-6">
+                <h3 class="p-3 border-b border-secondary-color font-bold">Notifications</h3>
+                <div class="p-4">
+                    <div class="flex justify-between items-center mb-4">
+                        <div>
+                            <h4 class="font-bold">Daily Journal Reminder</h4>
+                            <p class="text-xs">Remind you to write your daily journal</p>
+                        </div>
+                        <div class="relative inline-block w-12 h-6 rounded-full bg-gray-300">
+                            <input type="checkbox" class="sr-only" checked="">
+                            <span class="absolute left-1 top-1 w-4 h-4 rounded-full bg-white transform translate-x-6"></span>
+                        </div>
+                    </div>
+                    <div class="flex justify-between items-center mb-4">
+                        <div>
+                            <h4 class="font-bold">Achievement Alerts</h4>
+                            <p class="text-xs">Notify when you earn achievements</p>
+                        </div>
+                        <div class="relative inline-block w-12 h-6 rounded-full bg-gray-300">
+                            <input type="checkbox" class="sr-only" checked="">
+                            <span class="absolute left-1 top-1 w-4 h-4 rounded-full bg-white transform translate-x-6"></span>
+                        </div>
+                    </div>
+                    <div class="flex justify-between items-center">
+                        <div>
+                            <h4 class="font-bold">Friend Activity</h4>
+                            <p class="text-xs">Updates from friends and community</p>
+                        </div>
+                        <div class="relative inline-block w-12 h-6 rounded-full bg-gray-300">
+                            <input type="checkbox" class="sr-only" checked="">
+                            <span class="absolute left-1 top-1 w-4 h-4 rounded-full bg-white transform translate-x-6"></span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="eastern-card">
+                <h3 class="p-3 border-b border-secondary-color font-bold">About</h3>
+                <div class="p-4">
+                    <p class="text-sm mb-2">Seed of Gratitude v1.0.0</p>
+                    <p class="text-sm mb-4">A journey of gratitude through the five elements.</p>
+                    <div class="flex space-x-4">
+                        <button class="eastern-btn flex-1">Privacy Policy</button>
+                        <button class="eastern-btn flex-1">Terms of Service</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Navigation Bar -->
+        <div class="fixed bottom-0 left-0 right-0 bg-light-color border-t border-secondary-color p-2 z-10">
+            <div class="flex justify-around max-w-768 mx-auto">
+                <button class="nav-icon active" data-target="homeScreen">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"></path>
+                    </svg>
+                    Home
+                    <div class="nav-indicator"></div>
+                </button>
+                <button class="nav-icon" data-target="journalScreen">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"></path>
+                    </svg>
+                    Journal
+                </button>
+                <button class="nav-icon" data-target="challengesScreen">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4M7.835 4.697a3.42 3.42 0 001.946-.806 3.42 3.42 0 014.438 0 3.42 3.42 0 001.946.806 3.42 3.42 0 013.138 3.138 3.42 3.42 0 00.806 1.946 3.42 3.42 0 010 4.438 3.42 3.42 0 00-.806 1.946 3.42 3.42 0 01-3.138 3.138 3.42 3.42 0 00-1.946.806 3.42 3.42 0 01-4.438 0 3.42 3.42 0 00-1.946-.806 3.42 3.42 0 01-3.138-3.138 3.42 3.42 0 00-.806-1.946 3.42 3.42 0 010-4.438 3.42 3.42 0 00.806-1.946 3.42 3.42 0 013.138-3.138z"></path>
+                    </svg>
+                    Challenges
+                </button>
+                <button class="nav-icon" data-target="collectionScreen">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7v8a2 2 0 002 2h6M8 7V5a2 2 0 012-2h4.586a1 1 0 01.707.293l4.414 4.414a1 1 0 01.293.707V15a2 2 0 01-2 2h-2M8 7H6a2 2 0 00-2 2v10a2 2 0 002 2h8a2 2 0 002-2v-2"></path>
+                    </svg>
+                    Collection
+                </button>
+                <button class="nav-icon" data-target="socialScreen">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"></path>
+                    </svg>
+                    Social
+                </button>
+                <button class="nav-icon" data-target="settingsScreen">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"></path>
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path>
+                    </svg>
+                    Settings
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Check for dark mode preference
+        if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
+            document.documentElement.classList.add('dark');
+            document.getElementById('toggle-dark-mode').checked = true;
+        }
+
+        // Listen for changes in color scheme preference
+        window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', event => {
+            if (event.matches) {
+                document.documentElement.classList.add('dark');
+                document.getElementById('toggle-dark-mode').checked = true;
+            } else {
+                document.documentElement.classList.remove('dark');
+                document.getElementById('toggle-dark-mode').checked = false;
+            }
+        });
+
+        // Navigation
+        document.querySelectorAll('.nav-icon').forEach(icon => {
+            icon.addEventListener('click', () => {
+                // Hide all screens
+                document.querySelectorAll('.screen').forEach(screen => {
+                    screen.classList.remove('active-screen');
+                });
+
+                // Remove active class from all icons
+                document.querySelectorAll('.nav-icon').forEach(navIcon => {
+                    navIcon.classList.remove('active');
+                    navIcon.querySelector('.nav-indicator')?.remove();
+                });
+
+                // Show selected screen
+                const targetScreen = icon.getAttribute('data-target');
+                document.getElementById(targetScreen).classList.add('active-screen');
+
+                // Add active class to clicked icon
+                icon.classList.add('active');
+                
+                // Add indicator dot
+                if (!icon.querySelector('.nav-indicator')) {
+                    const indicator = document.createElement('div');
+                    indicator.className = 'nav-indicator';
+                    icon.appendChild(indicator);
+                }
+            });
+        });
+
+        // Write in Journal button
+        document.getElementById('writeJournalBtn').addEventListener('click', () => {
+            // Navigate to Journal screen
+            document.querySelectorAll('.screen').forEach(screen => {
+                screen.classList.remove('active-screen');
+            });
+            document.getElementById('journalScreen').classList.add('active-screen');
+
+            // Remove active class from all icons
+            document.querySelectorAll('.nav-icon').forEach(navIcon => {
+                navIcon.classList.remove('active');
+                navIcon.querySelector('.nav-indicator')?.remove();
+            });
+
+            // Add active class to Journal icon
+            const journalIcon = document.querySelector('[data-target="journalScreen"]');
+            journalIcon.classList.add('active');
+            if (!journalIcon.querySelector('.nav-indicator')) {
+                const indicator = document.createElement('div');
+                indicator.className = 'nav-indicator';
+                journalIcon.appendChild(indicator);
+            }
+        });
+
+        // Element selection in Journal
+        document.querySelectorAll('.element-icon').forEach(icon => {
+            icon.addEventListener('click', () => {
+                const element = icon.getAttribute('data-element');
+                if (element) {
+                    // Show journal entry area
+                    document.getElementById('elementJournal').classList.remove('hidden');
+                    
+                    // Update element title and description based on selection
+                    const elementTitle = document.getElementById('elementTitle');
+                    const elementDescription = document.getElementById('elementDescription');
+                    
+                    switch(element) {
+                        case 'gold':
+                            elementTitle.textContent = 'Gold Element Journal';
+                            elementDescription.textContent = 'Reflect on achievements, value, and what you treasure.';
+                            elementTitle.style.color = 'var(--gold-color)';
+                            break;
+                        case 'wood':
+                            elementTitle.textContent = 'Wood Element Journal';
+                            elementDescription.textContent = 'Reflect on growth, flexibility, and new beginnings.';
+                            elementTitle.style.color = 'var(--wood-color)';
+                            break;
+                        case 'water':
+                            elementTitle.textContent = 'Water Element Journal';
+                            elementDescription.textContent = 'Reflect on flow, adaptability, and emotional balance.';
+                            elementTitle.style.color = 'var(--water-color)';
+                            break;
+                        case 'fire':
+                            elementTitle.textContent = 'Fire Element Journal';
+                            elementDescription.textContent = 'Reflect on passion, energy, and transformation.';
+                            elementTitle.style.color = 'var(--fire-color)';
+                            break;
+                        case 'earth':
+                            elementTitle.textContent = 'Earth Element Journal';
+                            elementDescription.textContent = 'Reflect on stability, nourishment, and grounding.';
+                            elementTitle.style.color = 'var(--earth-color)';
+                            break;
+                    }
+
+                    // Scroll to the journal entry area
+                    document.getElementById('elementJournal').scrollIntoView({ behavior: 'smooth' });
+                }
+            });
+        });
+
+        // Cancel Journal button
+        document.getElementById('cancelJournalBtn').addEventListener('click', () => {
+            document.getElementById('elementJournal').classList.add('hidden');
+            document.getElementById('journalEntry').value = '';
+        });
+
+        // Save Journal button
+        document.getElementById('saveJournalBtn').addEventListener('click', () => {
+            const journalText = document.getElementById('journalEntry').value.trim();
+            
+            if (journalText) {
+                // Hide the journal entry form
+                document.getElementById('elementJournal').classList.add('hidden');
+                
+                // Clear the textarea
+                document.getElementById('journalEntry').value = '';
+                
+                // Show achievement notification
+                showAchievementNotification('Journal Entry Saved! +1 Seed');
+                
+                // Scroll back to the top of the journal screen
+                document.getElementById('journalScreen').scrollTop = 0;
+            }
+        });
+
+        // Dark mode toggle
+        document.getElementById('toggle-dark-mode').addEventListener('change', function() {
+            if (this.checked) {
+                document.documentElement.classList.add('dark');
+            } else {
+                document.documentElement.classList.remove('dark');
+            }
+        });
+
+        // Language selector
+        document.getElementById('languageSelector').addEventListener('change', function() {
+            // In a real app, this would change the language
+            console.log('Language changed to:', this.value);
+        });
+
+        // Achievement notification function
+        function showAchievementNotification(message) {
+            const notification = document.getElementById('achievementNotification');
+            document.getElementById('achievementText').textContent = message;
+            
+            notification.style.display = 'block';
+            
+            setTimeout(() => {
+                notification.style.opacity = '1';
+                notification.style.transform = 'translate(-50%, 0)';
+            }, 100);
+            
+            setTimeout(() => {
+                notification.style.opacity = '0';
+                notification.style.transform = 'translate(-50%, -20px)';
+                
+                setTimeout(() => {
+                    notification.style.display = 'none';
+                }, 500);
+            }, 3000);
+        }
+
+        // Initialize the toggle switches
+        document.querySelectorAll('.relative.inline-block input[type="checkbox"]').forEach(toggle => {
+            toggle.addEventListener('change', function() {
+                const span = this.nextElementSibling;
+                if (this.checked) {
+                    span.classList.add('transform', 'translate-x-6');
+                } else {
+                    span.classList.remove('transform', 'translate-x-6');
+                }
+            });
+        });
+    </script>
+
+
+</body></html>

@@ -1,0 +1,836 @@
+<!DOCTYPE html><html lang="en"><head><meta http-equiv="Content-Security-Policy" content="default-src 'self' 'unsafe-inline' 'unsafe-eval' data: blob: https://cdnjs.cloudflare.com https://cdn.jsdelivr.net https://code.jquery.com https://unpkg.com https://d3js.org https://threejs.org https://cdn.plot.ly https://stackpath.bootstrapcdn.com https://maps.googleapis.com https://cdn.tailwindcss.com https://ajax.googleapis.com https://kit.fontawesome.com https://cdn.datatables.net https://maxcdn.bootstrapcdn.com https://code.highcharts.com https://tako-static-assets-production.s3.amazonaws.com https://www.youtube.com https://fonts.googleapis.com https://fonts.gstatic.com https://pfst.cf2.poecdn.net https://puc.poecdn.net https://i.imgur.com https://wikimedia.org https://*.icons8.com https://*.giphy.com https://picsum.photos https://images.unsplash.com; frame-src 'self' https://www.youtube.com https://trytako.com; child-src 'self'; manifest-src 'self'; worker-src 'self'; upgrade-insecure-requests; block-all-mixed-content;">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Garden - Gratitude App</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        primary: '#5D5CDE',
+                        warmSand: '#F5EEE5',
+                        earthyClay: '#C4A484',
+                        deepCocoa: '#4F3222',
+                        sunshine: '#FFD700',
+                        dewdrops: '#5EC4FF',
+                        leaf: '#4CAF50',
+                        soil: '#8B4513',
+                        highlight: '#FFC107'
+                    },
+                    fontFamily: {
+                        'urbanist': ['Urbanist', 'sans-serif'],
+                        'playfair': ['"Playfair Display"', 'serif'],
+                        'sourceSans': ['"Source Sans Pro"', 'sans-serif'],
+                        'nunito': ['Nunito', 'sans-serif']
+                    },
+                    keyframes: {
+                        wiggle: {
+                            '0%, 100%': { transform: 'rotate(-3deg)' },
+                            '50%': { transform: 'rotate(3deg)' },
+                        },
+                        glow: {
+                            '0%, 100%': { filter: 'brightness(1)' },
+                            '50%': { filter: 'brightness(1.3)' },
+                        },
+                        float: {
+                            '0%, 100%': { transform: 'translateY(0)' },
+                            '50%': { transform: 'translateY(-10px)' },
+                        }
+                    },
+                    animation: {
+                        wiggle: 'wiggle 1s ease-in-out infinite',
+                        glow: 'glow 2s ease-in-out infinite',
+                        float: 'float 3s ease-in-out infinite',
+                    }
+                }
+            }
+        };
+    </script>
+    <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700&amp;family=Playfair+Display:wght@400;700&amp;family=Source+Sans+Pro:wght@400;600;700&amp;family=Urbanist:wght@400;600;700&amp;display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        body {
+            font-family: 'Nunito', sans-serif;
+            height: 100vh;
+            overflow-x: hidden;
+        }
+        
+        .dark {
+            color-scheme: dark;
+        }
+        
+        .plant-container {
+            perspective: 1000px;
+        }
+        
+        .jar-3d {
+            position: relative;
+            transform-style: preserve-3d;
+            transform: rotateX(5deg);
+            transition: transform 0.3s ease;
+        }
+        
+        .jar-3d:hover {
+            transform: rotateX(5deg) rotateY(10deg);
+        }
+        
+        .jar-body {
+            position: relative;
+            border-radius: 50% 50% 20% 20% / 12% 12% 80% 80%;
+            background-color: rgba(255, 255, 255, 0.5);
+            border: 2px solid rgba(255, 255, 255, 0.8);
+            box-shadow: 0 0 20px rgba(255, 255, 255, 0.3) inset,
+                        0 5px 15px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+            backdrop-filter: blur(4px);
+        }
+        
+        .jar-lid {
+            position: absolute;
+            top: -15px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 70%;
+            height: 20px;
+            border-radius: 10px 10px 0 0;
+            background-color: #a0522d;
+            box-shadow: 0 -2px 5px rgba(0, 0, 0, 0.2);
+            z-index: 10;
+        }
+        
+        .jar-base {
+            position: absolute;
+            bottom: -10px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 80%;
+            height: 15px;
+            border-radius: 5px;
+            background-color: #8B4513;
+            box-shadow: 0 3px 5px rgba(0, 0, 0, 0.2);
+        }
+        
+        .jar-label {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            padding: 5px 15px;
+            border-radius: 15px;
+            background-color: rgba(255, 255, 255, 0.9);
+            color: #4F3222;
+            font-family: 'Playfair Display', serif;
+            font-weight: bold;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+        }
+        
+        .jar-notification {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            background-color: #FF5252;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 12px;
+            font-weight: bold;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+            z-index: 20;
+        }
+        
+        .plant {
+            position: relative;
+            margin: 0 auto;
+            width: 100%;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: flex-end;
+        }
+        
+        .pot {
+            width: 140px;
+            height: 120px;
+            background-color: #a0522d;
+            border-radius: 5px 5px 70px 70px;
+            position: relative;
+            overflow: hidden;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+        }
+        
+        .pot::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 20px;
+            background-color: #8B4513;
+            border-radius: 5px 5px 0 0;
+        }
+        
+        .soil {
+            position: absolute;
+            top: 20px;
+            left: 10px;
+            right: 10px;
+            bottom: 0;
+            background-color: #5D4037;
+            border-radius: 0 0 60px 60px;
+        }
+        
+        .stem {
+            position: absolute;
+            bottom: 100px;
+            width: 10px;
+            height: 150px;
+            background-color: #4CAF50;
+            border-radius: 5px;
+            transform-origin: bottom center;
+            animation: sway 5s ease-in-out infinite;
+        }
+        
+        .leaf {
+            position: absolute;
+            width: 40px;
+            height: 20px;
+            background-color: #4CAF50;
+            border-radius: 50%;
+            transform-origin: 0 50%;
+        }
+        
+        .leaf-1 {
+            left: 5px;
+            bottom: 190px;
+            transform: rotate(40deg);
+        }
+        
+        .leaf-2 {
+            left: -35px;
+            bottom: 150px;
+            transform: rotate(-40deg);
+        }
+        
+        .flower {
+            position: absolute;
+            bottom: 230px;
+            left: -20px;
+            width: 50px;
+            height: 50px;
+        }
+        
+        .petal {
+            position: absolute;
+            width: 20px;
+            height: 40px;
+            background-color: #FFD700;
+            border-radius: 50%;
+            transform-origin: 50% 100%;
+        }
+        
+        .petal:nth-child(1) { transform: rotate(0deg); }
+        .petal:nth-child(2) { transform: rotate(45deg); }
+        .petal:nth-child(3) { transform: rotate(90deg); }
+        .petal:nth-child(4) { transform: rotate(135deg); }
+        .petal:nth-child(5) { transform: rotate(180deg); }
+        .petal:nth-child(6) { transform: rotate(225deg); }
+        .petal:nth-child(7) { transform: rotate(270deg); }
+        .petal:nth-child(8) { transform: rotate(315deg); }
+        
+        .center {
+            position: absolute;
+            width: 25px;
+            height: 25px;
+            background-color: #FF9800;
+            border-radius: 50%;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+        }
+        
+        .calendar-day {
+            width: 36px;
+            height: 36px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
+            font-size: 0.85rem;
+            transition: all 0.2s;
+        }
+        
+        .calendar-day.completed {
+            background-color: rgba(92, 220, 92, 0.2);
+            color: #4CAF50;
+            border: 2px solid #4CAF50;
+            font-weight: bold;
+        }
+        
+        .calendar-day.missed {
+            background-color: rgba(255, 82, 82, 0.1);
+            color: #FF5252;
+            border: 2px dashed #FF5252;
+        }
+        
+        .calendar-day.current {
+            background-color: rgba(93, 92, 222, 0.2);
+            color: #5D5CDE;
+            border: 2px solid #5D5CDE;
+            font-weight: bold;
+        }
+        
+        @keyframes sway {
+            0%, 100% {
+                transform: rotate(-2deg);
+            }
+            50% {
+                transform: rotate(2deg);
+            }
+        }
+        
+        @keyframes float-orb {
+            0%, 100% {
+                transform: translateY(0);
+            }
+            50% {
+                transform: translateY(-15px);
+            }
+        }
+        
+        .jar-orb {
+            position: absolute;
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            background-color: rgba(255, 215, 0, 0.7);
+            box-shadow: 0 0 10px rgba(255, 215, 0, 0.5);
+            filter: blur(1px);
+            z-index: 5;
+        }
+        
+        .orb-1 {
+            bottom: 20px;
+            left: 30%;
+            animation: float-orb 4s ease-in-out infinite;
+        }
+        
+        .orb-2 {
+            bottom: 35px;
+            left: 60%;
+            animation: float-orb 5s ease-in-out 0.5s infinite;
+        }
+        
+        .orb-3 {
+            bottom: 50px;
+            left: 40%;
+            animation: float-orb 3s ease-in-out 1s infinite;
+        }
+        
+        .bottom-nav-icon {
+            transition: all 0.3s;
+            font-size: 1.25rem;
+        }
+        
+        .bottom-nav-item.active .bottom-nav-icon {
+            transform: translateY(-5px);
+            color: #5D5CDE;
+        }
+        
+        .nav-label {
+            font-size: 0.75rem;
+            transition: all 0.3s;
+        }
+        
+        .bottom-nav-item.active .nav-label {
+            color: #5D5CDE;
+            font-weight: bold;
+        }
+        
+        .bottom-nav-item {
+            position: relative;
+        }
+        
+        .notification-dot {
+            position: absolute;
+            top: 4px;
+            right: 5px;
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background-color: #FF5252;
+        }
+        
+        .xp-bar {
+            height: 6px;
+            border-radius: 3px;
+            background-color: #E0E0E0;
+            overflow: hidden;
+        }
+        
+        .xp-progress {
+            height: 100%;
+            border-radius: 3px;
+            background-color: #5D5CDE;
+            width: 65%;
+            transition: width 1s ease-in-out;
+        }
+        
+        .avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 2px solid #5D5CDE;
+        }
+        
+        .currency-icon {
+            font-size: 1.25rem;
+            margin-right: 5px;
+        }
+        
+        .streak-counter {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            background: linear-gradient(135deg, #5D5CDE, #9897FF);
+            color: white;
+            padding: 5px 10px;
+            border-radius: 20px;
+            font-weight: bold;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+        
+        .event-list {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.5s ease;
+        }
+        
+        .event-list.open {
+            max-height: 300px;
+        }
+        
+        .event-item {
+            border-left: 3px solid #5D5CDE;
+            transition: all 0.2s;
+        }
+        
+        .event-item:hover {
+            background-color: rgba(93, 92, 222, 0.05);
+        }
+        
+        .dark body {
+            background-color: #181818;
+            color: #E0E0E0;
+        }
+        
+        .dark .jar-body {
+            background-color: rgba(40, 40, 40, 0.5);
+            border-color: rgba(80, 80, 80, 0.8);
+            box-shadow: 0 0 20px rgba(60, 60, 60, 0.3) inset,
+                        0 5px 15px rgba(0, 0, 0, 0.2);
+        }
+        
+        .dark .jar-label {
+            background-color: rgba(60, 60, 60, 0.9);
+            color: #E0E0E0;
+        }
+        
+        .dark .xp-bar {
+            background-color: #333333;
+        }
+        
+        .dark .calendar-day {
+            color: #E0E0E0;
+        }
+        
+        .dark .event-item {
+            border-color: #5D5CDE;
+        }
+        
+        .dark .event-item:hover {
+            background-color: rgba(93, 92, 222, 0.15);
+        }
+    </style>
+</head>
+<body class="bg-warmSand dark:bg-gray-900 text-deepCocoa dark:text-gray-200 flex flex-col h-full">
+    <!-- Top Navigation Bar -->
+    <header class="p-4 flex items-center justify-between border-b border-gray-200 dark:border-gray-700 bg-white/70 dark:bg-gray-800/70 backdrop-blur-sm">
+        <div class="flex items-center gap-3">
+            <img src="https://picsum.photos/200" alt="Avatar" class="avatar">
+            <div>
+                <div class="text-sm font-bold">Gardener Alex</div>
+                <div class="flex items-center gap-1">
+                    <span class="text-xs">Lvl 8</span>
+                    <div class="xp-bar w-20">
+                        <div class="xp-progress"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="flex items-center gap-3">
+            <div class="flex items-center text-sunshine">
+                <i class="fa-solid fa-sun currency-icon"></i>
+                <span class="font-bold">245</span>
+            </div>
+            <div class="flex items-center text-dewdrops">
+                <i class="fa-solid fa-droplet currency-icon"></i>
+                <span class="font-bold">78</span>
+            </div>
+            <div class="streak-counter">
+                <i class="fa-solid fa-fire-flame-curved"></i>
+                <span>12</span>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content Area -->
+    <main class="flex-1 overflow-y-auto relative flex flex-col">
+        <!-- Event List (initially hidden) -->
+        <div id="eventList" class="event-list bg-white/90 dark:bg-gray-800/90 backdrop-blur-sm border-b border-gray-200 dark:border-gray-700">
+            <div class="p-4 flex justify-between items-center">
+                <h3 class="font-bold text-primary dark:text-primary">Recent Events</h3>
+                <button id="closeEventList" class="p-2 text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200">
+                    <i class="fa-solid fa-times"></i>
+                </button>
+            </div>
+            <div class="px-4 pb-4 space-y-3 overflow-y-auto max-h-64">
+                <div class="event-item p-3 bg-white dark:bg-gray-700 rounded-lg shadow-sm">
+                    <div class="flex justify-between items-center mb-1">
+                        <span class="font-bold">5-Day Streak Challenge</span>
+                        <span class="text-xs bg-green-100 dark:bg-green-900 text-green-800 dark:text-green-100 px-2 py-1 rounded-full">Active</span>
+                    </div>
+                    <div class="text-sm text-gray-600 dark:text-gray-300">Keep your streak for 5 days to earn a special seed!</div>
+                    <div class="text-xs text-gray-500 dark:text-gray-400 mt-1">Due: Oct 15 • 3 days left</div>
+                </div>
+                <div class="event-item p-3 bg-white dark:bg-gray-700 rounded-lg shadow-sm">
+                    <div class="flex justify-between items-center mb-1">
+                        <span class="font-bold">Gratitude for Nature</span>
+                        <span class="text-xs bg-yellow-100 dark:bg-yellow-900 text-yellow-800 dark:text-yellow-100 px-2 py-1 rounded-full">New</span>
+                    </div>
+                    <div class="text-sm text-gray-600 dark:text-gray-300">Write a gratitude entry about something in nature.</div>
+                    <div class="text-xs text-gray-500 dark:text-gray-400 mt-1">Reward: Sunshine x50</div>
+                </div>
+                <div class="event-item p-3 bg-white dark:bg-gray-700 rounded-lg shadow-sm">
+                    <div class="flex justify-between items-center mb-1">
+                        <span class="font-bold">Seeds Almanac Updated</span>
+                        <span class="text-xs bg-blue-100 dark:bg-blue-900 text-blue-800 dark:text-blue-100 px-2 py-1 rounded-full">News</span>
+                    </div>
+                    <div class="text-sm text-gray-600 dark:text-gray-300">New autumn seeds are now available in the collection!</div>
+                    <div class="text-xs text-gray-500 dark:text-gray-400 mt-1">Posted: Oct 10</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Calendar Area -->
+        <div class="px-5 pt-4">
+            <div class="flex justify-between items-center mb-3">
+                <h2 class="text-lg font-bold font-playfair">October 2023</h2>
+                <div class="flex gap-2 text-xs">
+                    <div class="flex items-center gap-1">
+                        <div class="w-3 h-3 rounded-full bg-green-500"></div>
+                        <span>Completed</span>
+                    </div>
+                    <div class="flex items-center gap-1">
+                        <div class="w-3 h-3 rounded-full bg-red-500"></div>
+                        <span>Missed</span>
+                    </div>
+                </div>
+            </div>
+            <div class="grid grid-cols-7 gap-1 mb-6">
+                <div class="text-center text-xs text-gray-500 dark:text-gray-400 font-medium">S</div>
+                <div class="text-center text-xs text-gray-500 dark:text-gray-400 font-medium">M</div>
+                <div class="text-center text-xs text-gray-500 dark:text-gray-400 font-medium">T</div>
+                <div class="text-center text-xs text-gray-500 dark:text-gray-400 font-medium">W</div>
+                <div class="text-center text-xs text-gray-500 dark:text-gray-400 font-medium">T</div>
+                <div class="text-center text-xs text-gray-500 dark:text-gray-400 font-medium">F</div>
+                <div class="text-center text-xs text-gray-500 dark:text-gray-400 font-medium">S</div>
+                
+                <!-- Calendar Days -->
+                <div class="text-center text-gray-400 dark:text-gray-600">25</div>
+                <div class="text-center text-gray-400 dark:text-gray-600">26</div>
+                <div class="text-center text-gray-400 dark:text-gray-600">27</div>
+                <div class="text-center text-gray-400 dark:text-gray-600">28</div>
+                <div class="text-center text-gray-400 dark:text-gray-600">29</div>
+                <div class="text-center text-gray-400 dark:text-gray-600">30</div>
+                <div class="flex justify-center">
+                    <div class="calendar-day completed">1</div>
+                </div>
+                
+                <div class="flex justify-center">
+                    <div class="calendar-day completed">2</div>
+                </div>
+                <div class="flex justify-center">
+                    <div class="calendar-day completed">3</div>
+                </div>
+                <div class="flex justify-center">
+                    <div class="calendar-day completed">4</div>
+                </div>
+                <div class="flex justify-center">
+                    <div class="calendar-day completed">5</div>
+                </div>
+                <div class="flex justify-center">
+                    <div class="calendar-day completed">6</div>
+                </div>
+                <div class="flex justify-center">
+                    <div class="calendar-day completed">7</div>
+                </div>
+                <div class="flex justify-center">
+                    <div class="calendar-day completed">8</div>
+                </div>
+                
+                <div class="flex justify-center">
+                    <div class="calendar-day completed">9</div>
+                </div>
+                <div class="flex justify-center">
+                    <div class="calendar-day completed">10</div>
+                </div>
+                <div class="flex justify-center">
+                    <div class="calendar-day missed">11</div>
+                </div>
+                <div class="flex justify-center">
+                    <div class="calendar-day current">12</div>
+                </div>
+                <div class="flex justify-center">
+                    <div class="calendar-day">13</div>
+                </div>
+                <div class="flex justify-center">
+                    <div class="calendar-day">14</div>
+                </div>
+                <div class="flex justify-center">
+                    <div class="calendar-day">15</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Gratitude Plant -->
+        <div class="plant-container flex-1 flex justify-center items-center mb-4">
+            <div class="plant">
+                <div class="flower">
+                    <div class="petal"></div>
+                    <div class="petal"></div>
+                    <div class="petal"></div>
+                    <div class="petal"></div>
+                    <div class="petal"></div>
+                    <div class="petal"></div>
+                    <div class="petal"></div>
+                    <div class="petal"></div>
+                    <div class="center"></div>
+                </div>
+                <div class="stem">
+                    <div class="leaf leaf-1"></div>
+                    <div class="leaf leaf-2"></div>
+                </div>
+                <div class="pot">
+                    <div class="soil"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Collection Jar -->
+        <div class="relative px-6 pb-24 pt-4">
+            <div class="flex justify-between items-center mb-2">
+                <h2 class="text-lg font-bold font-playfair">Collection Jar</h2>
+                <button id="viewEvents" class="flex items-center gap-1 text-sm text-primary dark:text-primary">
+                    <span>View Events</span>
+                    <i class="fa-solid fa-chevron-down"></i>
+                </button>
+            </div>
+            
+            <div class="jar-3d h-44 sm:h-48 w-full relative">
+                <div class="jar-notification animate-wiggle">3</div>
+                <div class="jar-lid"></div>
+                <div class="jar-body w-full h-full relative">
+                    <div class="jar-label animate-glow">Seeds</div>
+                    <div class="jar-orb orb-1 animate-float"></div>
+                    <div class="jar-orb orb-2 animate-float"></div>
+                    <div class="jar-orb orb-3 animate-float"></div>
+                </div>
+                <div class="jar-base"></div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Bottom Navigation Bar -->
+    <nav class="fixed bottom-0 left-0 right-0 bg-white dark:bg-gray-800 border-t border-gray-200 dark:border-gray-700 py-3 px-4">
+        <div class="flex justify-around">
+            <div class="bottom-nav-item active flex flex-col items-center cursor-pointer" data-page="garden">
+                <i class="bottom-nav-icon fa-solid fa-seedling"></i>
+                <span class="nav-label">Garden</span>
+            </div>
+            <div class="bottom-nav-item flex flex-col items-center cursor-pointer" data-page="diary">
+                <i class="bottom-nav-icon fa-solid fa-book"></i>
+                <span class="nav-label">Diary</span>
+            </div>
+            <div class="bottom-nav-item flex flex-col items-center cursor-pointer" data-page="challenge">
+                <div class="notification-dot"></div>
+                <i class="bottom-nav-icon fa-solid fa-trophy"></i>
+                <span class="nav-label">Challenge</span>
+            </div>
+            <div class="bottom-nav-item flex flex-col items-center cursor-pointer" data-page="collection">
+                <i class="bottom-nav-icon fa-solid fa-leaf"></i>
+                <span class="nav-label">Collection</span>
+            </div>
+            <div class="bottom-nav-item flex flex-col items-center cursor-pointer" data-page="shop">
+                <i class="bottom-nav-icon fa-solid fa-store"></i>
+                <span class="nav-label">Shop</span>
+            </div>
+        </div>
+    </nav>
+
+    <script>
+        // Dark mode detection and toggle
+        if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
+            document.documentElement.classList.add('dark');
+        }
+        
+        window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', event => {
+            if (event.matches) {
+                document.documentElement.classList.add('dark');
+            } else {
+                document.documentElement.classList.remove('dark');
+            }
+        });
+        
+        // Event List Toggle
+        const viewEventsBtn = document.getElementById('viewEvents');
+        const closeEventListBtn = document.getElementById('closeEventList');
+        const eventList = document.getElementById('eventList');
+        
+        viewEventsBtn.addEventListener('click', () => {
+            eventList.classList.add('open');
+        });
+        
+        closeEventListBtn.addEventListener('click', () => {
+            eventList.classList.remove('open');
+        });
+        
+        // Page navigation system
+        const pages = {
+            'garden': document.querySelector('main'),
+            'diary': null,
+            'challenge': null,
+            'collection': null,
+            'shop': null
+        };
+        
+        // Create placeholder pages
+        function createPlaceholderPage(id, title, iconClass) {
+            const page = document.createElement('div');
+            page.id = id + '-page';
+            page.className = 'flex-1 overflow-y-auto flex flex-col items-center justify-center p-6 hidden';
+            
+            const content = document.createElement('div');
+            content.className = 'text-center max-w-md mx-auto';
+            
+            const icon = document.createElement('i');
+            icon.className = iconClass + ' text-6xl mb-6 text-primary';
+            
+            const heading = document.createElement('h1');
+            heading.className = 'text-2xl font-bold font-playfair mb-4';
+            heading.textContent = title;
+            
+            const description = document.createElement('p');
+            description.className = 'text-gray-600 dark:text-gray-300';
+            description.textContent = 'This is the ' + title + ' page. Content for this page will be implemented soon.';
+            
+            content.appendChild(icon);
+            content.appendChild(heading);
+            content.appendChild(description);
+            page.appendChild(content);
+            
+            return page;
+        }
+        
+        // Create and append placeholder pages
+        const main = document.querySelector('main').parentNode;
+        pages.diary = createPlaceholderPage('diary', 'Diary', 'fa-solid fa-book');
+        pages.challenge = createPlaceholderPage('challenge', 'Challenges', 'fa-solid fa-trophy');
+        pages.collection = createPlaceholderPage('collection', 'Seed Collection', 'fa-solid fa-leaf');
+        pages.shop = createPlaceholderPage('shop', 'Shop', 'fa-solid fa-store');
+        
+        main.appendChild(pages.diary);
+        main.appendChild(pages.challenge);
+        main.appendChild(pages.collection);
+        main.appendChild(pages.shop);
+        
+        // Function to navigate between pages
+        function navigateTo(pageId) {
+            // Hide all pages
+            Object.values(pages).forEach(page => {
+                if (page) page.classList.add('hidden');
+            });
+            
+            // Show selected page
+            if (pages[pageId]) {
+                pages[pageId].classList.remove('hidden');
+            }
+            
+            // Update active state in navigation
+            const navItems = document.querySelectorAll('.bottom-nav-item');
+            navItems.forEach(item => {
+                item.classList.remove('active');
+                if (item.dataset.page === pageId) {
+                    item.classList.add('active');
+                }
+            });
+        }
+        
+        // Bottom Navigation Interaction
+        const navItems = document.querySelectorAll('.bottom-nav-item');
+        
+        navItems.forEach(item => {
+            item.addEventListener('click', () => {
+                navigateTo(item.dataset.page);
+            });
+        });
+        
+        // Jar Interaction
+        const jar = document.querySelector('.jar-3d');
+        
+        jar.addEventListener('click', () => {
+            jar.classList.add('animate-wiggle');
+            setTimeout(() => {
+                jar.classList.remove('animate-wiggle');
+                // Show notification instead of alert (alerts aren't supported in the iframe)
+                const notificationEl = document.createElement('div');
+                notificationEl.className = 'fixed top-4 left-1/2 transform -translate-x-1/2 bg-white dark:bg-gray-800 p-4 rounded-lg shadow-lg z-50 text-center';
+                notificationEl.innerHTML = '<p class="font-bold mb-1">Collection Update</p><p>You have 3 new seeds in your collection!</p>';
+                document.body.appendChild(notificationEl);
+                
+                // Remove the notification after 3 seconds
+                setTimeout(() => {
+                    notificationEl.classList.add('opacity-0', 'transition-opacity', 'duration-500');
+                    setTimeout(() => {
+                        document.body.removeChild(notificationEl);
+                    }, 500);
+                }, 3000);
+            }, 1000);
+        });
+        
+        // Calendar Day Interaction
+        const calendarDays = document.querySelectorAll('.calendar-day');
+        
+        calendarDays.forEach(day => {
+            day.addEventListener('click', () => {
+                if (!day.classList.contains('completed') && !day.classList.contains('missed')) {
+                    // Would typically navigate to diary entry for that day
+                    console.log('Navigate to diary entry for day ' + day.textContent);
+                } else {
+                    // Would typically show the entry for that day
+                    console.log('Show entry for day ' + day.textContent);
+                }
+            });
+        });
+    </script>
+
+
+</body></html>
