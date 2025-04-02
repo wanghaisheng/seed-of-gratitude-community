@@ -1,564 +1,602 @@
-<html lang="en">
+<!DOCTYPE html>
+<html lang="zh">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>希望之森 - The Forest of Forgotten Hope</title>
-    <link rel="stylesheet" href="styles.css">
-    <script type="importmap">
-    {
-      "imports": {
-        "three": "https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.js",
-        "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.160.0/examples/jsm/"
-      }
-    }
-    </script>
+    <meta name="description" data-i18n="meta_description" content="探索遗忘森林，收集感恩种子，唤醒希望之树，开启幸福之门。一款关于感恩与希望的沉浸式冒险游戏。">
+    <meta name="keywords" data-i18n="meta_keywords" content="遗忘种子,感恩游戏,希望之树,冒险游戏,心灵成长,感恩日记">
+    <title data-i18n="page_title">遗忘种子 - 一场关于感恩与希望的心灵之旅</title>
+    
+    <!-- Favicon -->
+    <link rel="icon" href="img/favicon.ico" type="image/x-icon">
+    
+    <!-- CSS -->
+    <link rel="stylesheet" href="css/styles.css">
+    
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <!-- Open Graph Tags -->
+    <meta property="og:title" data-i18n="og_title" content="遗忘种子 - 感恩与希望的心灵之旅">
+    <meta property="og:description" data-i18n="og_description" content="在遗忘森林中收集感恩种子，唤醒希望之树，开启幸福之门。一款关于感恩与希望的沉浸式冒险游戏。">
+    <meta property="og:image" content="img/og-image.jpg">
+    <meta property="og:url" content="https://heytcm.com/seed-of-gratitude">
+    <meta property="og:type" content="website">
 </head>
 <body>
-    <div id="game-container">        <!-- Intro Overlay - New addition -->
-        <div id="intro-overlay" class="overlay">
-            <div class="overlay-content">
-                <h1>遗忘之地的遗忘森林</h1>
-                <p>在这片被时间遗忘的角落，希望之树静静等待着被唤醒...</p>
-                <p>你将扮演艾瑞恩，一位被希望之神选中的旅者，担负着找回失落的"感恩种子"的使命。</p>
-                <p>通过记录感恩，你将获得神奇的种子，唤醒沉睡的希望之树，最终开启幸福之门。</p>
-                <button id="start-journey">开始旅程</button>
+    <!-- 导航栏 -->
+    <nav class="navbar">
+        <div class="container">
+            <div class="logo">
+                <img src="img/logo.png" alt="遗忘种子" data-i18n="logo_alt">
+                <span data-i18n="logo_text">遗忘种子</span>
+            </div>
+            <div class="nav-links">
+                <a href="#features" data-i18n="nav_features">游戏特色</a>
+                <a href="#story" data-i18n="nav_story">故事背景</a>
+                <a href="#testimonials" data-i18n="nav_testimonials">玩家评价</a>
+                <a href="#download" class="cta-button" data-i18n="nav_download">立即体验</a>
+            </div>
+            <div class="menu-toggle">
+                <i class="fas fa-bars"></i>
             </div>
         </div>
+    </nav>
 
-        <div id="forest-scene"></div>
-        <div id="ui-container">
-            <!-- Character Portrait - New addition -->
-            <div id="character-portrait">
-                <div class="portrait-image"></div>
-                <div class="character-name">艾瑞恩</div>
-                <div class="character-info-button">?</div>
-            </div>
-
-            <div id="journal">
-                <div id="journal-title">艾瑞恩的感恩日记</div>
-                <div id="journal-content">
-                    <!-- Gratitude Categories - Enhanced -->
-                    <div id="gratitude-categories">
-                        <div class="category-tab active" data-category="personal">个人</div>
-                        <div class="category-tab" data-category="nature">自然</div>
-                        <div class="category-tab" data-category="relationships">关系</div>
-                        <div class="category-tab" data-category="achievements">成就</div>
-                    </div>
-                    
-                    <!-- Gratitude Prompts - New addition -->
-                    <div id="gratitude-prompts">
-                        <div class="prompt active" data-category="personal">今天，我为自己的哪些品质感到感恩？</div>
-                        <div class="prompt" data-category="nature">大自然中的什么事物让我感到敬畏？</div>
-                        <div class="prompt" data-category="relationships">谁在我的生活中给予了我支持和关爱？</div>
-                        <div class="prompt" data-category="achievements">我最近取得了什么小小的成就？</div>
-                    </div>
-                    
-                    <textarea id="gratitude-entry" placeholder="今天，我感谢..."></textarea>
-                    <button id="save-entry">记录感恩</button>
+    <!-- 英雄区域 -->
+    <section class="hero">
+        <div class="container">
+            <div class="hero-content">
+                <h1 data-i18n="hero_title">在遗忘森林中<br>寻找感恩的力量</h1>
+                <p data-i18n="hero_subtitle">一场关于感恩、希望与自我成长的心灵之旅</p>
+                <div class="hero-cta">
+                    <a href="#download" class="cta-button primary" data-i18n="hero_cta">开始你的旅程</a>
+                    <a href="#trailer" class="cta-button secondary" data-i18n="hero_watch"><i class="fas fa-play-circle"></i> 观看预告片</a>
                 </div>
-                <div id="seeds-container">
-                    <div id="seeds-title">已收集的希望种子</div>
-                    <div id="seeds-list"></div>
+                <div class="hero-badges">
+                    <div class="badge">
+                        <i class="fas fa-users"></i>
+                        <span data-i18n="hero_badge_players">10,000+ 玩家</span>
+                    </div>
+                    <div class="badge">
+                        <i class="fas fa-star"></i>
+                        <span data-i18n="hero_badge_rating">4.8/5 评分</span>
+                    </div>
+                    <div class="badge">
+                        <i class="fas fa-award"></i>
+                        <span data-i18n="hero_badge_award">最佳心灵成长游戏</span>
+                    </div>
                 </div>
             </div>
-            <div id="info-panel">
-                <h2>遗忘森林</h2>
-                <p>在这片被迷雾笼罩的古老森林中，希望之树静静等待被唤醒...</p>
-                
-                <!-- World Lore Section - New addition -->
-                <div id="world-lore">
-                    <p>遗忘森林位于心之领域的边缘，是遗忘之地的一部分。这里的树木因缺乏感恩而变得扭曲，需要通过感恩的力量来恢复生机。</p>
-                    <button id="show-more-lore">了解更多</button>
+            <div class="hero-image">
+                <img src="img/hero-image.png" alt="遗忘种子游戏截图" data-i18n="hero_image_alt">
+                <div class="floating-seed seed-1"></div>
+                <div class="floating-seed seed-2"></div>
+                <div class="floating-seed seed-3"></div>
+            </div>
+        </div>
+        <div class="hero-particles"></div>
+    </section>
+
+    <!-- 预告片区域 -->
+    <section id="trailer" class="trailer">
+        <div class="container">
+            <div class="section-header">
+                <h2 data-i18n="trailer_title">探索遗忘森林的奥秘</h2>
+                <p data-i18n="trailer_subtitle">观看游戏预告片，了解更多游戏内容</p>
+            </div>
+            <div class="video-container">
+                <div class="video-placeholder">
+                    <img src="img/video-thumbnail.jpg" alt="游戏预告片缩略图" data-i18n="video_thumbnail_alt">
+                    <div class="play-button">
+                        <i class="fas fa-play"></i>
+                    </div>
                 </div>
-                
-                <div id="tree-info">
-                    <h3>希望之树状态</h3>
-                    <div id="tree-status">未解锁</div>
-                    
-                    <!-- Tree Progress - New addition -->
-                    <div id="tree-progress">
-                        <div class="progress-label">解锁进度:</div>
-                        <div class="progress-bar">
-                            <div class="progress-fill" style="width: 0%"></div>
+                <!-- 视频将通过JavaScript动态加载 -->
+            </div>
+        </div>
+    </section>
+
+    <!-- 游戏特色区域 -->
+    <section id="features" class="features">
+        <div class="container">
+            <div class="section-header">
+                <h2 data-i18n="features_title">游戏特色</h2>
+                <p data-i18n="features_subtitle">发现遗忘种子的独特魅力</p>
+            </div>
+            <div class="features-grid">
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-book-open"></i>
+                    </div>
+                    <h3 data-i18n="feature_1_title">感恩日记系统</h3>
+                    <p data-i18n="feature_1_desc">记录生活中的感恩时刻，培养积极心态，获得希望种子</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-seedling"></i>
+                    </div>
+                    <h3 data-i18n="feature_2_title">多样化种子收集</h3>
+                    <p data-i18n="feature_2_desc">收集感恩、智慧、勇气、爱和和谐五种希望种子，每种都有独特能力</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-tree"></i>
+                    </div>
+                    <h3 data-i18n="feature_3_title">希望之树唤醒</h3>
+                    <p data-i18n="feature_3_desc">用收集的种子唤醒沉睡的希望之树，改变遗忘森林的面貌</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-door-open"></i>
+                    </div>
+                    <h3 data-i18n="feature_4_title">幸福之门解锁</h3>
+                    <p data-i18n="feature_4_desc">唤醒所有希望之树后，解锁通往幸福的神秘之门</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-map-marked-alt"></i>
+                    </div>
+                    <h3 data-i18n="feature_5_title">沉浸式3D世界</h3>
+                    <p data-i18n="feature_5_desc">探索精美的3D遗忘森林，发现隐藏的秘密和宝藏</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-music"></i>
+                    </div>
+                    <h3 data-i18n="feature_6_title">治愈音乐体验</h3>
+                    <p data-i18n="feature_6_desc">沉浸在专为游戏创作的治愈音乐中，放松身心</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 故事背景区域 -->
+    <section id="story" class="story">
+        <div class="container">
+            <div class="story-content">
+                <div class="section-header">
+                    <h2 data-i18n="story_title">故事背景</h2>
+                    <p data-i18n="story_subtitle">踏上艾瑞恩的心灵之旅</p>
+                </div>
+                <div class="story-text">
+                    <p data-i18n="story_p1">在一个被遗忘的森林深处，年轻的艾瑞恩发现了一棵枯萎的希望之树和一本神秘的感恩日记。</p>
+                    <p data-i18n="story_p2">传说中，这片森林曾经充满生机和希望，随着人们逐渐忘记感恩，森林也失去了活力，希望之树一棵接一棵地沉睡。</p>
+                    <p data-i18n="story_p3">艾瑞恩决定通过记录生活中的感恩时刻，收集希望种子，唤醒沉睡的希望之树，最终开启通往幸福的神秘之门。</p>
+                    <p data-i18n="story_p4">作为玩家，你将扮演艾瑞恩，在这场关于感恩、希望与自我成长的心灵之旅中，发现生活中被忽视的美好。</p>
+                </div>
+                <div class="story-cta">
+                    <a href="#download" class="cta-button primary" data-i18n="story_cta">开始你的旅程</a>
+                </div>
+            </div>
+            <div class="story-image">
+                <img src="img/story-image.png" alt="艾瑞恩与希望之树" data-i18n="story_image_alt">
+            </div>
+        </div>
+    </section>
+
+    <!-- 游戏截图区域 -->
+    <section class="screenshots">
+        <div class="container">
+            <div class="section-header">
+                <h2 data-i18n="screenshots_title">游戏截图</h2>
+                <p data-i18n="screenshots_subtitle">一睹遗忘森林的美丽风景</p>
+            </div>
+            <div class="screenshots-slider">
+                <div class="screenshot">
+                    <img src="img/screenshot-1.jpg" alt="感恩日记界面" data-i18n="screenshot_1_alt">
+                    <div class="screenshot-caption" data-i18n="screenshot_1_caption">感恩日记界面</div>
+                </div>
+                <div class="screenshot">
+                    <img src="img/screenshot-2.jpg" alt="希望之树唤醒" data-i18n="screenshot_2_alt">
+                    <div class="screenshot-caption" data-i18n="screenshot_2_caption">希望之树唤醒</div>
+                </div>
+                <div class="screenshot">
+                    <img src="img/screenshot-3.jpg" alt="种子收集" data-i18n="screenshot_3_alt">
+                    <div class="screenshot-caption" data-i18n="screenshot_3_caption">种子收集</div>
+                </div>
+                <div class="screenshot">
+                    <img src="img/screenshot-4.jpg" alt="幸福之门" data-i18n="screenshot_4_alt">
+                    <div class="screenshot-caption" data-i18n="screenshot_4_caption">幸福之门</div>
+                </div>
+            </div>
+            <div class="slider-controls">
+                <div class="slider-dots">
+                    <span class="dot active"></span>
+                    <span class="dot"></span>
+                    <span class="dot"></span>
+                    <span class="dot"></span>
+                </div>
+                <div class="slider-arrows">
+                    <button class="arrow prev"><i class="fas fa-chevron-left"></i></button>
+                    <button class="arrow next"><i class="fas fa-chevron-right"></i></button>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 玩家评价区域 -->
+    <section id="testimonials" class="testimonials">
+        <div class="container">
+            <div class="section-header">
+                <h2 data-i18n="testimonials_title">玩家评价</h2>
+                <p data-i18n="testimonials_subtitle">听听其他玩家的体验</p>
+            </div>
+            <div class="testimonials-grid">
+                <div class="testimonial-card">
+                    <div class="testimonial-rating">
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                    </div>
+                    <p class="testimonial-text" data-i18n="testimonial_1_text">"这款游戏改变了我的生活！每天记录感恩让我更加积极乐观，也让我发现了生活中被忽视的美好。"</p>
+                    <div class="testimonial-author">
+                        <img src="img/avatar-1.jpg" alt="李明" data-i18n="testimonial_1_author_alt">
+                        <div class="author-info">
+                            <h4 data-i18n="testimonial_1_author">李明</h4>
+                            <p data-i18n="testimonial_1_date">2023年5月</p>
                         </div>
-                        <div class="progress-text">0/5 种子</div>
                     </div>
                 </div>
-                <div id="door-info">
-                    <h3>幸福之门</h3>
-                    <div id="door-status">需要收集更多种子</div>
-                    
-                    <!-- Door Description - New addition -->
-                    <p class="door-description">幸福之门被迷雾和藤蔓紧紧缠绕，等待着正确的钥匙。每一颗种子都能驱散一些迷雾，当所有种子就位，门将开启通往新区域的道路。</p>
-                </div>
-            </div>
-            <div id="game-menu">
-                <div class="menu-button" id="inventory-button">
-                    <div class="button-icon">🎒</div>
-                    <span>背包</span>
-                </div>
-                <div class="menu-button" id="map-button">
-                    <div class="button-icon">🗺️</div>
-                    <span>地图</span>
-                </div>
-                <div class="menu-button" id="settings-button">
-                    <div class="button-icon">⚙️</div>
-                    <span>设置</span>
-                </div>
-                <!-- Help Button - New addition -->
-                <div class="menu-button" id="help-button">
-                    <div class="button-icon">❓</div>
-                    <span>帮助</span>
-                </div>
-            </div>
-        </div>
-        
-        <!-- Inventory Panel - Enhanced -->
-        <div id="inventory-panel" class="game-panel hidden">
-            <div class="panel-header">
-                <h2>希望背包</h2>
-                <button class="close-panel">×</button>
-            </div>
-            <div class="panel-content">
-                <div class="inventory-tabs">
-                    <div class="inventory-tab active" data-tab="seeds">希望种子</div>
-                    <div class="inventory-tab" data-tab="artifacts">神器</div>
-                    <div class="inventory-tab" data-tab="notes">笔记</div>
-                    <!-- New Journal Tab -->
-                    <div class="inventory-tab" data-tab="journal">感恩记录</div>
-                </div>
-                <div class="inventory-content active" id="seeds-inventory">
-                    <div class="seed-type-filters">
-                        <button class="seed-filter active" data-type="all">全部</button>
-                        <button class="seed-filter" data-type="gratitude">感恩</button>
-                        <button class="seed-filter" data-type="wisdom">智慧</button>
-                        <button class="seed-filter" data-type="courage">勇气</button>
-                        <button class="seed-filter" data-type="love">爱</button>
-                        <button class="seed-filter" data-type="harmony">和谐</button>
+                <div class="testimonial-card">
+                    <div class="testimonial-rating">
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
                     </div>
-                    <div class="seed-grid"></div>
+                    <p class="testimonial-text" data-i18n="testimonial_2_text">"游戏画面精美，音乐治愈，最重要的是它让我养成了每天记录感恩的习惯。看着希望之树一棵棵被唤醒，内心充满成就感！"</p>
+                    <div class="testimonial-author">
+                        <img src="img/avatar-2.jpg" alt="王芳" data-i18n="testimonial_2_author_alt">
+                        <div class="author-info">
+                            <h4 data-i18n="testimonial_2_author">王芳</h4>
+                            <p data-i18n="testimonial_2_date">2023年6月</p>
+                        </div>
+                    </div>
                 </div>
-                <div class="inventory-content" id="artifacts-inventory">
-                    <p class="empty-message">还未收集到任何神器。</p>
-                    <p class="artifact-hint">传说在遗忘之地的深处，隐藏着希望之神留下的神器，它们能帮助你更快地唤醒希望之树。</p>
-                </div>
-                <div class="inventory-content" id="notes-inventory">
-                    <p class="empty-message">还未记录任何笔记。</p>
-                    <p class="notes-hint">在探索遗忘森林的过程中，你可以记录下发现的线索和秘密。</p>
-                </div>
-                <div class="inventory-content" id="journal-inventory">
-                    <h3>感恩记录</h3>
-                    <div id="journal-entries">
-                        <!-- Journal entries will be populated here -->
+                <div class="testimonial-card">
+                    <div class="testimonial-rating">
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star-half-alt"></i>
+                    </div>
+                    <p class="testimonial-text" data-i18n="testimonial_3_text">"作为一名心理咨询师，我向我的许多来访者推荐了这款游戏。它是培养感恩习惯和积极心态的绝佳工具，包装在一个有趣的游戏体验中。"</p>
+                    <div class="testimonial-author">
+                        <img src="img/avatar-3.jpg" alt="张教授" data-i18n="testimonial_3_author_alt">
+                        <div class="author-info">
+                            <h4 data-i18n="testimonial_3_author">张教授</h4>
+                            <p data-i18n="testimonial_3_date">2023年7月</p>
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
-        
-        <!-- Map Panel - Enhanced -->
-        <div id="map-panel" class="game-panel hidden">
-            <div class="panel-header">
-                <h2>遗忘森林地图</h2>
-                <button class="close-panel">×</button>
+    </section>
+
+    <!-- 下载区域 -->
+    <section id="download" class="download">
+        <div class="container">
+            <div class="section-header">
+                <h2 data-i18n="download_title">立即开始你的心灵之旅</h2>
+                <p data-i18n="download_subtitle">选择适合你的版本，开启感恩与希望的旅程</p>
             </div>
-            <div class="panel-content">
-                <div id="forest-map">
-                    <div class="map-container">
-                        <svg viewBox="0 0 200 200" id="map-svg">
-                            <defs>
-                                <filter id="fog-effect">
-                                    <feGaussianBlur stdDeviation="2" />
-                                    <feComponentTransfer>
-                                        <feFuncA type="linear" slope="0.5" />
-                                    </feComponentTransfer>
-                                </filter>
-                                <mask id="fog-mask">
-                                    <rect width="100%" height="100%" fill="white" />
-                                    <circle cx="100" cy="100" r="30" fill="black" />
-                                </mask>
-                            </defs>
-                            <rect width="100%" height="100%" fill="#1a2c1a" opacity="0.3" />
-                            <rect width="100%" height="100%" fill="#d0e7d0" mask="url(#fog-mask)" filter="url(#fog-effect)" class="fog-overlay" />
-                            
-                            <circle cx="100" cy="100" r="10" class="map-marker main-tree" />
-                            <text x="100" y="85" class="map-label" text-anchor="middle">主希望之树</text>
-                            
-                            <circle cx="70" cy="60" r="8" class="map-marker locked-tree" data-tree-id="1" />
-                            <text x="70" y="45" class="map-label" text-anchor="middle">感恩之树</text>
-                            
-                            <circle cx="140" cy="70" r="8" class="map-marker locked-tree" data-tree-id="2" />
-                            <text x="140" y="55" class="map-label" text-anchor="middle">智慧之树</text>
-                            
-                            <circle cx="150" cy="130" r="8" class="map-marker locked-tree" data-tree-id="3" />
-                            <text x="150" y="115" class="map-label" text-anchor="middle">勇气之树</text>
-                            
-                            <circle cx="80" cy="150" r="8" class="map-marker locked-tree" data-tree-id="4" />
-                            <text x="80" y="165" class="map-label" text-anchor="middle">爱之树</text>
-                            
-                            <circle cx="50" cy="110" r="8" class="map-marker locked-tree" data-tree-id="5" />
-                            <text x="50" y="125" class="map-label" text-anchor="middle">和谐之树</text>
-                            
-                            <rect x="95" y="25" width="10" height="20" class="map-marker gate" />
-                            <text x="100" y="15" class="map-label" text-anchor="middle">幸福之门</text>
-                            
-                            <!-- Future Areas - Faded -->
-                            <circle cx="20" cy="20" r="15" class="map-marker future-area" opacity="0.3" />
-                            <text x="20" y="20" class="map-label future-label" text-anchor="middle">失落之城</text>
-                            
-                            <circle cx="180" cy="20" r="15" class="map-marker future-area" opacity="0.3" />
-                            <text x="180" y="20" class="map-label future-label" text-anchor="middle">冰霜荒原</text>
-                            
-                            <circle cx="180" cy="180" r="15" class="map-marker future-area" opacity="0.3" />
-                            <text x="180" y="180" class="map-label future-label" text-anchor="middle">希望之岛</text>
-                        </svg>
+            <div class="pricing-tiers">
+                <div class="pricing-card basic">
+                    <div class="pricing-header">
+                        <h3 data-i18n="pricing_basic_title">基础版</h3>
+                        <div class="pricing-price">
+                            <span class="currency">¥</span>
+                            <span class="amount" data-i18n="pricing_basic_amount">0</span>
+                            <span class="period" data-i18n="pricing_basic_period">免费</span>
+                        </div>
                     </div>
-                    <div class="map-legend">
-                        <div class="legend-item"><span class="legend-marker main-tree"></span> 主树</div>
-                        <div class="legend-item"><span class="legend-marker unlocked-tree"></span> 已唤醒的树</div>
-                        <div class="legend-item"><span class="legend-marker locked-tree"></span> 沉睡的树</div>
-                        <div class="legend-item"><span class="legend-marker gate"></span> 幸福之门</div>
-                        <div class="legend-item"><span class="legend-marker future-area"></span> 未探索区域</div>
+                    <div class="pricing-features">
+                        <ul>
+                            <li data-i18n="pricing_basic_feature_1"><i class="fas fa-check"></i> 基础游戏体验</li>
+                            <li data-i18n="pricing_basic_feature_2"><i class="fas fa-check"></i> 感恩日记系统</li>
+                            <li data-i18n="pricing_basic_feature_3"><i class="fas fa-check"></i> 3种希望种子</li>
+                            <li data-i18n="pricing_basic_feature_4"><i class="fas fa-check"></i> 2棵希望之树</li>
+                            <li data-i18n="pricing_basic_feature_5" class="disabled"><i class="fas fa-times"></i> 高级游戏内容</li>
+                            <li data-i18n="pricing_basic_feature_6" class="disabled"><i class="fas fa-times"></i> 专属音乐</li>
+                        </ul>
                     </div>
-                    <div class="map-description">
-                        <p>遗忘森林是遗忘之地的一部分，位于心之领域的边缘。这里的树木因缺乏感恩而变得扭曲，需要通过感恩的力量来恢复生机。</p>
-                        <p>随着你唤醒更多的希望之树，森林的迷雾将逐渐散去，揭示更多隐藏的区域。</p>
+                    <div class="pricing-cta">
+                        <a href="game/index.html" class="cta-button secondary" data-i18n="pricing_basic_cta">免费下载</a>
+                    </div>
+                </div>
+                <div class="pricing-card standard popular">
+                    <div class="popular-badge" data-i18n="pricing_popular_badge">最受欢迎</div>
+                    <div class="pricing-header">
+                        <h3 data-i18n="pricing_standard_title">标准版</h3>
+                        <div class="pricing-price">
+                            <span class="currency">¥</span>
+                            <span class="original-amount" data-i18n="pricing_standard_original">68</span>
+                            <span class="amount" data-i18n="pricing_standard_amount">48</span>
+                            <span class="period" data-i18n="pricing_standard_period">一次性付款</span>
+                        </div>
+                        <div class="pricing-discount" data-i18n="pricing_standard_discount">限时优惠 30% OFF</div>
+                    </div>
+                    <div class="pricing-features">
+                        <ul>
+                            <li data-i18n="pricing_standard_feature_1"><i class="fas fa-check"></i> 完整游戏体验</li>
+                            <li data-i18n="pricing_standard_feature_2"><i class="fas fa-check"></i> 高级感恩日记系统</li>
+                            <li data-i18n="pricing_standard_feature_3"><i class="fas fa-check"></i> 全部5种希望种子</li>
+                            <li data-i18n="pricing_standard_feature_4"><i class="fas fa-check"></i> 全部5棵希望之树</li>
+                            <li data-i18n="pricing_standard_feature_5"><i class="fas fa-check"></i> 幸福之门解锁</li>
+                            <li data-i18n="pricing_standard_feature_6"><i class="fas fa-check"></i> 专属音乐</li>
+                        </ul>
+                    </div>
+                    <div class="pricing-cta">
+                        <a href="game/index.html" class="cta-button primary" data-i18n="pricing_standard_cta">立即购买</a>
+                    </div>
+                </div>
+                <div class="pricing-card premium">
+                    <div class="pricing-header">
+                        <h3 data-i18n="pricing_premium_title">高级版</h3>
+                        <div class="pricing-price">
+                            <span class="currency">¥</span>
+                            <span class="original-amount" data-i18n="pricing_premium_original">128</span>
+                            <span class="amount" data-i18n="pricing_premium_amount">98</span>
+                            <span class="period" data-i18n="pricing_premium_period">一次性付款</span>
+                        </div>
+                        <div class="pricing-discount" data-i18n="pricing_premium_discount">限时优惠 25% OFF</div>
+                    </div>
+                    <div class="pricing-features">
+                        <ul>
+                            <li data-i18n="pricing_premium_feature_1"><i class="fas fa-check"></i> 标准版全部内容</li>
+                            <li data-i18n="pricing_premium_feature_2"><i class="fas fa-check"></i> 独家拓展地图</li>
+                            <li data-i18n="pricing_premium_feature_3"><i class="fas fa-check"></i> 额外希望种子类型</li>
+                            <li data-i18n="pricing_premium_feature_4"><i class="fas fa-check"></i> 专属角色皮肤</li>
+                            <li data-i18n="pricing_premium_feature_5"><i class="fas fa-check"></i> 数字艺术书</li>
+                            <li data-i18n="pricing_premium_feature_6"><i class="fas fa-check"></i> 终身更新</li>
+                        </ul>
+                    </div>
+                    <div class="pricing-cta">
+                        <a href="game/index.html" class="cta-button secondary" data-i18n="pricing_premium_cta">立即购买</a>
+                    </div>
+                </div>
+            </div>
+            <div class="countdown-container">
+                <div class="countdown-text" data-i18n="countdown_text">限时优惠倒计时：</div>
+                <div class="countdown-timer">
+                    <div class="countdown-item">
+                        <span class="countdown-value days">2</span>
+                        <span class="countdown-label" data-i18n="countdown_days">天</span>
+                    </div>
+                    <div class="countdown-item">
+                        <span class="countdown-value hours">12</span>
+                        <span class="countdown-label" data-i18n="countdown_hours">时</span>
+                    </div>
+                    <div class="countdown-item">
+                        <span class="countdown-value minutes">45</span>
+                        <span class="countdown-label" data-i18n="countdown_minutes">分</span>
+                    </div>
+                    <div class="countdown-item">
+                        <span class="countdown-value seconds">30</span>
+                        <span class="countdown-label" data-i18n="countdown_seconds">秒</span>
+                    </div>
+                </div>
+            </div>
+            <div class="guarantee">
+                <div class="guarantee-icon">
+                    <i class="fas fa-shield-alt"></i>
+                </div>
+                <div class="guarantee-text">
+                    <h3 data-i18n="guarantee_title">30天无条件退款保证</h3>
+                    <p data-i18n="guarantee_text">如果您在购买后30天内对游戏不满意，我们将全额退款，无需任何理由。</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- FAQ区域 -->
+    <section class="faq">
+        <div class="container">
+            <div class="section-header">
+                <h2 data-i18n="faq_title">常见问题</h2>
+                <p data-i18n="faq_subtitle">了解更多关于遗忘种子的信息</p>
+            </div>
+            <div class="faq-container">
+                <div class="faq-item">
+                    <div class="faq-question">
+                        <h3 data-i18n="faq_q1">遗忘种子适合什么年龄段的玩家？</h3>
+                        <span class="faq-toggle"><i class="fas fa-plus"></i></span>
+                    </div>
+                    <div class="faq-answer">
+                        <p data-i18n="faq_a1">遗忘种子适合所有年龄段的玩家，特别是那些希望培养感恩习惯、提升心理健康的人群。游戏内容简单易懂，没有暴力元素，适合全家人一起体验。</p>
+                    </div>
+                </div>
+                <div class="faq-item">
+                    <div class="faq-question">
+                        <h3 data-i18n="faq_q2">游戏支持哪些平台？</h3>
+                        <span class="faq-toggle"><i class="fas fa-plus"></i></span>
+                    </div>
+                    <div class="faq-answer">
+                        <p data-i18n="faq_a2">目前遗忘种子支持Windows、macOS、iOS和Android平台。您可以在PC、平板或手机上畅玩游戏，所有平台的游戏进度可以通过云存档同步。</p>
+                    </div>
+                </div>
+                <div class="faq-item">
+                    <div class="faq-question">
+                        <h3 data-i18n="faq_q3">如何获得更多希望种子？</h3>
+                        <span class="faq-toggle"><i class="fas fa-plus"></i></span>
+                    </div>
+                    <div class="faq-answer">
+                        <p data-i18n="faq_a3">在游戏中，您可以通过记录感恩日记、完成每日任务、探索遗忘森林的隐藏区域以及帮助NPC解决问题来获得希望种子。每种获取方式对应不同类型的种子。</p>
+                    </div>
+                </div>
+                <div class="faq-item">
+                    <div class="faq-question">
+                        <h3 data-i18n="faq_q4">游戏会定期更新吗？</h3>
+                        <span class="faq-toggle"><i class="fas fa-plus"></i></span>
+                    </div>
+                    <div class="faq-answer">
+                        <p data-i18n="faq_a4">是的，我们计划每季度发布一次内容更新，包括新的地图区域、希望种子类型、任务和故事内容。标准版用户可以免费获得一年的更新，高级版用户可以获得终身更新。</p>
+                    </div>
+                </div>
+                <div class="faq-item">
+                    <div class="faq-question">
+                        <h3 data-i18n="faq_q5">游戏内容是否有教育意义？</h3>
+                        <span class="faq-toggle"><i class="fas fa-plus"></i></span>
+                    </div>
+                    <div class="faq-answer">
+                        <p data-i18n="faq_a5">遗忘种子融合了心理学和教育学原理，通过游戏化方式培养感恩习惯和积极心态。游戏中的许多元素都有教育意义，适合在学校、家庭和心理健康机构中作为辅助工具使用。</p>
                     </div>
                 </div>
             </div>
         </div>
-        
-        <!-- Settings Panel -->
-        <div id="settings-panel" class="game-panel hidden">
-            <div class="panel-header">
-                <h2>游戏设置</h2>
-                <button class="close-panel">×</button>
-            </div>
-            <div class="panel-content">
-                <div class="settings-section">
-                    <h3>图像设置</h3>
-                    <div class="setting-item">
-                        <label for="fog-density">雾气密度:</label>
-                        <input type="range" id="fog-density" min="0" max="0.1" step="0.005" value="0.03">
-                    </div>
-                    <div class="setting-item">
-                        <label for="seed-glow">种子光亮:</label>
-                        <input type="range" id="seed-glow" min="0.5" max="3" step="0.1" value="1.5">
-                    </div>
+    </section>
+
+    <!-- 下载按钮区域 -->
+    <section class="final-cta">
+        <div class="container">
+            <div class="final-cta-content">
+                <h2 data-i18n="final_cta_title">准备好开始你的感恩之旅了吗？</h2>
+                <p data-i18n="final_cta_text">加入成千上万的玩家，一起探索遗忘森林，收集希望种子，唤醒生命中的感恩与希望。</p>
+                <div class="final-cta-buttons">
+                    <a href="game/index.html" class="cta-button primary large" data-i18n="final_cta_button">立即开始游戏</a>
                 </div>
-                <div class="settings-section">
-                    <h3>音效设置</h3>
-                    <div class="setting-item">
-                        <label for="music-volume">音乐音量:</label>
-                        <input type="range" id="music-volume" min="0" max="1" step="0.1" value="0.3">
-                    </div>
-                    <div class="setting-item">
-                        <label for="sfx-volume">特效音量:</label>
-                        <input type="range" id="sfx-volume" min="0" max="1" step="0.1" value="0.5">
-                    </div>
-                </div>
-                <div class="settings-section">
-                    <h3>游戏设置</h3>
-                    <div class="setting-item">
-                        <label for="language-select">语言:</label>
-                        <select id="language-select">
-                            <option value="zh" selected>中文</option>
-                            <option value="en">English</option>
-                        </select>
-                    </div>
-                    <div class="setting-item checkbox">
-                        <input type="checkbox" id="tutorial-toggle" checked>
-                        <label for="tutorial-toggle">显示教程提示</label>
-                    </div>
+                <div class="platforms">
+                    <span data-i18n="platforms_text">支持平台：</span>
+                    <i class="fab fa-windows" title="Windows"></i>
+                    <i class="fab fa-apple" title="macOS"></i>
+                    <i class="fab fa-android" title="Android"></i>
+                    <i class="fab fa-app-store-ios" title="iOS"></i>
                 </div>
             </div>
         </div>
-        
-        <!-- Help Panel - New addition -->
-        <div id="help-panel" class="game-panel hidden">
-            <div class="panel-header">
-                <h2>游戏帮助</h2>
-                <button class="close-panel">×</button>
-            </div>
-            <div class="panel-content">
-                <div class="help-tabs">
-                    <div class="help-tab active" data-tab="basics">基础玩法</div>
-                    <div class="help-tab" data-tab="journal">感恩日记</div>
-                    <div class="help-tab" data-tab="seeds">希望种子</div>
-                    <div class="help-tab" data-tab="trees">希望之树</div>
-                    <div class="help-tab" data-tab="lore">世界观</div>
+    </section>
+
+    <!-- 页脚 -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-logo">
+                    <img src="img/logo-white.png" alt="遗忘种子" data-i18n="footer_logo_alt">
+                    <p data-i18n="footer_tagline">发现生活中的感恩与希望</p>
                 </div>
-                <div class="help-content active" id="basics-help">
-                    <h3>基础玩法</h3>
-                    <p>在《希望之森》中，你将扮演艾瑞恩，一位被希望之神选中的旅者，担负着找回失落的"感恩种子"的使命。</p>
-                    <p>游戏的核心玩法是：</p>
-                    <ol>
-                        <li>在感恩日记中记录你的感恩</li>
-                        <li>获得希望种子</li>
-                        <li>使用种子唤醒沉睡的希望之树</li>
-                        <li>收集足够的种子开启幸福之门</li>
-                    </ol>
-                    <p>通过这个过程，你将逐渐驱散遗忘森林的迷雾，发现更多隐藏的秘密。</p>
-                </div>
-                <div class="help-content" id="journal-help">
-                    <h3>感恩日记</h3>
-                    <p>感恩日记是你获得希望种子的主要方式。每天记录你的感恩，就能获得一颗希望种子。</p>
-                    <p>日记分为四类：</p>
-                    <ul>
-                        <li><strong>个人</strong> - 关于自己的品质、成长和健康的感恩</li>
-                        <li><strong>自然</strong> - 对大自然和周围环境的感恩</li>
-                        <li><strong>关系</strong> - 对家人、朋友和他人的感恩</li>
-                        <li><strong>成就</strong> - 对自己的成就和进步的感恩</li>
-                    </ul>
-                    <p>不同类型的感恩会产生不同类型的种子，每种种子都有特殊的用途。</p>
-                </div>
-                <div class="help-content" id="seeds-help">
-                    <h3>希望种子</h3>
-                    <p>希望种子是游戏中的关键物品，它们由你的感恩之情孕育而生。</p>
-                    <p>种子类型：</p>
-                    <ul>
-                        <li><strong>感恩种子</strong> (绿色) - 基础种子，用于唤醒感恩之树</li>
-                        <li><strong>智慧种子</strong> (蓝色) - 用于唤醒智慧之树</li>
-                        <li><strong>勇气种子</strong> (橙色) - 用于唤醒勇气之树</li>
-                        <li><strong>爱之种子</strong> (粉色) - 用于唤醒爱之树</li>
-                        <li><strong>和谐种子</strong> (紫色) - 用于唤醒和谐之树</li>
-                    </ul>
-                    <p>收集所有类型的种子，才能开启幸福之门。</p>
-                </div>
-                <div class="help-content" id="trees-help">
-                    <h3>希望之树</h3>
-                    <p>希望之树是遗忘森林的核心，它们因缺乏感恩而沉睡。</p>
-                    <p>森林中有六棵主要的希望之树：</p>
-                    <ul>
-                        <li><strong>主希望之树</strong> - 位于森林中心，是你旅程的起点</li>
-                        <li><strong>感恩之树</strong> - 需要感恩种子唤醒</li>
-                        <li><strong>智慧之树</strong> - 需要智慧种子唤醒</li>
-                        <li><strong>勇气之树</strong> - 需要勇气种子唤醒</li>
-                        <li><strong>爱之树</strong> - 需要爱之种子唤醒</li>
-                        <li><strong>和谐之树</strong> - 需要和谐种子唤醒</li>
-                    </ul>
-                    <p>唤醒所有希望之树，才能完全驱散森林的迷雾。</p>
-                </div>
-                <div class="help-content" id="lore-help">
-                    <h3>世界观</h3>
-                    <p>在《Lost Seed: The Key to Bliss》的世界观中，宇宙是一个由多个层次构成的宏伟结构：</p>
-                    <ul>
-                        <li><strong>心之领域</strong> - 宇宙的核心，象征着爱、希望和感恩</li>
-                        <li><strong>遗忘之地</strong> - 心之领域的边缘，被时间遗忘的角落</li>
-                    </ul>
-                    <p>遗忘之地包含多个区域：</p>
-                    <ul>
-                        <li><strong>遗忘森林</strong> - 你当前所在的区域</li>
-                        <li><strong>失落之城</strong> - 一座被遗弃的古城</li>
-                        <li><strong>冰霜荒原</strong> - 一片被严寒覆盖的荒原</li>
-                        <li><strong>希望之岛</strong> - 一个充满生机的小岛</li>
-                    </ul>
-                    <p>随着你的探索，更多的世界观将逐渐揭示。</p>
-                </div>
-            </div>
-        </div>
-        
-        <!-- Character Info Panel - New addition -->
-        <div id="character-info-panel" class="game-panel hidden">
-            <div class="panel-header">
-                <h2>艾瑞恩</h2>
-                <button class="close-panel">×</button>
-            </div>
-            <div class="panel-content">
-                <div class="character-portrait-large"></div>
-                <div class="character-description">
-                    <p>艾瑞恩是一位被希望之神选中的旅者，担负着找回失落的"感恩种子"的使命。</p>
-                    <p>在踏入遗忘森林之前，艾瑞恩是一个普通人，过着平凡的生活。然而，他内心深处一直有一种渴望，渴望寻找生活中更深层次的意义。</p>
-                    <p>一天晚上，希望之神在梦中向他显现，赐予他一本特殊的日记本，并告诉他遗忘之地正在逐渐失去希望，需要他的帮助。</p>
-                    <p>艾瑞恩接受了这个使命，踏上了前往遗忘森林的旅程。他相信，通过记录感恩，他能够找回失落的希望种子，唤醒沉睡的希望之树，最终开启幸福之门。</p>
-                </div>
-                <div class="character-stats">
-                    <h3>旅程统计</h3>
-                    <div class="stat-item">
-                        <span class="stat-label">记录的感恩:</span>
-                        <span class="stat-value" id="gratitude-count">0</span>
+                <div class="footer-links">
+                    <div class="footer-links-column">
+                        <h3 data-i18n="footer_links_game">游戏</h3>
+                        <ul>
+                            <li><a href="#features" data-i18n="footer_link_features">游戏特色</a></li>
+                            <li><a href="#story" data-i18n="footer_link_story">故事背景</a></li>
+                            <li><a href="#download" data-i18n="footer_link_download">下载游戏</a></li>
+                            <li><a href="#" data-i18n="footer_link_updates">更新日志</a></li>
+                        </ul>
                     </div>
-                    <div class="stat-item">
-                        <span class="stat-label">收集的种子:</span>
-                        <span class="stat-value" id="seed-count">0</span>
+                    <div class="footer-links-column">
+                        <h3 data-i18n="footer_links_support">支持</h3>
+                        <ul>
+                            <li><a href="#" data-i18n="footer_link_faq">常见问题</a></li>
+                            <li><a href="#" data-i18n="footer_link_contact">联系我们</a></li>
+                            <li><a href="#" data-i18n="footer_link_help">帮助中心</a></li>
+                            <li><a href="#" data-i18n="footer_link_feedback">提交反馈</a></li>
+                        </ul>
                     </div>
-                    <div class="stat-item">
-                        <span class="stat-label">唤醒的树木:</span>
-                        <span class="stat-value" id="tree-count">0/6</span>
+                    <div class="footer-links-column">
+                        <h3 data-i18n="footer_links_legal">法律</h3>
+                        <ul>
+                            <li><a href="#" data-i18n="footer_link_terms">使用条款</a></li>
+                            <li><a href="#" data-i18n="footer_link_privacy">隐私政策</a></li>
+                            <li><a href="#" data-i18n="footer_link_cookies">Cookie政策</a></li>
+                            <li><a href="#" data-i18n="footer_link_refund">退款政策</a></li>
+                        </ul>
+                    </div>
+                    <div class="footer-links-column">
+                        <h3 data-i18n="footer_links_connect">关注我们</h3>
+                        <!-- 移动菜单 -->
+                        <div class="mobile-menu">
+                            <div class="mobile-menu-header">
+                                <div class="logo">
+                                    <img src="img/logo.png" alt="遗忘种子" data-i18n="logo_alt">
+                                    <span data-i18n="logo_text">遗忘种子</span>
+                                </div>
+                                <button class="mobile-menu-close" data-i18n="mobile_menu_close">
+                                    <i class="fas fa-times"></i>
+                                </button>
+                            </div>
+                            <div class="mobile-menu-links">
+                                <a href="#features" data-i18n="nav_features">游戏特色</a>
+                                <a href="#story" data-i18n="nav_story">故事背景</a>
+                                <a href="#testimonials" data-i18n="nav_testimonials">玩家评价</a>
+                                <a href="#download" class="cta-button" data-i18n="nav_download">立即体验</a>
+                            </div>
+                            <div class="mobile-menu-footer">
+                                <div class="social-links">
+                                    <a href="#" class="social-link"><i class="fab fa-weixin"></i></a>
+                                    <a href="#" class="social-link"><i class="fab fa-weibo"></i></a>
+                                    <a href="#" class="social-link"><i class="fab fa-qq"></i></a>
+                                    <a href="#" class="social-link"><i class="fab fa-bilibili"></i></a>
+                                </div>
+                                <div class="language-selector">
+                                    <select id="mobile-language-select">
+                                        <option value="zh" selected data-i18n="lang_zh">中文</option>
+                                        <option value="en" data-i18n="lang_en">English</option>
+                                        <option value="ja" data-i18n="lang_ja">日本語</option>
+                                        <option value="ko" data-i18n="lang_ko">한국어</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- 加载动画 -->
+                        <div class="loader">
+                            <div class="loader-content">
+                                <div class="loader-logo">
+                                    <img src="img/logo.png" alt="遗忘种子">
+                                </div>
+                                <div class="loader-spinner">
+                                    <div class="spinner"></div>
+                                </div>
+                                <div class="loader-text" data-i18n="loading_text">正在加载遗忘森林的奇妙世界...</div>
+                            </div>
+                        </div>
+                        
+                        <!-- JavaScript -->
+                        <script src="js/i18n.js"></script>
+                        <script src="js/main.js"></script>
                     </div>
                 </div>
             </div>
-        </div>
-        
-        <!-- Seed Detail Panel - Enhanced -->
-        <div id="seed-detail-panel" class="game-panel hidden">
-            <div class="panel-header">
-                <h2>希望种子</h2>
-                <button class="close-panel">×</button>
-            </div>
-            <div class="panel-content">
-                <div id="seed-visual"></div>
-                <div id="seed-details">
-                    <h3 id="seed-date"></h3>
-                    <div id="seed-type-badge"></div>
-                    <p id="seed-entry"></p>
-                    <div id="seed-actions">
-                        <button id="plant-seed">种植</button>
-                        <button id="offer-seed">奉献</button>
-                    </div>
+            <div class="footer-bottom">
+                <div class="copyright">
+                    <p data-i18n="footer_copyright">&copy; 2023 遗忘种子团队. 保留所有权利.</p>
                 </div>
-                <div id="seed-description">
-                    <p>希望种子是由感恩之情孕育而生的神奇物品。每颗种子都蕴含着强大的生命力，可以用来唤醒沉睡的希望之树或开启幸福之门。</p>
-                    <p>种子的颜色反映了它的类型，不同类型的种子有不同的用途。</p>
+                <div class="language-selector">
+                    <select id="language-select">
+                        <option value="zh" selected data-i18n="lang_zh">中文</option>
+                        <option value="en" data-i18n="lang_en">English</option>
+                        <option value="ja" data-i18n="lang_ja">日本語</option>
+                        <option value="ko" data-i18n="lang_ko">한국어</option>
+                    </select>
                 </div>
             </div>
         </div>
-        
-        <!-- Lore Detail Panel - New addition -->
-        <div id="lore-panel" class="game-panel hidden">
-            <div class="panel-header">
-                <h2>世界观详情</h2>
-                <button class="close-panel">×</button>
-            </div>
-            <div class="panel-content">
-                <div class="lore-tabs">
-                    <div class="lore-tab active" data-tab="world">世界</div>
-                    <div class="lore-tab" data-tab="characters">角色</div>
-                    <div class="lore-tab" data-tab="history">历史</div>
-                </div>
-                <div class="lore-content active" id="world-lore-content">
-                    <h3>宇宙层次</h3>
-                    <p><strong>心之领域：</strong>位于宇宙的核心，是所有层次中最光明和温暖的地方，象征着爱、希望和感恩。希望之神守护着这个层次，她的力量是维系宇宙和谐的关键。</p>
-                    <p><strong>遗忘之地：</strong>位于心之领域的边缘，是一个被时间遗忘的角落，由多个区域构成，每个区域都有其独特的环境、文化和挑战。</p>
-                    
-                    <h3>遗忘之地的区域</h3>
-                    <p><strong>遗忘森林：</strong>一片古老而神秘的森林，树木和植物因缺乏感恩而变得扭曲。玩家需要通过感恩的力量来恢复其生机。</p>
-                    <p><strong>失落之城：</strong>一座曾经辉煌的古城，因居民的忘恩负义而被遗弃。玩家需要在这里解开历史的秘密，找回失落的感恩。</p>
-                    <p><strong>冰霜荒原：</strong>一片被严寒覆盖的荒原，居民们因感恩的缺失而饱受孤独和寒冷。玩家的到来将为他们带来希望的火种。</p>
-                    <p><strong>希望之岛：</strong>一个充满生机的小岛，是唯一一个仍然记得感恩重要性的社区。玩家在这里可以学习到感恩的力量。</p>
-                </div>
-                <div class="lore-content" id="characters-lore-content">
-                    <h3>主要角色</h3>
-                    <p><strong>艾瑞恩：</strong>玩家扮演的主角，一位被希望之神选中的旅者，担负着找回失落的"感恩种子"的使命。</p>
-                    <p><strong>希望之神：</strong>游戏中的关键角色，她将"感恩种子"赐予人间，并在艾瑞恩的旅程中给予指引和帮助。</p>
-                    
-                    <h3>守护者与居民</h3>
-                    <p><strong>森林守护者：</strong>遗忘森林的原住民，他们是森林的看护者，知晓森林的历史和秘密。随着森林的遗忘，他们也逐渐失去了记忆和形体。</p>
-                    <p><strong>迷失旅者：</strong>像艾瑞恩一样被吸引到遗忘之地的人们，但他们因缺乏感恩而迷失在森林中，成为了森林的一部分。</p>
-                    <p><strong>古树长者：</strong>最古老的希望之树，拥有智慧和记忆，能够与艾瑞恩交流，讲述遗忘之地的历史。</p>
-                </div>
-                
-                <div class="lore-content" id="history-lore-content">
-                    <h3>遗忘之地的起源</h3>
-                    <p>很久以前，心之领域和遗忘之地是一体的，充满了希望和感恩。然而，随着人们逐渐忘记感恩的重要性，一部分领域开始变得黯淡，最终形成了遗忘之地。</p>
-                    
-                    <h3>希望之种的传说</h3>
-                    <p>希望之神为了拯救遗忘之地，创造了"感恩种子"，并将它们散布在人间。这些种子能够吸收人们的感恩之情，成长为强大的希望之树，驱散遗忘的迷雾。</p>
-                    
-                    <h3>幸福之门的秘密</h3>
-                    <p>传说在遗忘之地的深处，有一扇通往心之领域的门——幸福之门。只有当所有的希望之树都被唤醒，门才能被打开，让遗忘之地重新与心之领域相连。</p>
-                    
-                    <h3>艾瑞恩的使命</h3>
-                    <p>艾瑞恩被希望之神选中，担负着找回失落的"感恩种子"的使命。通过记录感恩，唤醒希望之树，最终开启幸福之门，让遗忘之地重新充满希望。</p>
-                </div>
-            </div>
-        </div>
-        
-        <!-- Message Box - Enhanced -->
-        <div id="message-box" class="hidden">
-            <div class="message-header">
-                <span id="message-title">消息</span>
-                <button id="message-close">×</button>
-            </div>
-            <div class="message-content">
-                <p id="message-text"></p>
-            </div>
-        </div>
-        
-        <!-- Tutorial Overlay - New addition -->
-        <div id="tutorial-overlay" class="overlay hidden">
-            <div class="tutorial-container">
-                <div class="tutorial-header">
-                    <h2 id="tutorial-title">欢迎来到遗忘森林</h2>
-                    <button id="tutorial-close">×</button>
-                </div>
-                <div class="tutorial-content">
-                    <div class="tutorial-image"></div>
-                    <p id="tutorial-text">在这片被迷雾笼罩的古老森林中，希望之树静静等待被唤醒。作为艾瑞恩，你的使命是通过记录感恩来收集希望种子，唤醒沉睡的希望之树，最终开启幸福之门。</p>
-                </div>
-                <div class="tutorial-navigation">
-                    <button id="tutorial-prev" disabled>上一步</button>
-                    <div class="tutorial-dots">
-                        <span class="dot active"></span>
-                        <span class="dot"></span>
-                        <span class="dot"></span>
-                        <span class="dot"></span>
-                    </div>
-                    <button id="tutorial-next">下一步</button>
-                </div>
-            </div>
-        </div>
-        
-        <!-- Achievement Notification - New addition -->
-        <div id="achievement-notification" class="hidden">
-            <div class="achievement-icon"></div>
-            <div class="achievement-info">
-                <h3 id="achievement-title">成就解锁！</h3>
-                <p id="achievement-description">你已经收集了第一颗希望种子！</p>
-            </div>
-        </div>
-        
-        <!-- Seed Collection Animation - New addition -->
-        <div id="seed-collection-animation" class="hidden">
-            <div class="seed-formation">
-                <div class="gratitude-text"></div>
-                <div class="seed-glow"></div>
-                <div class="seed-model"></div>
-            </div>
-        </div>
-        
-        <!-- Tree Awakening Animation - New addition -->
-        <div id="tree-awakening-animation" class="hidden">
-            <div class="awakening-effect"></div>
-        </div>
-        
-        <!-- Loading Screen - New addition -->
-        <div id="loading-screen">
-            <div class="loading-container">
-                <h1>希望之森</h1>
-                <div class="loading-bar">
-                    <div class="loading-progress"></div>
-                </div>
-                <p class="loading-text">正在加载遗忘森林...</p>
-                <p class="loading-tip">提示：记录感恩是唤醒希望之树的关键。</p>
+    </footer>
+
+    <!-- 返回顶部按钮 -->
+    <button id="back-to-top" class="back-to-top">
+        <i class="fas fa-arrow-up"></i>
+    </button>
+
+    <!-- Cookie同意提示 -->
+    <div class="cookie-consent">
+        <div class="cookie-content">
+            <p data-i18n="cookie_text">我们使用Cookie来提升您的浏览体验，个性化内容和广告，以及分析我们的流量。</p>
+            <div class="cookie-buttons">
+                <button class="cookie-btn accept" data-i18n="cookie_accept">接受所有Cookie</button>
+                <button class="cookie-btn settings" data-i18n="cookie_settings">Cookie设置</button>
             </div>
         </div>
     </div>
 
-    <!-- Audio Elements - New addition -->
-    <audio id="background-music" loop>
-        <source src="assets/audio/forest_ambience.mp3" type="audio/mpeg">
-    </audio>
-    <audio id="seed-collect-sound">
-        <source src="assets/audio/seed_collect.mp3" type="audio/mpeg">
-    </audio>
-    <audio id="tree-awaken-sound">
-        <source src="assets/audio/tree_awaken.mp3" type="audio/mpeg">
-    </audio>
-    <audio id="door-unlock-sound">
-        <source src="assets/audio/door_unlock.mp3" type="audio/mpeg">
-    </audio>
-    <audio id="ui-click-sound">
-        <source src="assets/audio/ui_click.mp3" type="audio/mpeg">
-    </audio>
-    <audio id="achievement-sound">
-        <source src="assets/audio/achievement.mp3" type="audio/mpeg">
-    </audio>
-
-    <!-- Scripts -->
-    <script src="main.js" type="module"></script>
-    <script src="ui.js" type="module"></script>
-    <script src="journal.js" type="module"></script>
-    <script src="particles.js" type="module"></script>
-    <script src="audio.js" type="module"></script>
+    <!-- JavaScript -->
+    <script src="js/i18n.js"></script>
+    <script src="js/main.js"></script>
 </body>
 </html>
